@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models
 {
-  public class HotelPhoto : BasePhotoEntity
+  public abstract class HotelRelatedEntity : BaseEntity
   {
     public Guid HotelId { get; set; }
     public Hotel Hotel { get; set; }

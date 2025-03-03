@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Models
+﻿namespace Domain.Models
 {
   public class Service : BaseEntity
   {
+    public double Price { get; set; }
+    public Guid BookingId { get; set; }
+    public Booking Booking { get; set; }
   }
 }

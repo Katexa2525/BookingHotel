@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Models
+﻿namespace Domain.Models
 {
   public class Booking
   {
@@ -12,5 +6,7 @@ namespace Domain.Models
     public int NumberOfAdults { get; set; }
     public DateTime RaceDate { get; set; }
     public DateTime DepartureDate { get; set; }
+    public IEnumerable<Guest> Guests { get; set; }
+    public IEnumerable<Service> Services { get; set; }
   }
 }

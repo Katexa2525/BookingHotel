@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Models
+﻿namespace Domain.Models
 {
   public class Room
   {
@@ -12,9 +6,10 @@ namespace Domain.Models
     public Guid HotelId { get; set; }
     public Hotel Hotel { get; set; }
     public int PeopleNumber { get; set; }
-    public double Square {  get; set; }
+    public double Square { get; set; }
     public IEnumerable<Price> Prices { get; set; }
-    
-
+    public IEnumerable<RoomPhoto> RoomPhotos { get; set; }
+    public IEnumerable<RoomFacility> RoomFacilities { get; set; }
+    public IEnumerable<RoomType> RoomTypes { get; set; }
   }
 }
