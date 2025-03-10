@@ -9,5 +9,6 @@
     public IEnumerable<HotelFacility> HotelFacilities { get; set; }
     public IEnumerable<HotelPhoto> HotelPhotos { get; set; }
     public IEnumerable<Location> Locations { get; set; }
+    public IEnumerable<Price> Prices { get; set; }
   }
 }
