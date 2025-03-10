@@ -1,0 +1,24 @@
+﻿<div class="card shadow" style="width: 18rem;">
+  <img src="@Hotel.MainPhoto" class="card-img-top" alt="@Hotel.Name">
+  <div class="card-body">
+    <h5 class="card-title">@Hotel.Name</h5>
+    <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6>
+    @* <div class="d-flex justify-content-between">
+      <span><span class="oi oi-clock mr-2"></span> @Hotel.TimeFormatted</span>
+      <span><span class="oi oi-infinity mr-2"></span> @Hotel.Length km</span>
+    </div> *@
+    <button class="btn btn-primary" title="View" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )">
+      <i class="bi bi-binoculars"></i>
+
+    </button>
+  </div>
+</div>
+
+@code {
+  [Parameter, EditorRequired]
+  public Hotel Hotel { get; set; } = default!; // определяет обязательный параметр компонента
+
+  /// <summary>События определяются с использованием типов делегатов Action или Func, или через тип EventCallback </summary>
+  [Parameter, EditorRequired]
+  public EventCallback<Hotel> OnSelected { get; set; }
+}

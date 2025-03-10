@@ -1,5 +1,51 @@
-﻿<h3>HomePage</h3>
+﻿@page "/" // определяет маршрут, за который отвечает этот компонент HomePage
+@inject HttpClient Http // для получения экземпляров объектов из контейнера внедрения зависимостей
+
+<PageTitle>Booking Hotel</PageTitle>
+
+@if (_hotels == null)
+{
+  <p>Loading _hotels...</p>
+}
+else
+{
+    @* <HotelDetails Hotel="_selectedHotel"/> *@
+    <div class="grid">
+    @foreach (var hotel in _hotels)
+    {
+      @* <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" /> *@
+      <HotelCard Hotel="hotel"/>
+    }
+    </div>
+}
 
 @code {
+  // это объявление свойства альтернатива выше указанной директиве @inject, представляющий синтаксический сахар свойства ниже
+  // [Inject]
+  // public HttpClient Http { get; set; }
 
+  // закрытое поле, содержащее данные о тропах
+  private IEnumerable<Hotel>? _hotels;
+  private Hotel? _selectedHotel;
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      // Http вызов загружает тестовые данные из json
+      _hotels = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
+
+    }
+    catch (HttpRequestException ex)
+    {
+      // обработка ответа о неудачном завершении Http вызова
+      Console.WriteLine($"There was a problem loading hotel data: {ex.Message}");
+    }
+  }
+
+  private void HandleTrailSelected(Hotel hotel)
+  {
+    _selectedHotel = hotel;
+    // StateHasChanged(); - не нужен, т.к. тип EventCallback вызывает этот метод для обрабатывающего события компонента
+  }
 }
