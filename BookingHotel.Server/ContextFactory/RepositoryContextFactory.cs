@@ -8,12 +8,15 @@ namespace BookingHotel.Server.ContextFactory
   {
     public RepositoryContext CreateDbContext(string[] args)
     {
+      // Чтение конфигурации из appsettings.json
       var configuration = new ConfigurationBuilder()
-       .SetBasePath(Directory.GetCurrentDirectory())
-       .AddJsonFile("appsettings.json")
-       .Build();
+          .SetBasePath(Directory.GetCurrentDirectory())
+          .AddJsonFile("appsettings.json")
+          .Build();
 
-      var builder = new DbContextOptionsBuilder<RepositoryContext>().UseSqlServer(configuration.GetConnectionString("sqlConnection"));
+      var builder = new DbContextOptionsBuilder<RepositoryContext>()
+          .UseSqlServer(configuration.GetConnectionString("sqlConnection"));
+
       return new RepositoryContext(builder.Options);
     }
   }
