@@ -5,16 +5,16 @@
 
 @if (_hotels == null)
 {
-  <p>Loading _hotels...</p>
+  <p>Loading hotels...</p>
 }
 else
 {
-    @* <HotelDetails Hotel="_selectedHotel"/> *@
+    <HotelDetails Hotel="_selectedHotel"/> // данные передаются в параметры компонента с помощью атрибутов элемента
     <div class="grid">
     @foreach (var hotel in _hotels)
     {
-      @* <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" /> *@
-      <HotelCard Hotel="hotel"/>
+      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
+      @* <HotelCard Hotel="hotel"/> *@
     }
     </div>
 }
@@ -43,9 +43,9 @@ else
     }
   }
 
-  private void HandleTrailSelected(Hotel hotel)
+  private void HandleHotelSelected(Hotel hotel)
   {
     _selectedHotel = hotel;
-    // StateHasChanged(); - не нужен, т.к. тип EventCallback вызывает этот метод для обрабатывающего события компонента
+     //StateHasChanged(); //- не нужен, т.к. тип EventCallback вызывает этот метод для обрабатывающего события компонента
   }
 }
