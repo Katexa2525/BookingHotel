@@ -1,5 +1,7 @@
 ﻿<!-- параметры маршрута определяются с помощью фигурных скобок в сегменте маршрута -->
 @page "/search/{SearchTerm}"
+@page "/search/{SearchTerm}/maxrating/{MaxRating:float}"
+
 @inject NavigationManager NavManager
 @inject HttpClient Http
 
@@ -18,6 +20,7 @@
 <PageTitle>Search hotels</PageTitle>
 
 <h3 class="mt-5 mb-4">Search results for "@SearchTerm"</h3>
+<SearchFilter SearchTerm="@SearchTerm" />
 
 @if(_searchResults==null)
 {
@@ -37,10 +40,14 @@ else
 @code {
   private IEnumerable<Hotel>? _searchResults;
   private Hotel? _selectedHotel;
+  private IEnumerable<Hotel>? _cachedSearchResults = Array.Empty<Hotel>(); // хранит копию неотфильтрованных результатов поиска
 
   // Параметр компонента, совпадающий с именем параметра маршрута, необходим для захвата его значения 
   [Parameter]
   public string SearchTerm { get; set; } = default!;
+
+  [Parameter]
+  public float? MaxRating { get; set; }
 
   // Когда компонент загружается, он получает все еотели из фиктивного файла данных и находит все отели, в названии или местоположении 
   // которых содержится поисковый запрос 
@@ -51,10 +58,24 @@ else
       var allHotel = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
       _searchResults = allHotel!.Where(p => p.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) || 
                                             p.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+      _cachedSearchResults = _searchResults;
     }
     catch (HttpRequestException ex)
     {
       Console.WriteLine($"There was a problem loading hotel data: {ex.Message}");
+    }
+  }
+
+  protected override void OnParametersSet()
+  {
+    if (_cachedSearchResults.Any() && MaxRating.HasValue)
+    {
+      _searchResults = _cachedSearchResults.Where(p => p.Rating <= MaxRating.Value);
+    }
+    // если кешированные результаты поиска есть, а фильтра нет, сбрасываем результаты, чтобы получить неотфильтрованные данные
+    else if(_cachedSearchResults.Any() && MaxRating is null)
+    {
+      _searchResults = _cachedSearchResults;
     }
   }
 

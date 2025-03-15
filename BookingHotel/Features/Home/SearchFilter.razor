@@ -1,0 +1,30 @@
+﻿@inject NavigationManager NavManager
+
+<!-- значение введенное пользователем привязано к полю _maxRating-->
+<div class="filters">
+  <label for="maxRating">Max Rating</label>
+  <input id="maxRating" type="number" class="form-control" @bind="_maxRating" />
+  <button class="btn btn-outline-primary" @onclick="FilterSearchResults">
+    Filter
+  </button>
+  <button class="btn btn-outline-secondary" @onclick="ClearSearchFilter">
+    Clear
+  </button>
+</div>
+
+@code {
+  private float _maxRating;
+
+  [Parameter, EditorRequired]
+  public string SearchTerm { get; set; } = default!;
+
+  // чтобы отфильтровать результат поиска, переходим ко второму маршруту, который определили для компонента
+  private void FilterSearchResults() => NavManager.NavigateTo($"/search/{SearchTerm}/maxrating/{_maxRating}");
+
+  private void ClearSearchFilter()
+  {
+    _maxRating = 0;
+    // чтобы очистить фильтр, переходим к исходному маршруту
+    NavManager.NavigateTo($"/search/{SearchTerm}");
+  }
+}
