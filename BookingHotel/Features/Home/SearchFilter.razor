@@ -2,27 +2,58 @@
 
 <!-- значение введенное пользователем привязано к полю _maxRating-->
 <div class="filters">
+  <label for="minRating">Min Rating</label>
+  <input id="mintRating" type="number" class="form-control" @bind="_minRating" />
+
   <label for="maxRating">Max Rating</label>
   <input id="maxRating" type="number" class="form-control" @bind="_maxRating" />
+
   <button class="btn btn-outline-primary" @onclick="FilterSearchResults">
     Filter
   </button>
+
   <button class="btn btn-outline-secondary" @onclick="ClearSearchFilter">
     Clear
   </button>
 </div>
 
 @code {
+  private float _minRating;
   private float _maxRating;
 
   [Parameter, EditorRequired]
   public string SearchTerm { get; set; } = default!;
 
+  [Parameter]
+  public float? MinRating { get; set; }
+  [Parameter]
+  public float? MaxRating { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    _minRating = MinRating ?? 0;
+    _maxRating = MaxRating ?? 0;
+  }
+
   // чтобы отфильтровать результат поиска, переходим ко второму маршруту, который определили для компонента
-  private void FilterSearchResults() => NavManager.NavigateTo($"/search/{SearchTerm}/maxrating/{_maxRating}");
+  //private void FilterSearchResults() => NavManager.NavigateTo($"/search/{SearchTerm}/maxrating/{_maxRating}");
+
+  private void FilterSearchResults()
+  {
+    var uriWithQuerystring = NavManager.GetUriWithQueryParameters(
+      // создаем uri, содержащий пары ключ-значение, представленные в виде строки запроса
+      new Dictionary<string, object?>()
+      {
+        [nameof(SearchPage.MinRating)] = _minRating == 0 ? null : _minRating,
+        [nameof(SearchPage.MaxRating)] = _maxRating == 0 ? null : _maxRating
+      }
+    );
+    NavManager.NavigateTo(uriWithQuerystring);
+  }
 
   private void ClearSearchFilter()
   {
+    _minRating = 0;
     _maxRating = 0;
     // чтобы очистить фильтр, переходим к исходному маршруту
     NavManager.NavigateTo($"/search/{SearchTerm}");

@@ -1,6 +1,6 @@
 ﻿<!-- параметры маршрута определяются с помощью фигурных скобок в сегменте маршрута -->
 @page "/search/{SearchTerm}"
-@page "/search/{SearchTerm}/maxrating/{MaxRating:float}"
+@* @page "/search/{SearchTerm}/maxrating/{MaxRating:float}" *@
 
 @inject NavigationManager NavManager
 @inject HttpClient Http
@@ -20,7 +20,7 @@
 <PageTitle>Search hotels</PageTitle>
 
 <h3 class="mt-5 mb-4">Search results for "@SearchTerm"</h3>
-<SearchFilter SearchTerm="@SearchTerm" />
+<SearchFilter SearchTerm="@SearchTerm" MinRating="MinRating" MaxRating="MaxRating" />
 
 @if(_searchResults==null)
 {
@@ -46,7 +46,9 @@ else
   [Parameter]
   public string SearchTerm { get; set; } = default!;
 
-  [Parameter]
+  [Parameter, SupplyParameterFromQuery]
+  public float? MinRating { get; set; }
+  [Parameter, SupplyParameterFromQuery]
   public float? MaxRating { get; set; }
 
   // Когда компонент загружается, он получает все еотели из фиктивного файла данных и находит все отели, в названии или местоположении 
@@ -66,18 +68,48 @@ else
     }
   }
 
-  protected override void OnParametersSet()
+  // protected override void OnParametersSet()
+  // {
+  //   if (_cachedSearchResults.Any() && MaxRating.HasValue)
+  //   {
+  //     _searchResults = _cachedSearchResults.Where(p => p.Rating <= MaxRating.Value);
+  //   }
+  //   // если кешированные результаты поиска есть, а фильтра нет, сбрасываем результаты, чтобы получить неотфильтрованные данные
+  //   else if(_cachedSearchResults.Any() && MaxRating is null)
+  //   {
+  //     _searchResults = _cachedSearchResults;
+  //   }
+  // }
+
+  protected override void OnParametersSet() => UpdateFilters();
+
+  private void HandleHotelSelected(Hotel hotel) => _selectedHotel = hotel;
+
+  private void UpdateFilters()
   {
-    if (_cachedSearchResults.Any() && MaxRating.HasValue)
+    // переменная будет содержать список лямбда выражений на основе имеющихся поисковых фильтров
+    var filters = new List<Func<Hotel, bool>>();
+
+    // если определeн фильтр MinRating, добавляем лямбда выражение для него в список фильтров
+    if (MinRating is not null && MinRating > 0)
     {
-      _searchResults = _cachedSearchResults.Where(p => p.Rating <= MaxRating.Value);
+      filters.Add(p => p.Rating >= MinRating);
     }
-    // если кешированные результаты поиска есть, а фильтра нет, сбрасываем результаты, чтобы получить неотфильтрованные данные
-    else if(_cachedSearchResults.Any() && MaxRating is null)
+    // если определeн фильтр MaxRating, добавляем лямбда выражение для него в список фильтров
+    if (MaxRating is not null && MaxRating > 0)
     {
+      filters.Add(p => p.Rating <= MaxRating);
+    }
+
+    if (filters.Any())
+    {
+      // при наличии фильтров, используем их и фильтруем кешированные результаты поиска
+      _searchResults = _cachedSearchResults.Where(hotel=> filters.All(filter=>filter(hotel)));
+    }
+    else
+    {
+      // иначе, используем неотфильтрованные кешированные результаты поиска  
       _searchResults = _cachedSearchResults;
     }
   }
-
-  private void HandleHotelSelected(Hotel hotel) => _selectedHotel = hotel;
 }
