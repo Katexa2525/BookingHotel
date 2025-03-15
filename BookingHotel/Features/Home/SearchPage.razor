@@ -1,9 +1,62 @@
-﻿@page "/search"
+﻿<!-- параметры маршрута определяются с помощью фигурных скобок в сегменте маршрута -->
+@page "/search/{SearchTerm}"
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<!-- цепочка навигации позволяет вернуться на главную страницу -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="/">Home</a>
+    </li>
+    <li class="breadcrumb-item active" arla-current="page">
+      Search
+    </li>
+  </ol>
+</nav>
 
 <PageTitle>Search hotels</PageTitle>
 
-<h3>Search results</h3>
+<h3 class="mt-5 mb-4">Search results for "@SearchTerm"</h3>
+
+@if(_searchResults==null)
+{
+  <p>Loading search results...</p>
+}
+else
+{
+  <HotelDetails Hotel="_selectedHotel" />
+  <div class="grid">
+    @foreach (var hotel in _searchResults)
+    {
+      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
+    }
+  </div>
+}
 
 @code {
+  private IEnumerable<Hotel>? _searchResults;
+  private Hotel? _selectedHotel;
 
+  // Параметр компонента, совпадающий с именем параметра маршрута, необходим для захвата его значения 
+  [Parameter]
+  public string SearchTerm { get; set; } = default!;
+
+  // Когда компонент загружается, он получает все еотели из фиктивного файла данных и находит все отели, в названии или местоположении 
+  // которых содержится поисковый запрос 
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      var allHotel = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
+      _searchResults = allHotel!.Where(p => p.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) || 
+                                            p.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+    }
+    catch (HttpRequestException ex)
+    {
+      Console.WriteLine($"There was a problem loading hotel data: {ex.Message}");
+    }
+  }
+
+  private void HandleHotelSelected(Hotel hotel) => _selectedHotel = hotel;
 }
