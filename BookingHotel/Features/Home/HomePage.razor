@@ -10,11 +10,12 @@
 else
 {
     <HotelDetails Hotel="_selectedHotel"/> // данные передаются в параметры компонента с помощью атрибутов элемента
+    <HotelSearch/> // компонент TrailSearch 
+
     <div class="grid">
     @foreach (var hotel in _hotels)
     {
       <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
-      @* <HotelCard Hotel="hotel"/> *@
     }
     </div>
 }

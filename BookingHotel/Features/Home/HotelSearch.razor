@@ -1,0 +1,31 @@
+﻿@inject NavigationManager NavManager
+
+<div>
+  <h1 class="display-4 text-center">Welcom to Hotels</h1>
+  <p class="lead text-center">Find the most beautiful hotels using our fast search</p>
+  <p class="mt-4">
+    <!-- метод SearchForHotel вызывается каждый раз при запуске события нажатия клавиши -->
+    <!-- директива bind="" разрешает двустороннюю привязку в Blazor. Здесь привязываю вводимый текст к полю _searchTerm -->
+    <!-- обновляем поле _searchTerm всякий раз, когда срабатывает событие oninput, по сути, при вводе нового символа-->
+    <input @onkeydown="SearchForHotel" 
+           @bind="_searchTerm"         
+           @bind:event="oninput"       
+           type="text"
+           placeholder="Search for a hotel..."
+           class="form-control form-control-lg"
+    />
+  </p>
+</div>
+
+@code {
+  private string _searchTerm;
+
+  private void SearchForHotel(KeyboardEventArgs args)
+  {
+    if (args.Key != "Enter")
+      return; // выходим, если нажатая клавиша не была клавишей Enter
+
+    // использую метод для перехода на страницу поиска программными средствами, передавая поисковый запрос, введенный пользователем
+    NavManager.NavigateTo($"/search/{_searchTerm}"); 
+  }
+}
