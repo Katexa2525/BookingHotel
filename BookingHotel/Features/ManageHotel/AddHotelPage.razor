@@ -1,0 +1,72 @@
+﻿@page "/add-hotel"
+
+<PageTitle>Add Hotel</PageTitle>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"> 
+      <a href="/"> Home </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Add Hotel
+    </li>
+  </ol>
+</nav>
+
+<h3 class="mt-5 mb-4">Add a hotel</h3>
+
+
+<!--Компонент EditForm используется для определения формы Blazor. Как минимум должны быть определены модель и действие отправки -->
+
+<EditForm Model="_hotel" OnInvalidSubmit="SubmitForm">
+
+<FormSection Title="Basic Details" HelpText="This information is used to identify the hotel..."> 
+
+    <FormFieldSet Width="col-6">
+          <label for="hotelName" class="font-weight-bold text-secondary">Name</label>
+          <InputText @bind-Value="_hotel.Name" class="form-control" id="hotelName"/>
+    </FormFieldSet>
+
+    <FormFieldSet Width="col">
+          <label for="hotelDescription" class="font-weight-bold text-secondary">Description</label>
+          <InputTextArea @bind-Value="_hotel.Description" rows="6" class="form-control" id="hotelDescription" />
+    </FormFieldSet>
+
+    <FormFieldSet Width="col-6">
+          <label for="hotelLocation" class="font-weight-bold text-secondary">Location</label>
+          <InputText @bind-Value="_hotel.Location" class="form-control" id="hotelLocation" />
+    </FormFieldSet>
+
+  </FormSection>  
+
+  <FormSection Title="Rating" HelpText="This information is rating the hotel...">
+    <FormFieldSet Width="col-3">
+      <label for="hotelRating" class="font-weight-bold text-secondary">Rating</label>
+      <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
+    </FormFieldSet>
+  </FormSection>
+
+  <div class="mt-4 mb-5">
+    <div class="row">
+      <div class="offset-4 col-8 text-right">
+        <button class="btn btn-outline-secondary" type="button" 
+                onclick="@(() => _hotel=new HotelDto())">
+          Reset
+        </button>
+        <button class="btn btn-primary" type="submit">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</EditForm>
+
+@code {
+  private HotelDto _hotel = new HotelDto();
+
+  // Метод вызывается взякий раз при вызове события OnInvalidSubmit компонента EditForm
+  private async Task SubmitForm()
+  {
+    
+  }
+}

@@ -5,6 +5,7 @@
     public string Description { get; set; } = string.Empty;
     public string MainPhoto { get; set; } = string.Empty;
     public double Rating { get; set; }
+    public string Location { get; set; } = string.Empty;
     public IEnumerable<Room> Rooms { get; set; } = Array.Empty<Room>();
     public IEnumerable<Food> Foods { get; set; } = Array.Empty<Food>();
     public IEnumerable<HotelFacility> HotelFacilities { get; set; } = Array.Empty<HotelFacility>();
