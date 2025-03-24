@@ -53,7 +53,7 @@ namespace Infrastructure
           .HasMany(h => h.Rooms)
           .WithOne(r => r.Hotel)
           .HasForeignKey(r => r.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Cascade); 
 
       modelBuilder.Entity<Room>()
           .HasMany(r => r.RoomPhotos)
@@ -97,13 +97,11 @@ namespace Infrastructure
           .HasForeignKey(r => r.TypeFoodId)
           .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
 
-      //modelBuilder.Entity<TypeFood>().HasData(
-      //    new { Id = new Guid(), Name = "Завтрак" },
-      //    new { Id = new Guid(), Name = "Полупансион" },
-      //    new { Id = new Guid(), Name = "Завтрак, обед и ужин" },
-      //    new { Id = new Guid(), Name = "Всё включено" },
-      //    new { Id = new Guid(), Name = "Без питания" }
-      //    );
+      modelBuilder.Entity<Review>()
+          .HasOne(rt => rt.Hotel)
+          .WithMany(r => r.Reviews)
+          .HasForeignKey(r => r.HotelId)
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.HasDefaultSchema("dbo");
       base.OnModelCreating(modelBuilder);
@@ -125,5 +123,6 @@ namespace Infrastructure
     public DbSet<RoomType>? RoomTypes { get; set; }
     public DbSet<Service>? Services { get; set; }
     public DbSet<TypeFood>? TypeFoods { get; set; }
+    public DbSet<Review>? Reviews { get; set; }
   }
 }
