@@ -1,13 +1,14 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
 {
-    public class RepositoryContext : DbContext
+  public class RepositoryContext : IdentityDbContext<User>
+  {
+    public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
     {
-        public RepositoryContext(DbContextOptions options) : base(options)
-        {
-        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,7 +54,7 @@ namespace Infrastructure
           .HasMany(h => h.Rooms)
           .WithOne(r => r.Hotel)
           .HasForeignKey(r => r.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Cascade); 
 
       modelBuilder.Entity<Room>()
           .HasMany(r => r.RoomPhotos)
@@ -91,24 +92,44 @@ namespace Infrastructure
           .HasForeignKey(r => r.RoomTypeId)
           .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
 
+      modelBuilder.Entity<TypeFood>()
+          .HasMany(rt => rt.Foods)
+          .WithOne(r => r.TypeFood)
+          .HasForeignKey(r => r.TypeFoodId)
+          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+
+      modelBuilder.Entity<Review>()
+          .HasOne(rt => rt.Hotel)
+          .WithMany(r => r.Reviews)
+          .HasForeignKey(r => r.HotelId)
+          .OnDelete(DeleteBehavior.Restrict);
+
+      modelBuilder.Entity<HotelUsefulInfo>()
+          .HasOne(rt => rt.Hotel)
+          .WithOne(r => r.HotelUsefulInfo)
+          .OnDelete(DeleteBehavior.Restrict);
+
       modelBuilder.HasDefaultSchema("dbo");
       base.OnModelCreating(modelBuilder);
     }
 
 
     public DbSet<Hotel>? Hotels { get; set; }
-        public DbSet<Room>? Rooms { get; set; }
-        public DbSet<Booking>? Bookings { get; set; }
-        public DbSet<Currency>? Currencies { get; set; }
-        public DbSet<Food>? Foods { get; set; }
-        public DbSet<Guest>? Guests { get; set; }
-        public DbSet<HotelFacility>? HotelFacilities { get; set; }
-        public DbSet<HotelPhoto>? HotelPhotos { get; set; }
-        public DbSet<Location>? Locations { get; set; }
-        public DbSet<Price>? Prices { get; set; }
-        public DbSet<RoomFacility>? RoomFacilities { get; set; }
-        public DbSet<RoomPhoto>? RoomPhotos { get; set; }
-        public DbSet<RoomType>? RoomTypes { get; set; }
-        public DbSet<Service>? Services { get; set; }
-      }
+    public DbSet<Room>? Rooms { get; set; }
+    public DbSet<Booking>? Bookings { get; set; }
+    public DbSet<Currency>? Currencies { get; set; }
+    public DbSet<Food>? Foods { get; set; }
+    public DbSet<Guest>? Guests { get; set; }
+    public DbSet<HotelFacility>? HotelFacilities { get; set; }
+    public DbSet<HotelPhoto>? HotelPhotos { get; set; }
+    public DbSet<Location>? Locations { get; set; }
+    public DbSet<Price>? Prices { get; set; }
+    public DbSet<RoomFacility>? RoomFacilities { get; set; }
+    public DbSet<RoomPhoto>? RoomPhotos { get; set; }
+    public DbSet<RoomType>? RoomTypes { get; set; }
+    public DbSet<Service>? Services { get; set; }
+    public DbSet<TypeFood>? TypeFoods { get; set; }
+    public DbSet<Review>? Reviews { get; set; }
+    public DbSet<HotelUsefulInfo>? HotelUsefulInfos { get; set; }
+  }
 }
