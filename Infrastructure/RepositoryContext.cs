@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
 {
-    public class RepositoryContext : DbContext
+  public class RepositoryContext : DbContext
+  {
+    public RepositoryContext(DbContextOptions options) : base(options)
     {
-        public RepositoryContext(DbContextOptions options) : base(options)
-        {
-        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -91,24 +91,39 @@ namespace Infrastructure
           .HasForeignKey(r => r.RoomTypeId)
           .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
 
+      modelBuilder.Entity<TypeFood>()
+          .HasMany(rt => rt.Foods)
+          .WithOne(r => r.TypeFood)
+          .HasForeignKey(r => r.TypeFoodId)
+          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+
+      //modelBuilder.Entity<TypeFood>().HasData(
+      //    new { Id = new Guid(), Name = "Завтрак" },
+      //    new { Id = new Guid(), Name = "Полупансион" },
+      //    new { Id = new Guid(), Name = "Завтрак, обед и ужин" },
+      //    new { Id = new Guid(), Name = "Всё включено" },
+      //    new { Id = new Guid(), Name = "Без питания" }
+      //    );
+
       modelBuilder.HasDefaultSchema("dbo");
       base.OnModelCreating(modelBuilder);
     }
 
 
     public DbSet<Hotel>? Hotels { get; set; }
-        public DbSet<Room>? Rooms { get; set; }
-        public DbSet<Booking>? Bookings { get; set; }
-        public DbSet<Currency>? Currencies { get; set; }
-        public DbSet<Food>? Foods { get; set; }
-        public DbSet<Guest>? Guests { get; set; }
-        public DbSet<HotelFacility>? HotelFacilities { get; set; }
-        public DbSet<HotelPhoto>? HotelPhotos { get; set; }
-        public DbSet<Location>? Locations { get; set; }
-        public DbSet<Price>? Prices { get; set; }
-        public DbSet<RoomFacility>? RoomFacilities { get; set; }
-        public DbSet<RoomPhoto>? RoomPhotos { get; set; }
-        public DbSet<RoomType>? RoomTypes { get; set; }
-        public DbSet<Service>? Services { get; set; }
-      }
+    public DbSet<Room>? Rooms { get; set; }
+    public DbSet<Booking>? Bookings { get; set; }
+    public DbSet<Currency>? Currencies { get; set; }
+    public DbSet<Food>? Foods { get; set; }
+    public DbSet<Guest>? Guests { get; set; }
+    public DbSet<HotelFacility>? HotelFacilities { get; set; }
+    public DbSet<HotelPhoto>? HotelPhotos { get; set; }
+    public DbSet<Location>? Locations { get; set; }
+    public DbSet<Price>? Prices { get; set; }
+    public DbSet<RoomFacility>? RoomFacilities { get; set; }
+    public DbSet<RoomPhoto>? RoomPhotos { get; set; }
+    public DbSet<RoomType>? RoomTypes { get; set; }
+    public DbSet<Service>? Services { get; set; }
+    public DbSet<TypeFood>? TypeFoods { get; set; }
+  }
 }

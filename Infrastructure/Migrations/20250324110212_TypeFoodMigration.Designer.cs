@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250324110212_TypeFoodMigration")]
+    partial class TypeFoodMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,8 +80,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
-
-                    b.HasIndex("TypeFoodId");
 
                     b.ToTable("Foods", "dbo");
                 });
@@ -353,21 +354,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Services", "dbo");
                 });
 
-            modelBuilder.Entity("Domain.Models.TypeFood", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TypeFoods", "dbo");
-                });
-
             modelBuilder.Entity("Domain.Models.Food", b =>
                 {
                     b.HasOne("Domain.Models.Hotel", "Hotel")
@@ -376,15 +362,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.TypeFood", "TypeFood")
-                        .WithMany("Foods")
-                        .HasForeignKey("TypeFoodId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Hotel");
-
-                    b.Navigation("TypeFood");
                 });
 
             modelBuilder.Entity("Domain.Models.Guest", b =>
@@ -563,11 +541,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Prices");
 
                     b.Navigation("Rooms");
-                });
-
-            modelBuilder.Entity("Domain.Models.TypeFood", b =>
-                {
-                    b.Navigation("Foods");
                 });
 #pragma warning restore 612, 618
         }
