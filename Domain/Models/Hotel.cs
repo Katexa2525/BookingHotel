@@ -23,7 +23,9 @@
     /// <summary> Местоположение рядом находящихся объектов, например, рядом аэропорт, рядом подъемник, ботанический сад в 15 км и тд </summary>
     public IEnumerable<Location> Locations { get; set; } = Array.Empty<Location>();
     public IEnumerable<Price> Prices { get; set; } = Array.Empty<Price>();
-
+    /// <summary> Отзывы по отелю </summary>
     public IEnumerable<Review> Reviews { get; set; } = Array.Empty<Review>();
+    /// <summary>Связь один-к-одному по полезной информации по отелю </summary>
+    public HotelUsefulInfo? HotelUsefulInfo { get; set; }
   }
 }
