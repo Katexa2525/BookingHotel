@@ -21,6 +21,7 @@ builder.Services.AddSingleton<IDesignTimeDbContextFactory<RepositoryContext>, Re
 
 builder.Services.AddHttpClient();
 builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureJWT(builder.Configuration);
 // Добавляем регистрацию Identity
 builder.Services.ConfigureIdentity();
 

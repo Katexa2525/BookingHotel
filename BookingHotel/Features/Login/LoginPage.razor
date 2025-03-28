@@ -1,0 +1,64 @@
+﻿@page "/login"
+
+<PageTitle>Hotel Login</PageTitle>
+
+<NavigationСhain LastChainName="Login" />
+
+<h3>Вход</h3>
+
+@if (ShowAuthError)
+{
+  <div class="alert alert-danger" role="alert">
+    <p>@Error</p>
+  </div>
+}
+<EditForm Model="_userForAuthentication" OnValidSubmit="ExecuteLogin">
+
+  <DataAnnotationsValidator />
+  <FormSectionG Title="Форма входа" HelpText="Необходимо заполнить поля для входа в систему">
+    <FormFieldSetG Width="col-6">
+      <label for="email" class="font-weight-bold text-secondary">Адрес электронной почты</label>
+      <InputText id="email" class="form-control" @bind-Value="_userForAuthentication.Email" />
+      <ValidationMessage For="@(() => _userForAuthentication.Email)" />
+    </FormFieldSetG>
+
+    <FormFieldSetG Width="col">
+      <label for="password" class="font-weight-bold text-secondary">Пароль</label>
+      <InputText type="password" id="password" class="form-control" @bind-Value="_userForAuthentication.Password" />
+      <ValidationMessage For="@(() => _userForAuthentication.Password)" />
+    </FormFieldSetG>
+
+  </FormSectionG>
+
+  <div class="row">
+    <div class="col-md-12 text-right">
+      <button type="submit" class="btn btn-success">Login</button>
+    </div>
+  </div>
+</EditForm>
+
+@code {
+  private UserForAuthenticationDto _userForAuthentication = new UserForAuthenticationDto();
+  // [Inject]
+  // public IAuthenticationService AuthenticationService { get; set; }
+  [Inject]
+  public NavigationManager NavigationManager { get; set; }
+  public bool ShowAuthError { get; set; }
+  public string Error { get; set; }
+
+  public async Task ExecuteLogin()
+  {
+    ShowAuthError = false;
+    //var result = await AuthenticationService.Login(_userForAuthentication);
+    AuthResponseDto result = new AuthResponseDto();
+    if (!result.IsAuthSuccessful)
+    {
+      Error = result.ErrorMessage;
+      ShowAuthError = true;
+    }
+    else
+    {
+      NavigationManager.NavigateTo("/");
+    }
+  }
+}
