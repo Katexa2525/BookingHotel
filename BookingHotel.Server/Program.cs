@@ -1,7 +1,10 @@
 using BookingHotel.Server.ContextFactory;
+using BookingHotel.Server.Extensions;
+using FluentValidation.AspNetCore;
 using Infrastructure;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +19,15 @@ builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer
 // Добавляем Factory для миграций
 builder.Services.AddSingleton<IDesignTimeDbContextFactory<RepositoryContext>, RepositoryContextFactory>();
 
-builder.Services.AddControllers();
+builder.Services.AddHttpClient();
+builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureJWT(builder.Configuration);
+// Добавляем регистрацию Identity
+builder.Services.ConfigureIdentity();
+
+
+//builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -38,6 +49,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

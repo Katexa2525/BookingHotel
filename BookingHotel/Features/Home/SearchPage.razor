@@ -6,16 +6,7 @@
 @inject HttpClient Http
 
 <!-- цепочка навигации позволяет вернуться на главную страницу -->
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a href="/">Home</a>
-    </li>
-    <li class="breadcrumb-item active" arla-current="page">
-      Search
-    </li>
-  </ol>
-</nav>
+<NavigationСhain LastChainName="Search"/>
 
 <PageTitle>Search hotels</PageTitle>
 
@@ -42,7 +33,7 @@ else
   private Hotel? _selectedHotel;
   private IEnumerable<Hotel>? _cachedSearchResults = Array.Empty<Hotel>(); // хранит копию неотфильтрованных результатов поиска
 
-  // Параметр компонента, совпадающий с именем параметра маршрута, необходим для захвата его значения 
+  /// <summary> Параметр компонента, совпадающий с именем параметра маршрута, необходим для захвата его значения </summary>
   [Parameter]
   public string SearchTerm { get; set; } = default!;
 

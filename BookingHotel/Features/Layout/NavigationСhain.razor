@@ -1,0 +1,18 @@
+﻿<!-- цепочка навигации позволяет вернуться на главную страницу -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="/">Home</a>
+    </li>
+    <li class="breadcrumb-item active" arla-current="page">
+      @LastChainName
+    </li>
+  </ol>
+</nav>
+
+@code {
+  /// <summary> Параметр компонента, для задания последнего имени цепочки маршрута </summary>
+  [Parameter, EditorRequired]
+  public string LastChainName { get; set; } = string.Empty;
+
+}
