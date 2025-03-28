@@ -1,7 +1,19 @@
 ﻿@page "/" // определяет маршрут, за который отвечает этот компонент HomePage
 @inject HttpClient Http // для получения экземпляров объектов из контейнера внедрения зависимостей
+@using System.Security.Claims
 
 <PageTitle>Booking Hotel</PageTitle>
+
+<!--
+<AuthorizeView>
+    <Authorized>
+        The user: @context.User.FindFirst(ClaimTypes.Name).Value is authorized
+    </Authorized>
+    <NotAuthorized>
+        The User is not authorized
+    </NotAuthorized>
+</AuthorizeView>
+-->
 
 @if (_hotels == null)
 {

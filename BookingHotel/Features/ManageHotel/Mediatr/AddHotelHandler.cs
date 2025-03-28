@@ -24,7 +24,7 @@ namespace BookingHotel.Features.ManageHotel.Mediatr
 
       if (response.IsSuccessStatusCode)
       {
-        var hotelId = await response.Content.ReadFromJsonAsync<int>(cancellationToken);
+        int hotelId = await response.Content.ReadFromJsonAsync<int>(cancellationToken);
         // если запрос был успешным, то hotelId считывается из ответа и возвращается с помощью записи AddHotelRequest.Response
         return new AddHotelRequest.Response(hotelId);
       }

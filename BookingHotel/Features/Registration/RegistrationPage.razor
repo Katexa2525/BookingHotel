@@ -1,0 +1,53 @@
+﻿@page "/registration"
+@inject NavigationManager NavManager
+
+<PageTitle>Hotel Registration</PageTitle>
+
+<NavigationСhain LastChainName="Registration" />
+
+<h3>Регистрация</h3>
+
+@if (ShowRegistrationErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        @foreach (var error in Errors)
+        {
+            <p>@error</p>
+        }
+    </div>
+}
+
+<EditForm Model="_userForRegistration" OnValidSubmit="Register" >
+    <DataAnnotationsValidator />
+
+    <FormSectionG Title="Форма регистрации" HelpText="Необходимо заполнить поля для регистрации">
+        <FormFieldSetG Width="col-6">
+            <label for="hotelName" class="font-weight-bold text-secondary">Адрес электронной почты</label>
+            <InputText id="email" class="form-control" @bind-Value="_userForRegistration.Email" />
+            <ValidationMessage For="@(() => _userForRegistration.Email)" />
+        </FormFieldSetG>
+
+        <FormFieldSetG Width="col">
+            <label for="hotelName" class="font-weight-bold text-secondary">Пароль</label>
+            <InputText type="password" id="password" class="form-control" @bind-Value="_userForRegistration.Password" />
+            <ValidationMessage For="@(() => _userForRegistration.Password)" />
+        </FormFieldSetG>
+
+        <FormFieldSetG Width="col-6">
+            <label for="hotelName" class="font-weight-bold text-secondary">Подтверждение пароля</label>
+            <InputText type="password" id="confirm" class="form-control" @bind-Value="_userForRegistration.ConfirmPassword" />
+            <ValidationMessage For="@(() => _userForRegistration.ConfirmPassword)" />
+        </FormFieldSetG>
+    </FormSectionG>
+
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button type="submit" class="btn btn-success">Register</button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+
+}

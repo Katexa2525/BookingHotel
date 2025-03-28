@@ -1,8 +1,9 @@
 using BookingHotel.Server.ContextFactory;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore;
+using BookingHotel.Server.Extensions;
 using FluentValidation.AspNetCore;
+using Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,12 @@ builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer
 
 // Добавляем Factory для миграций
 builder.Services.AddSingleton<IDesignTimeDbContextFactory<RepositoryContext>, RepositoryContextFactory>();
+
+builder.Services.AddHttpClient();
+builder.Services.ConfigureServiceManager();
+// Добавляем регистрацию Identity
+builder.Services.ConfigureIdentity();
+
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
@@ -41,6 +48,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
