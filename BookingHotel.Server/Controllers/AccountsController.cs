@@ -9,7 +9,7 @@ using System.Text;
 
 namespace BookingHotel.Server.Controllers
 {
-  [Route("api/accounts")]
+  [Route("accounts")]
   [ApiController]
   public class AccountsController : ControllerBase
   {
@@ -24,7 +24,7 @@ namespace BookingHotel.Server.Controllers
       _jwtSettings = _configuration.GetSection("JwtSettings");
     }
 
-    [HttpPost("Registration")]
+    [HttpPost("registration")]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
     {
       if (userForRegistration == null || !ModelState.IsValid)
@@ -41,7 +41,7 @@ namespace BookingHotel.Server.Controllers
       return StatusCode(201);
     }
 
-    [HttpPost("Login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthentication)
     {
       var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
