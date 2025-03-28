@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 
-namespace BookingHotel.Features.AuthProviders
+namespace Application.BussinessLogic.AuthProviders
 {
   public class AuthStateProvider : AuthenticationStateProvider
   {

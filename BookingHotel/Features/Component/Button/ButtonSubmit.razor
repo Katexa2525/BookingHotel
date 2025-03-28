@@ -1,0 +1,11 @@
+﻿<div class="row">
+  <div class="col-md-12 text-right">
+    <button type="submit" class="btn btn-success">@Text</button>
+  </div>
+</div>
+
+@code {
+  /// <summary> Параметр компонента, для задания текста кнопки </summary>
+  [Parameter, EditorRequired]
+  public string Text { get; set; } = string.Empty;
+}

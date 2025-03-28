@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
 
-namespace BookingHotel.Features.AuthProviders
+namespace Application.BussinessLogic.AuthProviders
 {
   public static class JwtParser
   {

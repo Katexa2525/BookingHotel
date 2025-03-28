@@ -1,7 +1,9 @@
 ﻿using Application.BussinessLogic.Authentication;
+using Application.BussinessLogic.AuthProviders;
 using Domain.Models;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -27,7 +29,8 @@ namespace BookingHotel.Server.Extensions
 
     public static void ConfigureServiceManager(this IServiceCollection services)
     {
-      services.AddScoped<IAuthenticationService, AuthenticationService>();
+      //services.AddScoped<IAuthenticationService, AuthenticationService>();
+      //services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
     }
 
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)

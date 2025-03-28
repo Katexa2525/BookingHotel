@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Application.BussinessLogic.AuthProviders;
 
 namespace Application.BussinessLogic.Authentication
 {
@@ -15,10 +16,12 @@ namespace Application.BussinessLogic.Authentication
     private readonly AuthenticationStateProvider _authStateProvider;
     private readonly ILocalStorageService _localStorage;
 
-    public AuthenticationService(HttpClient client)
+    public AuthenticationService(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
     {
       _client = client;
       _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+      _authStateProvider = authStateProvider;
+      _localStorage = localStorage;
     }
 
     public async Task<RegistrationResponseDto> RegisterUser(UserForRegistrationDto userForRegistration)
@@ -42,17 +45,22 @@ namespace Application.BussinessLogic.Authentication
       var authResult = await _client.PostAsync("accounts/login", bodyContent);
       var authContent = await authResult.Content.ReadAsStringAsync();
       var result = JsonSerializer.Deserialize<AuthResponseDto>(authContent, _options);
+
       if (!authResult.IsSuccessStatusCode)
         return result;
+
       await _localStorage.SetItemAsync("authToken", result.Token);
-      //((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(userForAuthentication.Email);
+
+      ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(userForAuthentication.Email);
       _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Token);
+
       return new AuthResponseDto { IsAuthSuccessful = true };
     }
+
     public async Task Logout()
     {
       await _localStorage.RemoveItemAsync("authToken");
-      //((AuthStateProvider)_authStateProvider).NotifyUserLogout();
+      ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
       _client.DefaultRequestHeaders.Authorization = null;
     }
 

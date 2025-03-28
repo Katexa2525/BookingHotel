@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace BookingHotel.Features.AuthProviders
+namespace Application.BussinessLogic.AuthProviders
 {
   /// <summary>
   /// Класс предоставит информацию о состоянии аутентификации пользователя - будь то аутентификация или нет, каковы его претензии и т. Д.

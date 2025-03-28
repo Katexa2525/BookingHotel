@@ -8,8 +8,8 @@ namespace BookingHotel.Features.Registration
   {
     private UserForRegistrationDto _userForRegistration = new UserForRegistrationDto();
 
-    //[Inject]
-    //public IAuthenticationService AuthenticationService { get; set; }
+    [Inject]
+    public IAuthenticationService AuthenticationService { get; set; }
 
     [Inject]
     public NavigationManager NavigationManager { get; set; }
@@ -19,8 +19,8 @@ namespace BookingHotel.Features.Registration
     public async Task Register()
     {
       ShowRegistrationErrors = false;
-      //RegistrationResponseDto? result = await AuthenticationService.RegisterUser(_userForRegistration);
-      RegistrationResponseDto? result = new RegistrationResponseDto();
+      RegistrationResponseDto? result = await AuthenticationService.RegisterUser(_userForRegistration);
+      //RegistrationResponseDto? result = new RegistrationResponseDto();
       if (!result.IsSuccessfulRegistration)
       {
         Errors = result.Errors;

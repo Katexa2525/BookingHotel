@@ -45,12 +45,15 @@ namespace BookingHotel.Server.Controllers
     public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthentication)
     {
       var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
+
       if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
         return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
+
       var signingCredentials = GetSigningCredentials();
       var claims = GetClaims(user);
       var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
       var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
       return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
     }
 
