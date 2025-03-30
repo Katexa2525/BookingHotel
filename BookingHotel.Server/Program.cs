@@ -20,7 +20,8 @@ builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer
 builder.Services.AddSingleton<IDesignTimeDbContextFactory<RepositoryContext>, RepositoryContextFactory>();
 
 builder.Services.AddHttpClient();
-builder.Services.ConfigureServiceManager();
+//builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureCors();
 builder.Services.ConfigureJWT(builder.Configuration);
 // ƒобавл€ем регистрацию Identity
 builder.Services.ConfigureIdentity();
@@ -28,9 +29,10 @@ builder.Services.ConfigureIdentity();
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -43,15 +45,26 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+  //app.UseSwagger();
+  //app.UseSwaggerUI();
+  // позвол€ет отлаживать код Blazor WebAssembly
+  app.UseWebAssemblyDebugging();
 }
 
 app.UseHttpsRedirection();
+
+// позвол€ет серверной части прослушивать приложение Blazor
+app.UseBlazorFrameworkFiles();
+// позвол€ет обслуживать статичекие файлы с помощью API
+app.UseStaticFiles();
+
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+// если запрос не соответствует контроллеру, выдаем файл index.html из проекта Blazor
+app.MapFallbackToFile("index.html");
 
 app.Run();
