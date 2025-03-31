@@ -1,5 +1,6 @@
 ﻿using Application.DTO.Login;
 using Application.DTO.Registration;
+using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -13,11 +14,11 @@ namespace BookingHotel.Server.Controllers
   [ApiController]
   public class AccountsController : ControllerBase
   {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;
     private readonly IConfigurationSection _jwtSettings;
 
-    public AccountsController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+    public AccountsController(UserManager<User> userManager, IConfiguration configuration)
     {
       _userManager = userManager;
       _configuration = configuration;
@@ -29,12 +30,13 @@ namespace BookingHotel.Server.Controllers
     {
       if (userForRegistration == null || !ModelState.IsValid)
         return BadRequest();
-      var user = new IdentityUser { UserName = userForRegistration.Email, Email = userForRegistration.Email };
 
-      var result = await _userManager.CreateAsync(user, userForRegistration.Password);
+      User? user = new User { UserName = userForRegistration.Email, Email = userForRegistration.Email };
+
+      IdentityResult? result = await _userManager.CreateAsync(user, userForRegistration.Password);
       if (!result.Succeeded)
       {
-        var errors = result.Errors.Select(e => e.Description);
+        IEnumerable<string>? errors = result.Errors.Select(e => e.Description);
         return BadRequest(new RegistrationResponseDto { Errors = errors });
       }
 
@@ -44,39 +46,40 @@ namespace BookingHotel.Server.Controllers
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthentication)
     {
-      var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
+      User? user = await _userManager.FindByNameAsync(userForAuthentication.Email);
 
       if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
         return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
 
-      var signingCredentials = GetSigningCredentials();
-      var claims = GetClaims(user);
-      var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-      var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+      SigningCredentials? signingCredentials = GetSigningCredentials();
+      List<Claim>? claims = GetClaims(user);
+      JwtSecurityToken? tokenOptions = GenerateTokenOptions(signingCredentials, claims);
+      string? token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
       return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
     }
 
     private SigningCredentials GetSigningCredentials()
     {
-      var key = Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]);
-      var secret = new SymmetricSecurityKey(key);
+      byte[]? key = Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]);
+      SymmetricSecurityKey? secret = new SymmetricSecurityKey(key);
 
       return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
 
     private List<Claim> GetClaims(IdentityUser user)
     {
-      var claims = new List<Claim>
-    {
+      List<Claim>? claims = new List<Claim>
+      {
         new Claim(ClaimTypes.Name, user.Email)
-    };
+      };
 
       return claims;
     }
+
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
     {
-      var tokenOptions = new JwtSecurityToken(
+      JwtSecurityToken? tokenOptions = new JwtSecurityToken(
           issuer: _jwtSettings["validIssuer"],
           audience: _jwtSettings["validAudience"],
           claims: claims,

@@ -24,19 +24,19 @@
     <FormFieldSet Width="col-6">
       <label for="email" class="font-weight-bold text-secondary">Адрес электронной почты</label>
       <InputText id="email" class="form-control" @bind-Value="_userForRegistration.Email" />
-      <ValidationMessage For="@(() => _userForRegistration.Email)" />
+      <ValidationMessage For="@(() => _userForRegistration.Email)" class="text-danger" />
     </FormFieldSet>
 
     <FormFieldSet Width="col">
       <label for="password" class="font-weight-bold text-secondary">Пароль</label>
       <InputText type="password" id="password" class="form-control" @bind-Value="_userForRegistration.Password" />
-      <ValidationMessage For="@(() => _userForRegistration.Password)" />
+      <ValidationMessage For="@(() => _userForRegistration.Password)" class="text-danger" />
     </FormFieldSet>
 
     <FormFieldSet Width="col-6">
       <label for="confirm" class="font-weight-bold text-secondary">Подтверждение пароля</label>
       <InputText type="password" id="confirm" class="form-control" @bind-Value="_userForRegistration.ConfirmPassword" />
-      <ValidationMessage For="@(() => _userForRegistration.ConfirmPassword)" />
+      <ValidationMessage For="@(() => _userForRegistration.ConfirmPassword)" class="text-danger" />
     </FormFieldSet>
   </FormSection>
 
