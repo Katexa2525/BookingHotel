@@ -19,13 +19,13 @@
     <FormFieldSet Width="col-6">
       <label for="email" class="font-weight-bold text-secondary">Адрес электронной почты</label>
       <InputText id="email" class="form-control" @bind-Value="_userForAuthentication.Email" />
-      <ValidationMessage For="@(() => _userForAuthentication.Email)" />
+      <ValidationMessage For="@(() => _userForAuthentication.Email)" class="text-danger" />
     </FormFieldSet>
 
     <FormFieldSet Width="col">
       <label for="password" class="font-weight-bold text-secondary">Пароль</label>
       <InputText type="password" id="password" class="form-control" @bind-Value="_userForAuthentication.Password" />
-      <ValidationMessage For="@(() => _userForAuthentication.Password)" />
+      <ValidationMessage For="@(() => _userForAuthentication.Password)" class="text-danger" />
     </FormFieldSet>
 
   </FormSection>
