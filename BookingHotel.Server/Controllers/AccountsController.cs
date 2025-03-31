@@ -48,8 +48,10 @@ namespace BookingHotel.Server.Controllers
     {
       User? user = await _userManager.FindByNameAsync(userForAuthentication.Email);
 
-      if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
-        return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
+      if (user == null)
+        return Unauthorized(new AuthResponseDto { ErrorMessage = $"Ошибка аутентификации. Не найден пользователь с адресом электронной почты {userForAuthentication.Email}." });
+      else if (user is not null && !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
+        return Unauthorized(new AuthResponseDto { ErrorMessage = "Ошибка аутентификации. Неверный пароль." });
 
       SigningCredentials? signingCredentials = GetSigningCredentials();
       List<Claim>? claims = GetClaims(user);
