@@ -16,6 +16,8 @@ namespace BookingHotel.Server.Extensions
     {
       var builder = services.AddIdentity<User, IdentityRole>(o =>
       {
+        //o.SignIn.RequireConfirmedPhoneNumber = true; //Требует от пользователей подтверждения своей учетной записи по электронной почте, прежде чем они смогут выполнить вход
+        o.Lockout.AllowedForNewUsers = true; // Активирует блокировку пользователя, чтобы предотвратить атаки методом перебора, направленные на пароли пользователей
         o.Password.RequireDigit = true;
         o.Password.RequireLowercase = false;
         o.Password.RequireUppercase = false;
