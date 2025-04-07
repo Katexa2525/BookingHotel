@@ -1,0 +1,19 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager NavManager
+
+<RemoteAuthenticatorView Action="@Action">
+  <LogOut>
+    @{
+      string authority = "http://localhost:8080/realms/BlazorWebApiRealm";
+      string clientId = "blazor-client";
+
+      NavManager.NavigateTo($"{authority}/logout?client_id={clientId}");
+    }
+  </LogOut>
+</RemoteAuthenticatorView>
+
+@code {
+  [Parameter] public string? Action { get; set; }
+}
+

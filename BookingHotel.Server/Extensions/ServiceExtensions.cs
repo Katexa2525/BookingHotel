@@ -67,5 +67,24 @@ namespace BookingHotel.Server.Extensions
         };
       });
     }
+
+    public static void ConfigureAuthenticationJWTKeycloak(this IServiceCollection services)
+    {
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(options =>
+              {
+                options.Authority = "http://localhost:8080/realms/BlazorWebApiRealm";
+                options.Audience = "web-api";
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                  ValidateIssuer = true,
+                  ValidateAudience = true,
+                  ValidateLifetime = true,
+                  ValidateIssuerSigningKey = true
+                };
+              });
+    }
+
   }
 }

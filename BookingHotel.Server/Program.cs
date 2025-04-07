@@ -22,7 +22,9 @@ builder.Services.AddSingleton<IDesignTimeDbContextFactory<RepositoryContext>, Re
 builder.Services.AddHttpClient();
 //builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureCors();
-builder.Services.ConfigureJWT(builder.Configuration);
+//builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.ConfigureAuthenticationJWTKeycloak();
+builder.Services.AddAuthorization();
 // Добавляем регистрацию Identity
 builder.Services.ConfigureIdentity();
 
@@ -52,6 +54,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 
 // позволяет серверной части прослушивать приложение Blazor
 app.UseBlazorFrameworkFiles();
