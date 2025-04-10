@@ -1,4 +1,4 @@
-﻿using Application.DTO.Hotel;
+﻿using Application.DTO.Hotel.Validator;
 using FluentValidation;
 
 namespace BookingHotel.Features.ManageHotel.Mediatr

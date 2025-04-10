@@ -22,5 +22,13 @@ namespace BookingHotel.Server.Controllers
       var result = await _mediator.Send(new GetAllQuery() { });
       return Ok(result);
     }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    public async Task<IActionResult> Create([FromBody] RoomCreateDto dto)
+    {
+      var result = await _mediator.Send(new CreateRoomCommand() { Dto = dto });
+      return Ok(result);
+    }
   }
 }

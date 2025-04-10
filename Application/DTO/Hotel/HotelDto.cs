@@ -8,5 +8,6 @@
     public string Location { get; set; } = string.Empty;
     public double Rating { get; set; }
     public int Star { get; set; }
+    public string? MainPhoto { get; set; }
   }
 }
