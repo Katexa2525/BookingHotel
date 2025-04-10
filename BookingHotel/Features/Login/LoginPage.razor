@@ -37,8 +37,8 @@
 @code {
   private UserForAuthenticationDto _userForAuthentication = new UserForAuthenticationDto();
 
-  [Inject]
-  public IAuthenticationService AuthenticationService { get; set; }
+  // [Inject]
+  // public IAuthenticationService AuthenticationService { get; set; }
 
   [Inject]
   public NavigationManager NavigationManager { get; set; }
@@ -48,8 +48,8 @@
   public async Task ExecuteLogin()
   {
     ShowAuthError = false;
-    var result = await AuthenticationService.Login(_userForAuthentication);
-    //AuthResponseDto result = new AuthResponseDto();
+    //var result = await AuthenticationService.Login(_userForAuthentication);
+    AuthResponseDto result = new AuthResponseDto();
     if (!result.IsAuthSuccessful)
     {
       Error = result.ErrorMessage;

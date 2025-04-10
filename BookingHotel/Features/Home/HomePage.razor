@@ -1,5 +1,10 @@
-﻿@page "/" // определяет маршрут, за который отвечает этот компонент HomePage
-@inject HttpClient Http // для получения экземпляров объектов из контейнера внедрения зависимостей
+﻿@* определяет маршрут, за который отвечает этот компонент HomePage *@
+@page "/" 
+
+@*  для получения экземпляров объектов из контейнера внедрения зависимостей *@
+@* @inject HttpClient Http *@ 
+
+@inject IHttpClientFactory ClientFactory
 @using System.Security.Claims
 
 <PageTitle>Booking Hotel</PageTitle>
@@ -46,13 +51,24 @@ else
     try
     {
       // Http вызов загружает тестовые данные из json
-      _hotels = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
+      //_hotels = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
 
+      var client = ClientFactory.CreateClient("NoAuthenticationClient");
+      _hotels = await client.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
     }
     catch (HttpRequestException ex)
     {
       // обработка ответа о неудачном завершении Http вызова
       Console.WriteLine($"There was a problem loading hotel data: {ex.Message}");
+    }
+    catch (AccessTokenNotAvailableException ex)
+    {
+      // перенаправление, если ошибка аутентификации, т.е. не аутентифицированный запрос
+      ex.Redirect(requestOptions =>
+      {
+        requestOptions.TryAddAdditionalParameter("prompt", "login");
+        requestOptions.TryAddAdditionalParameter("loginHint", "peter@contoso.com");
+      });
     }
   }
 

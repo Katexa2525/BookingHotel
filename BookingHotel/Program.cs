@@ -18,8 +18,10 @@ builder.Services.AddScoped(sp => new HttpClient
   //BaseAddress = new Uri("https://localhost:7222")
 });
 
+builder.Services.AddHttpClient("NoAuthenticationClient", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+
 builder.Services.AddHttpClient("SecureAPIClient", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
-                .AddHttpMessageHandler<AuthorizationMessageHandler>();
+                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("SecureAPIClient"));
 
@@ -38,7 +40,7 @@ builder.Services.AddAuthorizationCore();
 // регистрирую класс в в коллекцию IService 
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+//builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 //builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 
 await builder.Build().RunAsync();

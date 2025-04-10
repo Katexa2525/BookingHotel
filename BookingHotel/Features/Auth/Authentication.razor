@@ -8,7 +8,8 @@
       string authority = "http://localhost:8080/realms/BlazorWebApiRealm";
       string clientId = "blazor-client";
 
-      NavManager.NavigateTo($"{authority}/logout?client_id={clientId}");
+      //NavManager.NavigateTo($"{authority}/logout?client_id={clientId}");
+      NavManager.NavigateToLogout("authentication/logout");
     }
   </LogOut>
 </RemoteAuthenticatorView>

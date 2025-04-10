@@ -3,7 +3,8 @@
 @* @page "/search/{SearchTerm}/maxrating/{MaxRating:float}" *@
 
 @inject NavigationManager NavManager
-@inject HttpClient Http
+@* @inject HttpClient Http *@
+@inject IHttpClientFactory ClientFactory
 
 <!-- цепочка навигации позволяет вернуться на главную страницу -->
 <NavigationСhain LastChainName="Search"/>
@@ -48,7 +49,10 @@ else
   {
     try
     {
-      var allHotel = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
+      //var allHotel = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
+
+      var client = ClientFactory.CreateClient("NoAuthenticationClient");
+      var allHotel = await client.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
       _searchResults = allHotel!.Where(p => p.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) || 
                                             p.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
       _cachedSearchResults = _searchResults;
