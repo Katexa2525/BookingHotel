@@ -1,16 +1,17 @@
-﻿using Application.DTO.Hotel;
+﻿using Application.BussinessLogic.GeneralMethods;
+using Application.DTO.Hotel;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using HotelEntity = Domain.Models.Hotel;
-using RoomEntity = Domain.Models.Room;
 using FoodEntity = Domain.Models.Food;
+using HotelEntity = Domain.Models.Hotel;
 using HotelFacilityEntity = Domain.Models.HotelFacility;
 using HotelPhotoEntity = Domain.Models.HotelPhoto;
 using LocationEntity = Domain.Models.Location;
 using PriceEntity = Domain.Models.Price;
 using ReviewEntity = Domain.Models.Review;
+using RoomEntity = Domain.Models.Room;
 
 namespace Application.BussinessLogic.Hotel
 {
@@ -24,6 +25,7 @@ namespace Application.BussinessLogic.Hotel
     private readonly IRepositoryBase<LocationEntity> _repositoryLocation;
     private readonly IRepositoryBase<PriceEntity> _repositoryPrice;
     private readonly IRepositoryBase<ReviewEntity> _repositoryReview;
+    private readonly IGeneralBussinessLogic _generalBussinessLogic;
 
     private readonly IMapper _mapper;
 
@@ -34,7 +36,8 @@ namespace Application.BussinessLogic.Hotel
                                IRepositoryBase<HotelPhotoEntity> repositoryHotelPhoto,
                                IRepositoryBase<LocationEntity> repositoryLocation,
                                IRepositoryBase<PriceEntity> repositoryPrice,
-                               IRepositoryBase<ReviewEntity> repositoryReview)
+                               IRepositoryBase<ReviewEntity> repositoryReview,
+                               IGeneralBussinessLogic generalBussinessLogic)
     {
       _repositoryHotel = repositoryHotel;
       _repositoryRoom = repositoryRoom;
@@ -44,15 +47,17 @@ namespace Application.BussinessLogic.Hotel
       _repositoryLocation = repositoryLocation;
       _repositoryPrice = repositoryPrice;
       _repositoryReview = repositoryReview;
+      _generalBussinessLogic = generalBussinessLogic;
     }
 
-    public async Task<List<HotelDto>> GetAllAsync()
+    public async Task<List<HotelAllDto>> GetAllAsync()
     {
-      return await _repositoryHotel.FindAll().ProjectTo<HotelDto>(_mapper.ConfigurationProvider)
-                                             .ToListAsync();
+      return await _repositoryHotel.FindAll()
+                                   .ProjectTo<HotelAllDto>(_mapper.ConfigurationProvider)
+                                   .ToListAsync();
     }
 
-    public async Task<Guid> CreateAsync(HotelCreateDto dto) 
+    public async Task<Guid> CreateAsync(HotelCreateDto dto)
     {
       var entity = _mapper.Map<HotelEntity>(dto);
       entity.Id = Guid.NewGuid();
@@ -84,7 +89,7 @@ namespace Application.BussinessLogic.Hotel
     {
       var hotel = await _repositoryHotel.FindOneAsync(x => x.Id == hotelId);
 
-      await _repositoryRoom.DeleteRangeAsync(hotel.Rooms); 
+      await _repositoryRoom.DeleteRangeAsync(hotel.Rooms);
       await _repositoryFood.DeleteRangeAsync(hotel.Foods);
       await _repositoryHotelFacility.DeleteRangeAsync(hotel.HotelFacilities);
       await _repositoryHotelPhoto.DeleteRangeAsync(hotel.HotelPhotos);
@@ -96,6 +101,68 @@ namespace Application.BussinessLogic.Hotel
       await _repositoryRoom.SaveAsync();
     }
 
+    public async Task UpdateAsync(HotelUpdateDto dto)
+    {
+      var entity = await _repositoryHotel.FindOneAsync(x => x.Id == dto.Id);
+      if (entity == null) return;
 
+      _mapper.Map(dto, entity);
+
+      await _generalBussinessLogic.UpdateCollectionAsync(
+            entity.Prices,
+            dto.Prices,
+            _repositoryPrice,
+            (item, hotelId) => item.HotelId = hotelId,
+            price => price.Id,
+            dto => dto.Id
+            );
+
+      await _generalBussinessLogic.UpdateCollectionAsync(
+            entity.Rooms,
+            dto.Rooms,
+            _repositoryRoom,
+            (item, hotelId) => item.HotelId = hotelId,
+            room => room.Id,
+            dto => dto.Id
+            );
+
+      await _generalBussinessLogic.UpdateCollectionAsync(
+            entity.Foods,
+            dto.Foods,
+            _repositoryFood,
+            (item, hotelId) => item.HotelId = hotelId,
+            food => food.Id,
+            dto => dto.Id
+            );
+
+      await _generalBussinessLogic.UpdateCollectionAsync(
+            entity.HotelFacilities,
+            dto.HotelFacilities,
+            _repositoryHotelFacility,
+            (item, hotelId) => item.HotelId = hotelId,
+            hotelFacility => hotelFacility.Id,
+            dto => dto.Id
+            );
+
+      await _generalBussinessLogic.UpdateCollectionAsync(
+            entity.HotelPhotos,
+            dto.HotelPhotos,
+            _repositoryHotelPhoto,
+            (item, hotelId) => item.HotelId = hotelId,
+            hotelPhoto => hotelPhoto.Id,
+            dto => dto.Id
+            );
+
+      await _generalBussinessLogic.UpdateCollectionAsync(
+            entity.Locations,
+            dto.Locations,
+            _repositoryLocation,
+            (item, hotelId) => item.HotelId = hotelId,
+            location => location.Id,
+            dto => dto.Id
+            );
+
+      await _repositoryHotel.SaveAsync();
+    }
   }
 }
