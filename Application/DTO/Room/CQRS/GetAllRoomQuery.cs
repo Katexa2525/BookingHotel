@@ -2,7 +2,7 @@
 
 namespace Application.DTO.Room.CQRS
 {
-  public class GetAllQuery : IRequest<List<RoomDto>>
+  public class GetAllRoomQuery : IRequest<List<RoomAllDto>>
   {
   }
 }

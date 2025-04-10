@@ -80,7 +80,7 @@ namespace Application.BussinessLogic.Hotel
       return entityDto;
     }
 
-    public async Task<bool> DeleteAsync(Guid hotelId)
+    public async Task DeleteAsync(Guid hotelId)
     {
       var hotel = await _repositoryHotel.FindOneAsync(x => x.Id == hotelId);
 
@@ -93,7 +93,7 @@ namespace Application.BussinessLogic.Hotel
       await _repositoryReview.DeleteRangeAsync(hotel.Reviews);
 
       _repositoryHotel.Delete(hotel);
-      return true;
+      await _repositoryRoom.SaveAsync();
     }
 
 

@@ -4,10 +4,10 @@ using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using RoomEntity = Domain.Models.Room;
 using PriceEntity = Domain.Models.Price;
-using RoomPhotoEntity = Domain.Models.RoomPhoto;
+using RoomEntity = Domain.Models.Room;
 using RoomFacilityEntity = Domain.Models.RoomFacility;
+using RoomPhotoEntity = Domain.Models.RoomPhoto;
 
 
 namespace Application.BussinessLogic.Room
@@ -31,10 +31,19 @@ namespace Application.BussinessLogic.Room
       _repositoryRoomFacility = repositoryRoomFacility;
     }
 
-    public async Task<List<RoomDto>> GetAllAsync()
+    public async Task<List<RoomAllDto>> GetAllAsync()
     {
-      return await _repositoryRoom.FindAll().ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
-                                        .ToListAsync();
+      return await _repositoryRoom.FindAll()
+                                  .ProjectTo<RoomAllDto>(_mapper.ConfigurationProvider)
+                                  .ToListAsync();
+    }
+
+    public async Task<RoomDto> GetByIdAsync(Guid id)
+    {
+      var entityDto = await _repositoryRoom.FindAll()
+                           .ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
+                           .FirstOrDefaultAsync(x => x.Id == id);
+      return entityDto;
     }
 
     public async Task<Guid> CreateAsync(RoomCreateDto dto)
@@ -49,6 +58,92 @@ namespace Application.BussinessLogic.Room
         roomFacility.RoomId = entity.Id;
       await _repositoryRoom.CreateAsync(entity);
       return entity.Id;
+    }
+
+    public async Task DeleteAsync(Guid roomId)
+    {
+      var room = await _repositoryRoom.FindOneAsync(x => x.Id == roomId);
+
+      await _repositoryPrice.DeleteRangeAsync(room.Prices);
+      await _repositoryRoomPhoto.DeleteRangeAsync(room.RoomPhotos);
+      await _repositoryRoomFacility.DeleteRangeAsync(room.RoomFacilities);
+
+      _repositoryRoom.Delete(room);
+      await _repositoryRoom.SaveAsync();
+    }
+
+    public async Task UpdateAsync(RoomUpdateDto dto)
+    {
+      var entity = await _repositoryRoom.FindOneAsync(x => x.Id == dto.Id);
+      if (entity == null) return;
+
+      _mapper.Map(dto, entity);
+
+      await UpdateCollectionAsync(
+            entity.Prices,
+            dto.Prices,
+            _repositoryPrice,
+            (item, roomId) => item.RoomId = roomId,
+            photo => photo.Id,
+            dto => dto.Id
+            );
+
+      await UpdateCollectionAsync(
+            entity.RoomPhotos,
+            dto.RoomPhotos,
+            _repositoryRoomPhoto,
+            (item, roomId) => item.RoomId = roomId,
+            photo => photo.Id,
+            dto => dto.Id
+            );
+
+      await UpdateCollectionAsync(
+            entity.RoomFacilities,
+            dto.RoomFacilities,
+            _repositoryRoomFacility,
+            (item, roomId) => item.RoomId = roomId,
+            photo => photo.Id,
+            dto => dto.Id
+            );
+
+      await _repositoryRoom.SaveAsync();
+    }
+    private async Task UpdateCollectionAsync<TEntity, TDto>(
+                      IEnumerable<TEntity> existingItems,
+                      IEnumerable<TDto> updatedItems,
+                      IRepositoryBase<TEntity> repository,
+                      Action<TEntity, Guid> setParentId,
+                      Func<TEntity, Guid> getEntityId,
+                      Func<TDto, Guid> getDtoId)
+                      where TEntity : class
+    {
+      var existingItemsList = existingItems.ToList();
+
+      foreach (var updatedItem in updatedItems)
+      {
+        var updatedId = getDtoId(updatedItem);
+        var existingItem = existingItemsList.FirstOrDefault(e => getEntityId(e) == updatedId);
+
+        if (existingItem != null)
+        {
+          _mapper.Map(updatedItem, existingItem);
+          repository.Update(existingItem);
+        }
+        else
+        {
+          var newEntity = _mapper.Map<TEntity>(updatedItem);
+          setParentId(newEntity, getEntityId(existingItemsList.First()));
+          await repository.CreateAsync(newEntity);
+        }
+      }
+
+      foreach (var existingItem in existingItemsList)
+      {
+        if (!updatedItems.Any(x => getDtoId(x) == getEntityId(existingItem)))
+        {
+          repository.Delete(existingItem);
+        }
+      }
     }
   }
 }
