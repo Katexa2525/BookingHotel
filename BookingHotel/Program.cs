@@ -33,6 +33,7 @@ builder.Services.AddOidcAuthentication(options =>
   options.ProviderOptions.ClientId = "blazor-client";
   options.ProviderOptions.ResponseType = "code";
   options.ProviderOptions.DefaultScopes.Add("blazor_api_scope");
+  options.UserOptions.RoleClaim = "role";
 });
 
 //Добавляю сервис авторизации в коллекцию IService
