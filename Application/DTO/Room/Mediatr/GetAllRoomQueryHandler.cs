@@ -4,14 +4,14 @@ using MediatR;
 
 namespace Application.DTO.Room.Mediatr
 {
-  public class GetAllQueryHandler : IRequestHandler<GetAllQuery, List<RoomDto>>
+  public class GetAllRoomQueryHandler : IRequestHandler<GetAllRoomQuery, List<RoomAllDto>>
   {
     private readonly IRoomBussinessLogic _bussinessLogic;
-    public GetAllQueryHandler(IRoomBussinessLogic bussinessLogic)
+    public GetAllRoomQueryHandler(IRoomBussinessLogic bussinessLogic)
     {
       _bussinessLogic = bussinessLogic;
     }
-    public async Task<List<RoomDto>> Handle(GetAllQuery request, CancellationToken cancellationToken)
+    public async Task<List<RoomAllDto>> Handle(GetAllRoomQuery request, CancellationToken cancellationToken)
     {
       return await _bussinessLogic.GetAllAsync();
     }

@@ -15,6 +15,7 @@ namespace Application.Interfaces.Repository
     void Delete(T entity);
 
     Task SaveAsync();
+    Task DeleteRangeAsync(IEnumerable<T> entities);
   }
 
 }

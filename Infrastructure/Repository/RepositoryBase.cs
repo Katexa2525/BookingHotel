@@ -26,6 +26,11 @@ namespace Infrastructure.Repository
 
     public void Delete(T entity) => RepositoryContext.Set<T>().Remove(entity);
 
+    public async Task DeleteRangeAsync(IEnumerable<T> entities)
+    {
+      RepositoryContext.Set<T>().RemoveRange(entities);
+    }
+
     public async Task SaveAsync() => await RepositoryContext.SaveChangesAsync();
   }
 }
