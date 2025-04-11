@@ -1,5 +1,6 @@
 using Application.BussinessLogic.Authentication;
 using Application.BussinessLogic.AuthProviders;
+using Application.BussinessLogic.RoleClaim;
 using Blazored.LocalStorage;
 using BookingHotel;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -34,7 +35,7 @@ builder.Services.AddOidcAuthentication(options =>
   options.ProviderOptions.ResponseType = "code";
   options.ProviderOptions.DefaultScopes.Add("blazor_api_scope");
   options.UserOptions.RoleClaim = "role";
-});
+}).AddAccountClaimsPrincipalFactory<MultipleRoleClaimsPrincipalFactory<RemoteUserAccount>>(); ;
 
 //Добавляю сервис авторизации в коллекцию IService
 builder.Services.AddAuthorizationCore();

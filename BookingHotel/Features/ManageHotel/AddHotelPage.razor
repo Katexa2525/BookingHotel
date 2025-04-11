@@ -1,5 +1,8 @@
 ﻿@page "/add-hotel"
 @inject IMediator Mediator
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrator")]
 
 <PageTitle>Add Hotel</PageTitle>
 
