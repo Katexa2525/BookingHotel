@@ -1,13 +1,9 @@
-using Application.BussinessLogic.Authentication;
-using Application.BussinessLogic.AuthProviders;
 using Application.BussinessLogic.RoleClaim;
 using Blazored.LocalStorage;
 using BookingHotel;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

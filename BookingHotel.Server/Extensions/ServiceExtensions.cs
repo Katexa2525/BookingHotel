@@ -1,9 +1,6 @@
-﻿using Application.BussinessLogic.Authentication;
-using Application.BussinessLogic.AuthProviders;
-using Domain.Models;
+﻿using Domain.Models;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
