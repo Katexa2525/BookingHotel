@@ -19,8 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Food\CQRS\" />
-    <Folder Include="DTO\Food\Mediatr\" />
     <Folder Include="DTO\HotelFacility\CQRS\" />
     <Folder Include="DTO\HotelFacility\Mediatr\" />
     <Folder Include="DTO\HotelPhoto\CQRS\" />
