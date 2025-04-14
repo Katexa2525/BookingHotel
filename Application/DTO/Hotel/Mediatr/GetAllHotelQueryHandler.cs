@@ -3,14 +3,14 @@ using Application.DTO.Hotel.CQRS;
 using MediatR;
 namespace Application.DTO.Hotel.Mediatr
 {
-  public class GetAllQueryHandler : IRequestHandler<GetAllQuery, List<HotelDto>>
+  public class GetAllHotelQueryHandler : IRequestHandler<GetAllHotelQuery, List<HotelAllDto>>
   {
     private readonly IHotelBussinessLogic _bussinessLogic;
-    public GetAllQueryHandler(IHotelBussinessLogic bussinessLogic)
+    public GetAllHotelQueryHandler(IHotelBussinessLogic bussinessLogic)
     {
       _bussinessLogic = bussinessLogic;
     }
-    public async Task<List<HotelDto>> Handle(GetAllQuery request, CancellationToken cancellationToken)
+    public async Task<List<HotelAllDto>> Handle(GetAllHotelQuery request, CancellationToken cancellationToken)
     {
       return await _bussinessLogic.GetAllAsync();
     }

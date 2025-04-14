@@ -4,11 +4,10 @@ using Application.DTO.HotelPhoto;
 using Application.DTO.Location;
 using Application.DTO.Price;
 using Application.DTO.Room;
-using Domain.Models;
 
 namespace Application.DTO.Hotel
 {
-  public class HotelDto
+  public class HotelUpdateDto
   {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -23,6 +22,5 @@ namespace Application.DTO.Hotel
     public IEnumerable<HotelPhotoDto> HotelPhotos { get; set; }
     public IEnumerable<LocationDto> Locations { get; set; }
     public IEnumerable<PriceDto> Prices { get; set; }
-    public IEnumerable<Review> Reviews { get; set; }
   }
 }
