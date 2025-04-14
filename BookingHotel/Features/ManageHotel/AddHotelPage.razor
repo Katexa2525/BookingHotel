@@ -37,23 +37,27 @@ else if (_errorMessage is not null)
 }
 
 <!--Компонент EditForm используется для определения формы Blazor. Как минимум должны быть определены модель и действие отправки -->
-<EditForm Model="_hotel" OnInvalidSubmit="SubmitForm">
+<EditForm Model="_hotel" OnValidSubmit="SubmitForm">
+  <FluentValidationValidator/>
 
   <FormSection Title="Базовая информация" HelpText="Эта информация используется для идентификации отеля ..."> 
 
     <FormFieldSet Width="col-6">
       <label for="hotelName" class="font-weight-bold text-secondary">Наименование отеля</label>
       <InputText @bind-Value="_hotel.Name" class="form-control" id="hotelName"/>
+      <ValidationMessage For="@(() => _hotel.Name )" />
     </FormFieldSet>
 
     <FormFieldSet Width="col">
       <label for="hotelDescription" class="font-weight-bold text-secondary">Описание отеля</label>
       <InputTextArea @bind-Value="_hotel.Description" rows="6" class="form-control" id="hotelDescription" />
+      <ValidationMessage For="@(() => _hotel.Description )" />
     </FormFieldSet>
 
     <FormFieldSet Width="col-6">
       <label for="hotelLocation" class="font-weight-bold text-secondary">Расположение</label>
       <InputText @bind-Value="_hotel.Location" class="form-control" id="hotelLocation" />
+      <ValidationMessage For="@(() => _hotel.Location )" />
     </FormFieldSet>
 
   </FormSection>  

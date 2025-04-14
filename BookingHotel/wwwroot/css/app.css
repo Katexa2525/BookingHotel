@@ -66,3 +66,24 @@ a {
     column-gap: 123px;
     row-gap: 75px;
 }
+
+/*текст для класса validation-message будет красным. Этот класс используется компонентом ValidationMessage*/
+.validation-message{
+  color: red;
+}
+
+/*любой элемент input, textarea или select с классом invalid будет иметь красную рамку*/
+input.invalid,
+textarea.invalid,
+select.invalid {
+  border-color: red;
+}
+
+/*любой элемент input, textarea или select с классом valid и modified будет иметь зеленую рамку*/
+input.valid.modified,
+text.valid.modified,
+select.valid.modified {
+  border-color: green;
+}
+
+
