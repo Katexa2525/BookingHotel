@@ -18,9 +18,4 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTO\HotelFacility\CQRS\" />
-    <Folder Include="DTO\HotelFacility\Mediatr\" />
-  </ItemGroup>
-
 </Project>
