@@ -20,8 +20,8 @@
 }
 
 :root {
-    --brand: #448922;
-    --brand-hover: #5da030;
+  --brand: #2945a7; /*448922;*/
+  --brand-hover: #38bfe6; /*5da030;*/
 }
 
 body {
@@ -65,6 +65,11 @@ a {
     grid-template-columns: repeat(3, 288px);
     column-gap: 123px;
     row-gap: 75px;
+}
+
+.navbar-brand {
+  margin: 0px 0px 0px 0px; /* Внешние отступы */
+  padding: 0px; /* Внутренние отступы */
 }
 
 /*текст для класса validation-message будет красным. Этот класс используется компонентом ValidationMessage*/
