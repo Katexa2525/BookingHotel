@@ -21,8 +21,6 @@
   <ItemGroup>
     <Folder Include="DTO\HotelFacility\CQRS\" />
     <Folder Include="DTO\HotelFacility\Mediatr\" />
-    <Folder Include="DTO\RoomFacility\CQRS\" />
-    <Folder Include="DTO\RoomFacility\Mediatr\" />
   </ItemGroup>
 
 </Project>
