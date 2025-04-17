@@ -27,7 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\images\logo1.png">
+    <Content Update="wwwroot\hotels\hotel-22.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\logo2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
