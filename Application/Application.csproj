@@ -23,8 +23,6 @@
     <Folder Include="DTO\HotelFacility\Mediatr\" />
     <Folder Include="DTO\HotelPhoto\CQRS\" />
     <Folder Include="DTO\HotelPhoto\Mediatr\" />
-    <Folder Include="DTO\Location\CQRS\" />
-    <Folder Include="DTO\Location\Mediatr\" />
     <Folder Include="DTO\RoomFacility\CQRS\" />
     <Folder Include="DTO\RoomFacility\Mediatr\" />
     <Folder Include="DTO\RoomPhoto\CQRS\" />

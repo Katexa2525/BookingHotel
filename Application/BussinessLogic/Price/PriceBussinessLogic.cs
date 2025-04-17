@@ -11,9 +11,10 @@ namespace Application.BussinessLogic.Price
   {
     private readonly IRepositoryBase<PriceEntity> _repositoryPrice;
     private readonly IMapper _mapper;
-    public PriceBussinessLogic(IRepositoryBase<PriceEntity> repositoryPrice)
+    public PriceBussinessLogic(IRepositoryBase<PriceEntity> repositoryPrice, IMapper mapper)
     {
       _repositoryPrice = repositoryPrice;
+      _mapper = mapper;
     }
 
     public async Task<List<PriceDto>> GetAllAsync()

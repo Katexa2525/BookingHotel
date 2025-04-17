@@ -11,9 +11,10 @@ namespace Application.BussinessLogic.Food
   {
     private readonly IRepositoryBase<FoodEntity> _repositoryFood;
     private readonly IMapper _mapper;
-    public FoodBussinessLogic(IRepositoryBase<FoodEntity> repositoryFood)
+    public FoodBussinessLogic(IRepositoryBase<FoodEntity> repositoryFood, IMapper mapper)
     {
       _repositoryFood = repositoryFood;
+      _mapper = mapper;
     }
 
     public async Task<List<FoodDto>> GetAllAsync()

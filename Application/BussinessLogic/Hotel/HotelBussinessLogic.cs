@@ -37,7 +37,8 @@ namespace Application.BussinessLogic.Hotel
                                IRepositoryBase<LocationEntity> repositoryLocation,
                                IRepositoryBase<PriceEntity> repositoryPrice,
                                IRepositoryBase<ReviewEntity> repositoryReview,
-                               IGeneralBussinessLogic generalBussinessLogic)
+                               IGeneralBussinessLogic generalBussinessLogic,
+                               IMapper mapper)
     {
       _repositoryHotel = repositoryHotel;
       _repositoryRoom = repositoryRoom;
@@ -48,6 +49,7 @@ namespace Application.BussinessLogic.Hotel
       _repositoryPrice = repositoryPrice;
       _repositoryReview = repositoryReview;
       _generalBussinessLogic = generalBussinessLogic;
+      _mapper = mapper;
     }
 
     public async Task<List<HotelAllDto>> GetAllAsync()

@@ -26,13 +26,16 @@ namespace Application.BussinessLogic.Room
                               IRepositoryBase<PriceEntity> repositoryPrice,
                               IRepositoryBase<RoomPhotoEntity> repositoryRoomPhoto,
                               IRepositoryBase<RoomFacilityEntity> repositoryRoomFacility,
-                              IGeneralBussinessLogic generalBussinessLogic)
+                              IGeneralBussinessLogic generalBussinessLogic,
+                              IMapper mapper)
+                                              
     {
       _repositoryRoom = repositoryRoom;
       _repositoryPrice = repositoryPrice;
       _repositoryRoomPhoto = repositoryRoomPhoto;
       _repositoryRoomFacility = repositoryRoomFacility;
       _generalBussinessLogic = generalBussinessLogic;
+      _mapper = mapper;
     }
 
     public async Task<List<RoomAllDto>> GetAllAsync()
