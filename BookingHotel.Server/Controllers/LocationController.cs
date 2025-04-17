@@ -43,7 +43,7 @@ namespace BookingHotel.Server.Controllers
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(Guid id)
     {
-      var result = await _mediator.Send(new DeleteLocationCommand { FoodId = id });
+      var result = await _mediator.Send(new DeleteLocationCommand { LocationId = id });
       return NoContent();
     }
 

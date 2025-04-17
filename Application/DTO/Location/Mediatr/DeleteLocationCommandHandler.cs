@@ -13,7 +13,7 @@ namespace Application.DTO.Location.Mediatr
     }
     public async Task<Unit> Handle(DeleteLocationCommand request, CancellationToken cancellationToken)
     {
-      await _bussinessLogic.DeleteAsync(request.FoodId);
+      await _bussinessLogic.DeleteAsync(request.LocationId);
       return Unit.Value;
     }
   }

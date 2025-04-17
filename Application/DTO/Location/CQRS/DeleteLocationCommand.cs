@@ -4,6 +4,6 @@ namespace Application.DTO.Location.CQRS
 {
   public class DeleteLocationCommand : IRequest<Unit>
   {
-    public Guid FoodId { get; set; }
+    public Guid LocationId { get; set; }
   }
 }
