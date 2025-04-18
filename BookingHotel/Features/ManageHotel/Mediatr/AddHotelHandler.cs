@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.DTO.Hotel.ClientRequest;
+using MediatR;
 using System.Net.Http.Json;
 
 namespace BookingHotel.Features.ManageHotel.Mediatr
@@ -24,14 +25,15 @@ namespace BookingHotel.Features.ManageHotel.Mediatr
 
       if (response.IsSuccessStatusCode)
       {
-        int hotelId = await response.Content.ReadFromJsonAsync<int>(cancellationToken);
+        //int hotelId = await response.Content.ReadFromJsonAsync<int>(cancellationToken);
+        Guid hotelId = await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
         // если запрос был успешным, то hotelId считывается из ответа и возвращается с помощью записи AddHotelRequest.Response
         return new AddHotelRequest.Response(hotelId);
       }
       else
       {
         // если запрос не выполнен
-        return new AddHotelRequest.Response(-1);
+        return new AddHotelRequest.Response(Guid.Empty);
       }
     }
   }

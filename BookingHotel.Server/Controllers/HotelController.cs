@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingHotel.Server.Controllers
 {
   [ApiController]
-  [Route("hotel")]
+  [Route("/api/hotels")]
   public class HotelController : ControllerBase
   {
     private readonly IMediator _mediator;
+
     public HotelController(IMediator mediator)
     {
       _mediator = mediator;
@@ -23,6 +24,7 @@ namespace BookingHotel.Server.Controllers
       return Ok(result);
     }
 
+    [Route("create")]
     [HttpPost]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] HotelCreateDto dto)
