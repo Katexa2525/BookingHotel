@@ -32,8 +32,8 @@ namespace BookingHotel.Server.Extensions
         options.AddPolicy("CorsPolicy", builder =>
         builder.AllowAnyOrigin()
                .AllowAnyMethod()
-               .AllowAnyHeader()
-               .WithExposedHeaders("X-Pagination"));
+               .AllowAnyHeader());
+               //.WithExposedHeaders("X-Pagination"));
       });
 
     public static void ConfigureServiceManager(this IServiceCollection services)

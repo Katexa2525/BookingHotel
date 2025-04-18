@@ -2,6 +2,6 @@
 {
   public class Currency : BaseEntity
   {
-    public IEnumerable<Price> Prices { get; set; }
+    public ICollection<Price> Prices { get; set; }
   }
 }

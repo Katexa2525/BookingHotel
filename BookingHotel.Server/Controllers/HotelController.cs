@@ -1,12 +1,13 @@
 ﻿using Application.DTO.Hotel;
 using Application.DTO.Hotel.CQRS;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingHotel.Server.Controllers
 {
   [ApiController]
-  [Route("/api/hotels")]
+  [Route("api/hotels")]
   public class HotelController : ControllerBase
   {
     private readonly IMediator _mediator;
