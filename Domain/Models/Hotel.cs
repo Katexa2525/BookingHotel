@@ -5,11 +5,11 @@
     /// <summary> Описание отеля </summary>
     public string Description { get; set; } = string.Empty;
     /// <summary> Основное фото отеля </summary>
-    public string MainPhoto { get; set; } = string.Empty;
+    public string? MainPhoto { get; set; } = string.Empty;
     /// <summary>Рейтинг отеля </summary>
-    public double Rating { get; set; }
+    public double Rating { get; set; } = 0;
     /// <summary> Кол-во звезд отеля </summary>
-    public int Star { get; set; }
+    public int Star { get; set; } = 0;
     /// <summary> Местоположение самого отеля </summary>
     public string Location { get; set; } = string.Empty;
     /// <summary> Коллекция номеров в отеле </summary>
