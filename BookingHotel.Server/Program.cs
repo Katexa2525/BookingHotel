@@ -1,3 +1,12 @@
+using Application.BussinessLogic.Food;
+using Application.BussinessLogic.Hotel;
+using Application.BussinessLogic.HotelFacility;
+using Application.BussinessLogic.HotelPhoto;
+using Application.BussinessLogic.Location;
+using Application.BussinessLogic.Price;
+using Application.BussinessLogic.Room;
+using Application.BussinessLogic.RoomFacility;
+using Application.BussinessLogic.RoomPhoto;
 using BookingHotel.Server.ContextFactory;
 using BookingHotel.Server.Extensions;
 using BookingHotel.Server.MappingProfile;
@@ -32,8 +41,21 @@ builder.Services.ConfigureIdentity();
 builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IRoomBussinessLogic, RoomBussinessLogic>();
+builder.Services.AddScoped<IHotelBussinessLogic, HotelBussinessLogic>();
+builder.Services.AddScoped<IFoodBussinessLogic, FoodBussinessLogic>();
+builder.Services.AddScoped<IRoomPhotoBussinessLogic, RoomPhotoBussinessLogic>();
+builder.Services.AddScoped<IRoomFacilityBussinessLogic, RoomFacilityBussinessLogic>();
+builder.Services.AddScoped<IHotelPhotoBussinessLogic, HotelPhotoBussinessLogic>();
+builder.Services.AddScoped<IHotelFacilityBussinessLogic, HotelFacilityBussinessLogic>();
+builder.Services.AddScoped<ILocationBussinessLogic, LocationBussinessLogic>();
+builder.Services.AddScoped<IPriceBussinessLogic, PriceBussinessLogic>();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Load("Application")));
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
@@ -47,8 +69,8 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  //app.UseSwagger();
-  //app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
   // позволяет отлаживать код Blazor WebAssembly
   app.UseWebAssemblyDebugging();
 }
