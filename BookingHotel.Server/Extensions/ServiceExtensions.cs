@@ -1,7 +1,18 @@
 ﻿using Application.BussinessLogic.Authentication;
 using Application.BussinessLogic.AuthProviders;
+using Application.BussinessLogic.Food;
+using Application.BussinessLogic.Hotel;
+using Application.BussinessLogic.HotelFacility;
+using Application.BussinessLogic.HotelPhoto;
+using Application.BussinessLogic.Location;
+using Application.BussinessLogic.Price;
+using Application.BussinessLogic.Room;
+using Application.BussinessLogic.RoomFacility;
+using Application.BussinessLogic.RoomPhoto;
+using Application.Interfaces.Repository;
 using Domain.Models;
 using Infrastructure;
+using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +48,10 @@ namespace BookingHotel.Server.Extensions
                .WithExposedHeaders("X-Pagination"));
       });
 
+    /// <summary> Регистрация менеджера репозитория </summary>
+    public static void ConfigureRepositoryManager(this IServiceCollection services) =>
+                                  services.AddScoped<IRepositoryManager, RepositoryManager>();
+
     public static void ConfigureServiceManager(this IServiceCollection services)
     {
       //services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -65,5 +80,19 @@ namespace BookingHotel.Server.Extensions
         };
       });
     }
+
+    public static void ConfigureBussinessLogic(this IServiceCollection services)
+    {
+      services.AddScoped<IRoomBussinessLogic, RoomBussinessLogic>();
+      services.AddScoped<IHotelBussinessLogic, HotelBussinessLogic>();
+      services.AddScoped<IFoodBussinessLogic, FoodBussinessLogic>();
+      services.AddScoped<IRoomPhotoBussinessLogic, RoomPhotoBussinessLogic>();
+      services.AddScoped<IRoomFacilityBussinessLogic, RoomFacilityBussinessLogic>();
+      services.AddScoped<IHotelPhotoBussinessLogic, HotelPhotoBussinessLogic>();
+      services.AddScoped<IHotelFacilityBussinessLogic, HotelFacilityBussinessLogic>();
+      services.AddScoped<ILocationBussinessLogic, LocationBussinessLogic>();
+      services.AddScoped<IPriceBussinessLogic, PriceBussinessLogic>();
+    }
+
   }
 }

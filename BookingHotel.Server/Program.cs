@@ -44,15 +44,8 @@ builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFro
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IRoomBussinessLogic, RoomBussinessLogic>();
-builder.Services.AddScoped<IHotelBussinessLogic, HotelBussinessLogic>();
-builder.Services.AddScoped<IFoodBussinessLogic, FoodBussinessLogic>();
-builder.Services.AddScoped<IRoomPhotoBussinessLogic, RoomPhotoBussinessLogic>();
-builder.Services.AddScoped<IRoomFacilityBussinessLogic, RoomFacilityBussinessLogic>();
-builder.Services.AddScoped<IHotelPhotoBussinessLogic, HotelPhotoBussinessLogic>();
-builder.Services.AddScoped<IHotelFacilityBussinessLogic, HotelFacilityBussinessLogic>();
-builder.Services.AddScoped<ILocationBussinessLogic, LocationBussinessLogic>();
-builder.Services.AddScoped<IPriceBussinessLogic, PriceBussinessLogic>();
+// Регистрируем бизнес логику
+builder.Services.ConfigureBussinessLogic();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Load("Application")));
 

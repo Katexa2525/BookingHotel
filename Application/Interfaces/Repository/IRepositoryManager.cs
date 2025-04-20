@@ -2,7 +2,7 @@
 {
   public interface IRepositoryManager
   {
-    //IHotelRepository HotelRepository { get; }
+    IRoomRepository RoomRepository { get; }
 
     Task SaveAsync();
     void Save();

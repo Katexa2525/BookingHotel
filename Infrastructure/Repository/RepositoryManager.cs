@@ -2,7 +2,6 @@
 
 namespace Infrastructure.Repository
 {
-
     /// <summary>
     /// Класс менеджера репозитория, который создаст экземпляры пользовательских классов репозитория, а затем
     /// зарегистрирует их внутри контейнера внедрения зависимостей.После этого можно внедрить его внутри сервисов 
@@ -12,15 +11,17 @@ namespace Infrastructure.Repository
     public sealed class RepositoryManager : IRepositoryManager
   {
     private readonly RepositoryContext _repositoryContext;
-    //private readonly Lazy<IHotelRepository> _hotelRepository;
+
+    private readonly Lazy<IRoomRepository> _roomRepository;
 
     public RepositoryManager(RepositoryContext repositoryContext)
     {
       _repositoryContext = repositoryContext;
 
-      //_hotelRepository = new Lazy<IHotelRepository>(() => new HotelRepository(repositoryContext));
+      _roomRepository = new Lazy<IRoomRepository>(() => new RoomRepository(repositoryContext));
     }
-    //public IHotelRepository HotelRepository => _hotelRepository.Value;
+
+    public IRoomRepository RoomRepository => _roomRepository.Value;
 
     public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
     public void Save() => _repositoryContext.SaveChanges();
