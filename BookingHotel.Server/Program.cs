@@ -1,12 +1,3 @@
-using Application.BussinessLogic.Food;
-using Application.BussinessLogic.Hotel;
-using Application.BussinessLogic.HotelFacility;
-using Application.BussinessLogic.HotelPhoto;
-using Application.BussinessLogic.Location;
-using Application.BussinessLogic.Price;
-using Application.BussinessLogic.Room;
-using Application.BussinessLogic.RoomFacility;
-using Application.BussinessLogic.RoomPhoto;
 using BookingHotel.Server.ContextFactory;
 using BookingHotel.Server.Extensions;
 using BookingHotel.Server.MappingProfile;
@@ -35,7 +26,10 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureJWT(builder.Configuration);
 // Добавляем регистрацию Identity
 builder.Services.ConfigureIdentity();
-
+// Регистрируем репозитории
+builder.Services.ConfigureRepository();
+// Регистрируем бизнес логику
+builder.Services.ConfigureBussinessLogic();
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
@@ -43,16 +37,6 @@ builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFro
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IRoomBussinessLogic, RoomBussinessLogic>();
-builder.Services.AddScoped<IHotelBussinessLogic, HotelBussinessLogic>();
-builder.Services.AddScoped<IFoodBussinessLogic, FoodBussinessLogic>();
-builder.Services.AddScoped<IRoomPhotoBussinessLogic, RoomPhotoBussinessLogic>();
-builder.Services.AddScoped<IRoomFacilityBussinessLogic, RoomFacilityBussinessLogic>();
-builder.Services.AddScoped<IHotelPhotoBussinessLogic, HotelPhotoBussinessLogic>();
-builder.Services.AddScoped<IHotelFacilityBussinessLogic, HotelFacilityBussinessLogic>();
-builder.Services.AddScoped<ILocationBussinessLogic, LocationBussinessLogic>();
-builder.Services.AddScoped<IPriceBussinessLogic, PriceBussinessLogic>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Load("Application")));
 

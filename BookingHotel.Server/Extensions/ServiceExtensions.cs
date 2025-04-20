@@ -1,7 +1,18 @@
 ﻿using Application.BussinessLogic.Authentication;
 using Application.BussinessLogic.AuthProviders;
+using Application.BussinessLogic.Food;
+using Application.BussinessLogic.Hotel;
+using Application.BussinessLogic.HotelFacility;
+using Application.BussinessLogic.HotelPhoto;
+using Application.BussinessLogic.Location;
+using Application.BussinessLogic.Price;
+using Application.BussinessLogic.Room;
+using Application.BussinessLogic.RoomFacility;
+using Application.BussinessLogic.RoomPhoto;
+using Application.Interfaces.Repository;
 using Domain.Models;
 using Infrastructure;
+using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -65,5 +76,33 @@ namespace BookingHotel.Server.Extensions
         };
       });
     }
+
+    public static void ConfigureRepository(this IServiceCollection services)
+    {
+      services.AddScoped<IRepositoryBase<Room>, RepositoryBase<Room>>();
+      services.AddScoped<IRepositoryBase<Price>, RepositoryBase<Price>>();
+      services.AddScoped<IRepositoryBase<RoomFacility>, RepositoryBase<RoomFacility>>();
+      services.AddScoped<IRepositoryBase<RoomPhoto>, RepositoryBase<RoomPhoto>>();
+      services.AddScoped<IRepositoryBase<Food>, RepositoryBase<Food>>();
+      services.AddScoped<IRepositoryBase<Hotel>, RepositoryBase<Hotel>>();
+      services.AddScoped<IRepositoryBase<HotelFacility>, RepositoryBase<HotelFacility>>();
+      services.AddScoped<IRepositoryBase<HotelPhoto>, RepositoryBase<HotelPhoto>>();
+      services.AddScoped<IRepositoryBase<Location>, RepositoryBase<Location>>();
+      services.AddScoped<IRepositoryBase<Review>, RepositoryBase<Review>>();
+    }
+
+    public static void ConfigureBussinessLogic(this IServiceCollection services)
+    {
+      services.AddScoped<IRoomBussinessLogic, RoomBussinessLogic>();
+      services.AddScoped<IHotelBussinessLogic, HotelBussinessLogic>();
+      services.AddScoped<IFoodBussinessLogic, FoodBussinessLogic>();
+      services.AddScoped<IRoomPhotoBussinessLogic, RoomPhotoBussinessLogic>();
+      services.AddScoped<IRoomFacilityBussinessLogic, RoomFacilityBussinessLogic>();
+      services.AddScoped<IHotelPhotoBussinessLogic, HotelPhotoBussinessLogic>();
+      services.AddScoped<IHotelFacilityBussinessLogic, HotelFacilityBussinessLogic>();
+      services.AddScoped<ILocationBussinessLogic, LocationBussinessLogic>();
+      services.AddScoped<IPriceBussinessLogic, PriceBussinessLogic>();
+    }
+
   }
 }
