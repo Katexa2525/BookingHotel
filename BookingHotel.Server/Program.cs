@@ -27,7 +27,7 @@ builder.Services.ConfigureJWT(builder.Configuration);
 // Добавляем регистрацию Identity
 builder.Services.ConfigureIdentity();
 // Регистрируем репозитории
-builder.Services.ConfigureRepository();
+//builder.Services.ConfigureRepository();
 // Регистрируем бизнес логику
 builder.Services.ConfigureBussinessLogic();
 
