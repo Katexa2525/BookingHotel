@@ -1,6 +1,7 @@
 ﻿using Application.BussinessLogic.Authentication;
 using Application.BussinessLogic.AuthProviders;
 using Application.BussinessLogic.Food;
+using Application.BussinessLogic.GeneralMethods;
 using Application.BussinessLogic.Hotel;
 using Application.BussinessLogic.HotelFacility;
 using Application.BussinessLogic.HotelPhoto;
@@ -83,6 +84,7 @@ namespace BookingHotel.Server.Extensions
 
     public static void ConfigureBussinessLogic(this IServiceCollection services)
     {
+      services.AddScoped<IGeneralBussinessLogic, GeneralBussinessLogic>();
       services.AddScoped<IRoomBussinessLogic, RoomBussinessLogic>();
       services.AddScoped<IHotelBussinessLogic, HotelBussinessLogic>();
       services.AddScoped<IFoodBussinessLogic, FoodBussinessLogic>();

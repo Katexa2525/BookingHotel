@@ -17,26 +17,26 @@ namespace Application.BussinessLogic.Room
   public class RoomBussinessLogic : IRoomBussinessLogic
   {
     //private readonly IRepositoryBase<RoomEntity> _repositoryRoom;
-    private readonly IRepositoryBase<PriceEntity> _repositoryPrice;
-    private readonly IRepositoryBase<RoomPhotoEntity> _repositoryRoomPhoto;
-    private readonly IRepositoryBase<RoomFacilityEntity> _repositoryRoomFacility;
+    //private readonly IRepositoryBase<PriceEntity> _repositoryPrice;
+    //private readonly IRepositoryBase<RoomPhotoEntity> _repositoryRoomPhoto;
+    //private readonly IRepositoryBase<RoomFacilityEntity> _repositoryRoomFacility;
     private readonly IGeneralBussinessLogic _generalBussinessLogic;
     private readonly IMapper _mapper;
     private readonly IRepositoryManager _repositoryManager;
 
-    public RoomBussinessLogic(/*IRepositoryBase<RoomEntity> repositoryRoom,*/
+    public RoomBussinessLogic(/*IRepositoryBase<RoomEntity> repositoryRoom,
                               IRepositoryBase<PriceEntity> repositoryPrice,
                               IRepositoryBase<RoomPhotoEntity> repositoryRoomPhoto,
-                              IRepositoryBase<RoomFacilityEntity> repositoryRoomFacility,
+                              IRepositoryBase<RoomFacilityEntity> repositoryRoomFacility,*/
                               IGeneralBussinessLogic generalBussinessLogic,
                               IMapper mapper,
                               IRepositoryManager repositoryManager)
                                               
     {
       //_repositoryRoom = repositoryRoom;
-      _repositoryPrice = repositoryPrice;
-      _repositoryRoomPhoto = repositoryRoomPhoto;
-      _repositoryRoomFacility = repositoryRoomFacility;
+      //_repositoryPrice = repositoryPrice;
+      //_repositoryRoomPhoto = repositoryRoomPhoto;
+      //_repositoryRoomFacility = repositoryRoomFacility;
       _generalBussinessLogic = generalBussinessLogic;
       _mapper = mapper;
       _repositoryManager = repositoryManager;
@@ -61,7 +61,6 @@ namespace Application.BussinessLogic.Room
 
       var entityDto = await _repositoryManager.RoomRepository.GetByCondition(x => x.Id == id, trackChanges: true)
                            .AsQueryable().ProjectTo<RoomDto>(_mapper.ConfigurationProvider).FirstAsync();
-      ;
 
       return entityDto;
     }
@@ -88,9 +87,12 @@ namespace Application.BussinessLogic.Room
       var room = await _repositoryManager.RoomRepository.GetOneAsync(x => x.Id == roomId);
 
       //await _repositoryPrice.DeleteRangeAsync(room.Prices);
+      //await _repositoryRoomPhoto.DeleteRangeAsync(room.RoomPhotos);
+      //await _repositoryRoomFacility.DeleteRangeAsync(room.RoomFacilities);
+
       await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(room.Prices);
-      await _repositoryRoomPhoto.DeleteRangeAsync(room.RoomPhotos);
-      await _repositoryRoomFacility.DeleteRangeAsync(room.RoomFacilities);
+      await _repositoryManager.RoomPhotoRepository.DeleteEntityRangeAsync(room.RoomPhotos);
+      await _repositoryManager.RoomFacilityRepository.DeleteEntityRangeAsync(room.RoomFacilities);
 
       //_repositoryRoom.Delete(room);
       //await _repositoryRoom.SaveAsync();
@@ -110,7 +112,8 @@ namespace Application.BussinessLogic.Room
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Prices,
             dto.Prices,
-            _repositoryPrice,
+            //_repositoryPrice,
+            null,
             (item, roomId) => item.RoomId = roomId,
             price => price.Id,
             dto => dto.Id
@@ -119,7 +122,8 @@ namespace Application.BussinessLogic.Room
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.RoomPhotos,
             dto.RoomPhotos,
-            _repositoryRoomPhoto,
+            //_repositoryRoomPhoto,
+            null,
             (item, roomId) => item.RoomId = roomId,
             roomPhoto => roomPhoto.Id,
             dto => dto.Id
@@ -128,7 +132,8 @@ namespace Application.BussinessLogic.Room
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.RoomFacilities,
             dto.RoomFacilities,
-            _repositoryRoomFacility,
+            //_repositoryRoomFacility,
+            null,
             (item, roomId) => item.RoomId = roomId,
             roomFacility => roomFacility.Id,
             dto => dto.Id

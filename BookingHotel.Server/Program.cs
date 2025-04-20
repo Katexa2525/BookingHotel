@@ -44,6 +44,7 @@ builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFro
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.ConfigureRepositoryManager();
 // Регистрируем бизнес логику
 builder.Services.ConfigureBussinessLogic();
 
