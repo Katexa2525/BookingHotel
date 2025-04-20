@@ -13,15 +13,18 @@ namespace Infrastructure.Repository
     private readonly RepositoryContext _repositoryContext;
 
     private readonly Lazy<IRoomRepository> _roomRepository;
+    private readonly Lazy<IPriceRepository> _priceRepository;
 
     public RepositoryManager(RepositoryContext repositoryContext)
     {
       _repositoryContext = repositoryContext;
 
       _roomRepository = new Lazy<IRoomRepository>(() => new RoomRepository(repositoryContext));
+      _priceRepository = new Lazy<IPriceRepository>(() => new PriceRepository(repositoryContext));
     }
 
     public IRoomRepository RoomRepository => _roomRepository.Value;
+    public IPriceRepository PriceRepository => _priceRepository.Value;
 
     public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
     public void Save() => _repositoryContext.SaveChanges();
