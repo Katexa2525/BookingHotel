@@ -16,5 +16,6 @@ namespace Application.Interfaces.Repository
     public Task CreateEntityAsync(T entity);
     public void UpdateEntity(T entity);
     public void DeleteEntity(T entity);
+    public Task DeleteEntityRangeAsync(IEnumerable<T> entities);
   }
 }

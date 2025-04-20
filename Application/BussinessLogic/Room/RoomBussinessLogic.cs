@@ -87,7 +87,8 @@ namespace Application.BussinessLogic.Room
 
       var room = await _repositoryManager.RoomRepository.GetOneAsync(x => x.Id == roomId);
 
-      await _repositoryPrice.DeleteRangeAsync(room.Prices);
+      //await _repositoryPrice.DeleteRangeAsync(room.Prices);
+      await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(room.Prices);
       await _repositoryRoomPhoto.DeleteRangeAsync(room.RoomPhotos);
       await _repositoryRoomFacility.DeleteRangeAsync(room.RoomFacilities);
 

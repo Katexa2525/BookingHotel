@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Repository;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repository
@@ -32,5 +33,10 @@ namespace Infrastructure.Repository
     public async Task CreateEntityAsync(Price entity) => await CreateAsync(entity);
     public void UpdateEntity(Price entity) => Update(entity);
     public void DeleteEntity(Price entity) => Delete(entity);
+
+    public async Task DeleteEntityRangeAsync(IEnumerable<Price> entities)
+    {
+      await DeleteRangeAsync(entities);
+    }
   }
 }

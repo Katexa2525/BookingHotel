@@ -3,6 +3,7 @@
   public interface IRepositoryManager
   {
     IRoomRepository RoomRepository { get; }
+    IPriceRepository PriceRepository { get; }
 
     Task SaveAsync();
     void Save();

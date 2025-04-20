@@ -32,5 +32,9 @@ namespace Infrastructure.Repository
     public async Task CreateEntityAsync(Room entity) => await CreateAsync(entity);
     public void UpdateEntity(Room entity) => Update(entity);
     public void DeleteEntity(Room entity) => Delete(entity);
+    public async Task DeleteEntityRangeAsync(IEnumerable<Room> entities)
+    {
+      await DeleteRangeAsync(entities);
+    }
   }
 }
