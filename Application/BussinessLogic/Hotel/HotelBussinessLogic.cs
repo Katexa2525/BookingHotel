@@ -44,7 +44,7 @@ namespace Application.BussinessLogic.Hotel
         location.HotelId = entity.Id;
       foreach (var price in entity.Prices)
         price.HotelId = entity.Id;
-      //await _repositoryHotel.CreateAsync(entity);
+
       await _repositoryManager.HotelRepository.CreateEntityAsync(entity);
       await _repositoryManager.SaveAsync();
       return entity.Id;
@@ -52,7 +52,8 @@ namespace Application.BussinessLogic.Hotel
 
     public async Task<HotelDto> GetByIdAsync(Guid id)
     {
-      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges: true);
+      //var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges: true);
+      var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges: true).FirstOrDefault();
       if (hotel == null)
         return new HotelDto();
       else
@@ -61,18 +62,26 @@ namespace Application.BussinessLogic.Hotel
 
     public async Task DeleteAsync(Guid hotelId)
     {
-      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == hotelId, trackChanges: true);
-
-      //await _repositoryManager.RoomRepository.DeleteEntityRangeAsync(hotel.Rooms);
-      //await _repositoryManager.FoodRepository.DeleteEntityRangeAsync(hotel.Foods);
-      //await _repositoryManager.HotelFacilityRepository.DeleteEntityRangeAsync(hotel.HotelFacilities);
-      //await _repositoryManager.HotelPhotoRepository.DeleteEntityRangeAsync(hotel.HotelPhotos);
-      //await _repositoryManager.LocationRepository.DeleteEntityRangeAsync(hotel.Locations);
-      //await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(hotel.Prices);
-      //await _repositoryManager.ReviewRepository.DeleteEntityRangeAsync(hotel.Reviews);
+      //var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == hotelId, trackChanges: true);
+      var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == hotelId, trackChanges: false).FirstOrDefault();
 
       if (hotel is not null)
       {
+        if (hotel.Rooms is not null)
+          await _repositoryManager.RoomRepository.DeleteEntityRangeAsync(hotel.Rooms);
+        if (hotel.Foods is not null)
+          await _repositoryManager.FoodRepository.DeleteEntityRangeAsync(hotel.Foods);
+        if (hotel.HotelFacilities is not null)
+          await _repositoryManager.HotelFacilityRepository.DeleteEntityRangeAsync(hotel.HotelFacilities);
+        if (hotel.HotelPhotos is not null)
+          await _repositoryManager.HotelPhotoRepository.DeleteEntityRangeAsync(hotel.HotelPhotos);
+        if (hotel.Locations is not null)
+          await _repositoryManager.LocationRepository.DeleteEntityRangeAsync(hotel.Locations);
+        if (hotel.Prices is not null)
+          await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(hotel.Prices);
+        if (hotel.Reviews is not null)
+          await _repositoryManager.ReviewRepository.DeleteEntityRangeAsync(hotel.Reviews);
+
         _repositoryManager.HotelRepository.DeleteEntity(hotel);
         await _repositoryManager.SaveAsync();
       }

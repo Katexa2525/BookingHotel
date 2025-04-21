@@ -14,13 +14,21 @@ namespace Infrastructure.Repository
       _repositoryContext = repositoryContext;
     }
 
-    public IEnumerable<Hotel> GetAll(bool trackChanges) => FindAll(trackChanges).ToList();
+    public IEnumerable<Hotel> GetAll(bool trackChanges) => FindAll(trackChanges)
+      .Include(h => h.Locations).Include(h => h.Prices).Include(h => h.Foods).Include(h => h.HotelUsefulInfo)
+      .Include(h => h.HotelFacilities).Include(h => h.HotelPhotos).Include(h => h.Reviews).Include(h => h.Rooms)
+      .ToList();
 
-    public async Task<IEnumerable<Hotel>> GetAllAsync(bool trackChanges) => await FindAll(trackChanges).ToListAsync();
+    public async Task<IEnumerable<Hotel>> GetAllAsync(bool trackChanges) => await FindAll(trackChanges)
+      .Include(h => h.Locations).Include(h => h.Prices).Include(h => h.Foods).Include(h => h.HotelUsefulInfo)
+      .Include(h => h.HotelFacilities).Include(h => h.HotelPhotos).Include(h => h.Reviews).Include(h => h.Rooms)
+      .ToListAsync();
 
     public IEnumerable<Hotel> GetByCondition(Expression<Func<Hotel, bool>> expression, bool trackChanges)
     {
-      return FindByCondition(expression, trackChanges);
+      return FindByCondition(expression, trackChanges)
+             .Include(h=>h.Locations).Include(h => h.Prices).Include(h => h.Foods).Include(h => h.HotelUsefulInfo)
+             .Include(h => h.HotelFacilities).Include(h => h.HotelPhotos).Include(h => h.Reviews).Include(h => h.Rooms);
     }
 
     public Task<Hotel?> GetOneAsync(Expression<Func<Hotel, bool>> expression, bool trackChanges = false)
