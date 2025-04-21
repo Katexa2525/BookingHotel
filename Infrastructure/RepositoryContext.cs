@@ -1,6 +1,7 @@
 ﻿using Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Specialized;
 
 namespace Infrastructure
 {
@@ -17,25 +18,25 @@ namespace Infrastructure
           .HasOne(p => p.Room)
           .WithMany(r => r.Prices)
           .HasForeignKey(p => p.RoomId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<Price>()
           .HasOne(p => p.Hotel)
           .WithMany(h => h.Prices)
           .HasForeignKey(p => p.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict);
 
       modelBuilder.Entity<Price>()
           .HasOne(p => p.Currency)
           .WithMany()
           .HasForeignKey(p => p.CurrencyId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<Price>()
           .HasOne(p => p.RoomType)
           .WithMany(rt => rt.Prices)
           .HasForeignKey(p => p.RoomTypeId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       // Применяем каскадное удаление только для нужных внешних ключей
       modelBuilder.Entity<Booking>()
@@ -54,49 +55,57 @@ namespace Infrastructure
           .HasMany(h => h.Rooms)
           .WithOne(r => r.Hotel)
           .HasForeignKey(r => r.HotelId)
-          .OnDelete(DeleteBehavior.Cascade); 
+          .OnDelete(DeleteBehavior.Cascade);
 
       modelBuilder.Entity<Room>()
           .HasMany(r => r.RoomPhotos)
           .WithOne(rp => rp.Room)
           .HasForeignKey(rp => rp.RoomId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<Room>()
           .HasMany(r => r.RoomFacilities)
           .WithOne(rf => rf.Room)
           .HasForeignKey(rf => rf.RoomId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<HotelFacility>()
           .HasOne(hf => hf.Hotel)
           .WithMany(h => h.HotelFacilities)
           .HasForeignKey(hf => hf.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<HotelPhoto>()
           .HasOne(hp => hp.Hotel)
           .WithMany(h => h.HotelPhotos)
           .HasForeignKey(hp => hp.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<Location>()
           .HasOne(l => l.Hotel)
           .WithMany(h => h.Locations)
           .HasForeignKey(l => l.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<RoomType>()
           .HasMany(rt => rt.Rooms)
           .WithOne(r => r.RoomType)
           .HasForeignKey(r => r.RoomTypeId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<TypeFood>()
           .HasMany(rt => rt.Foods)
           .WithOne(r => r.TypeFood)
           .HasForeignKey(r => r.TypeFoodId)
-          .OnDelete(DeleteBehavior.Restrict); // Изменено на Restrict
+          .OnDelete(DeleteBehavior.Restrict);
+
+      //modelBuilder.Entity<TypeFood>().HasData(
+      //  new { Id = Guid.NewGuid(), Name = "Завтрак" }, 
+      //  new { Id = Guid.NewGuid(), Name = "Полупансион" }, 
+      //  new { Id = Guid.NewGuid(), Name = "Завтрак, обед и ужин" }, 
+      //  new { Id = Guid.NewGuid(), Name = "Всё включено" }, 
+      //  new { Id = Guid.NewGuid(), Name = "Завтрак" },
+      //  new { Id = Guid.NewGuid(), Name = "Без питания" });
 
       modelBuilder.Entity<Review>()
           .HasOne(rt => rt.Hotel)
