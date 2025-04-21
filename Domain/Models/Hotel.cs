@@ -13,18 +13,18 @@
     /// <summary> Местоположение самого отеля </summary>
     public string Location { get; set; } = string.Empty;
     /// <summary> Коллекция номеров в отеле </summary>
-    public IEnumerable<Room> Rooms { get; set; } = Array.Empty<Room>();
+    public ICollection<Room> Rooms { get; set; }
     /// <summary> Типы питания, предостовляемые отелем </summary>
-    public IEnumerable<Food> Foods { get; set; } = Array.Empty<Food>();
+    public ICollection<Food> Foods { get; set; }
     /// <summary> Удобства, предоставляемые отелем, например: wifi, парковка, трансфер и тд  </summary>
-    public IEnumerable<HotelFacility> HotelFacilities { get; set; } = Array.Empty<HotelFacility>();
+    public ICollection<HotelFacility> HotelFacilities { get; set; }
     /// <summary> Коллекция фоток отеля </summary>
-    public IEnumerable<HotelPhoto> HotelPhotos { get; set; } = Array.Empty<HotelPhoto>();
+    public ICollection<HotelPhoto> HotelPhotos { get; set; }
     /// <summary> Местоположение рядом находящихся объектов, например, рядом аэропорт, рядом подъемник, ботанический сад в 15 км и тд </summary>
-    public IEnumerable<Location> Locations { get; set; } = Array.Empty<Location>();
-    public IEnumerable<Price> Prices { get; set; } = Array.Empty<Price>();
+    public ICollection<Location> Locations { get; set; }
+    public ICollection<Price> Prices { get; set; }
     /// <summary> Отзывы по отелю </summary>
-    public IEnumerable<Review> Reviews { get; set; } = Array.Empty<Review>();
+    public ICollection<Review> Reviews { get; set; }
     /// <summary>Связь один-к-одному по полезной информации по отелю </summary>
     public HotelUsefulInfo? HotelUsefulInfo { get; set; }
   }
