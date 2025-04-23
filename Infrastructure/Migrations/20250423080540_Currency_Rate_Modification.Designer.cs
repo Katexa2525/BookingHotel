@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250423080540_Currency_Rate_Modification")]
+    partial class Currency_Rate_Modification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,36 +341,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("RoomTypeId");
 
                     b.ToTable("Prices", "dbo");
-                });
-
-            modelBuilder.Entity("Domain.Models.Rate", b =>
-                {
-                    b.Property<int>("Cur_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Cur_ID"));
-
-                    b.Property<string>("Cur_Abbreviation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Cur_OfficialRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Cur_Scale")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Cur_ID");
-
-                    b.ToTable("Rates", "dbo");
                 });
 
             modelBuilder.Entity("Domain.Models.Review", b =>
