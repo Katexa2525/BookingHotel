@@ -99,13 +99,13 @@ namespace Infrastructure
           .HasForeignKey(r => r.TypeFoodId)
           .OnDelete(DeleteBehavior.Restrict);
 
-      //modelBuilder.Entity<TypeFood>().HasData(
-      //  new { Id = Guid.NewGuid(), Name = "Завтрак" }, 
-      //  new { Id = Guid.NewGuid(), Name = "Полупансион" }, 
-      //  new { Id = Guid.NewGuid(), Name = "Завтрак, обед и ужин" }, 
-      //  new { Id = Guid.NewGuid(), Name = "Всё включено" }, 
-      //  new { Id = Guid.NewGuid(), Name = "Завтрак" },
-      //  new { Id = Guid.NewGuid(), Name = "Без питания" });
+      modelBuilder.Entity<TypeFood>().HasData(
+        new { Id = Guid.Parse("072fc618-8703-437f-9662-5ba97d0ab4f0"), Name = "Завтрак" },
+        new { Id = Guid.Parse("4d53a1ed-9613-4406-8a31-a411c934e628"), Name = "Полупансион" },
+        new { Id = Guid.Parse("b2d7509e-c5b3-4936-8deb-26e51052446f"), Name = "Завтрак, обед и ужин" },
+        new { Id = Guid.Parse("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782"), Name = "Всё включено" },
+        new { Id = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), Name = "Завтрак" },
+        new { Id = Guid.Parse("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"), Name = "Без питания" });
 
       modelBuilder.Entity<Review>()
           .HasOne(rt => rt.Hotel)
