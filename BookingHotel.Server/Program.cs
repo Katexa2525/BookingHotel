@@ -1,21 +1,10 @@
-using Application.BussinessLogic.Food;
-using Application.BussinessLogic.Hotel;
-using Application.BussinessLogic.HotelFacility;
-using Application.BussinessLogic.HotelPhoto;
-using Application.BussinessLogic.Location;
-using Application.BussinessLogic.Price;
-using Application.BussinessLogic.Room;
-using Application.BussinessLogic.RoomFacility;
-using Application.BussinessLogic.RoomPhoto;
 using BookingHotel.Server.ContextFactory;
 using BookingHotel.Server.Extensions;
 using BookingHotel.Server.MappingProfile;
 using FluentValidation.AspNetCore;
 using Infrastructure;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -159,6 +159,8 @@ namespace Infrastructure
       //установка альтернативного ключа
       modelBuilder.Entity<Currency>().HasAlternateKey(u => u.Cur_ID);
 
+      modelBuilder.Entity<Rate>().Property(o => o.Cur_OfficialRate).HasColumnType("decimal(18,2)");
+
       modelBuilder.HasDefaultSchema("dbo");
       base.OnModelCreating(modelBuilder);
     }

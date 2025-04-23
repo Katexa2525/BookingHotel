@@ -1,6 +1,4 @@
-﻿using Application.BussinessLogic.Authentication;
-using Application.BussinessLogic.AuthProviders;
-using Application.BussinessLogic.Food;
+﻿using Application.BussinessLogic.Food;
 using Application.BussinessLogic.GeneralMethods;
 using Application.BussinessLogic.Hotel;
 using Application.BussinessLogic.HotelFacility;
@@ -15,7 +13,6 @@ using Domain.Models;
 using Infrastructure;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -94,6 +91,24 @@ namespace BookingHotel.Server.Extensions
       services.AddScoped<IHotelFacilityBussinessLogic, HotelFacilityBussinessLogic>();
       services.AddScoped<ILocationBussinessLogic, LocationBussinessLogic>();
       services.AddScoped<IPriceBussinessLogic, PriceBussinessLogic>();
+    }
+
+    public static void ConfigureAuthenticationJWTKeycloak(this IServiceCollection services)
+    {
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(options =>
+              {
+                options.Authority = "http://localhost:8080/realms/BlazorWebApiRealm";
+                options.Audience = "web-api";
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                  ValidateIssuer = true,
+                  ValidateAudience = true,
+                  ValidateLifetime = true,
+                  ValidateIssuerSigningKey = true
+                };
+              });
     }
 
   }
