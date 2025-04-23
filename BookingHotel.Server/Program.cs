@@ -1,5 +1,6 @@
 using BookingHotel.Server.ContextFactory;
 using BookingHotel.Server.Extensions;
+using BookingHotel.Server.MappingProfile;
 using FluentValidation.AspNetCore;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,9 @@ builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer
 builder.Services.AddSingleton<IDesignTimeDbContextFactory<RepositoryContext>, RepositoryContextFactory>();
 
 builder.Services.AddHttpClient();
+//builder.Services.AddHttpClient( client => client.BaseAddress = new Uri("https://localhost:7222"));
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7222") });
+
 //builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureCors();
 //builder.Services.ConfigureJWT(builder.Configuration);
@@ -27,14 +31,22 @@ builder.Services.ConfigureAuthenticationJWTKeycloak();
 builder.Services.AddAuthorization();
 // ƒобавл€ем регистрацию Identity
 builder.Services.ConfigureIdentity();
-
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.ConfigureRepositoryManager();
+// –егистрируем бизнес логику
+builder.Services.ConfigureBussinessLogic();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Load("Application")));
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
@@ -47,8 +59,8 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  //app.UseSwagger();
-  //app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
   // позвол€ет отлаживать код Blazor WebAssembly
   app.UseWebAssemblyDebugging();
 }

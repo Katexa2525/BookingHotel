@@ -1,5 +1,17 @@
-﻿using Domain.Models;
+﻿using Application.BussinessLogic.Food;
+using Application.BussinessLogic.GeneralMethods;
+using Application.BussinessLogic.Hotel;
+using Application.BussinessLogic.HotelFacility;
+using Application.BussinessLogic.HotelPhoto;
+using Application.BussinessLogic.Location;
+using Application.BussinessLogic.Price;
+using Application.BussinessLogic.Room;
+using Application.BussinessLogic.RoomFacility;
+using Application.BussinessLogic.RoomPhoto;
+using Application.Interfaces.Repository;
+using Domain.Models;
 using Infrastructure;
+using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -13,8 +25,6 @@ namespace BookingHotel.Server.Extensions
     {
       var builder = services.AddIdentity<User, IdentityRole>(o =>
       {
-        //o.SignIn.RequireConfirmedPhoneNumber = true; //Требует от пользователей подтверждения своей учетной записи по электронной почте, прежде чем они смогут выполнить вход
-        o.Lockout.AllowedForNewUsers = true; // Активирует блокировку пользователя, чтобы предотвратить атаки методом перебора, направленные на пароли пользователей
         o.Password.RequireDigit = true;
         o.Password.RequireLowercase = false;
         o.Password.RequireUppercase = false;
@@ -35,6 +45,10 @@ namespace BookingHotel.Server.Extensions
                .AllowAnyHeader()
                .WithExposedHeaders("X-Pagination"));
       });
+
+    /// <summary> Регистрация менеджера репозитория </summary>
+    public static void ConfigureRepositoryManager(this IServiceCollection services) =>
+                                  services.AddScoped<IRepositoryManager, RepositoryManager>();
 
     public static void ConfigureServiceManager(this IServiceCollection services)
     {
@@ -63,6 +77,20 @@ namespace BookingHotel.Server.Extensions
           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["securityKey"]))
         };
       });
+    }
+
+    public static void ConfigureBussinessLogic(this IServiceCollection services)
+    {
+      services.AddScoped<IGeneralBussinessLogic, GeneralBussinessLogic>();
+      services.AddScoped<IRoomBussinessLogic, RoomBussinessLogic>();
+      services.AddScoped<IHotelBussinessLogic, HotelBussinessLogic>();
+      services.AddScoped<IFoodBussinessLogic, FoodBussinessLogic>();
+      services.AddScoped<IRoomPhotoBussinessLogic, RoomPhotoBussinessLogic>();
+      services.AddScoped<IRoomFacilityBussinessLogic, RoomFacilityBussinessLogic>();
+      services.AddScoped<IHotelPhotoBussinessLogic, HotelPhotoBussinessLogic>();
+      services.AddScoped<IHotelFacilityBussinessLogic, HotelFacilityBussinessLogic>();
+      services.AddScoped<ILocationBussinessLogic, LocationBussinessLogic>();
+      services.AddScoped<IPriceBussinessLogic, PriceBussinessLogic>();
     }
 
     public static void ConfigureAuthenticationJWTKeycloak(this IServiceCollection services)

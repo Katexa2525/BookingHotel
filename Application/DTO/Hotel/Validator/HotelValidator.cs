@@ -3,7 +3,7 @@
 namespace Application.DTO.Hotel.Validator
 {
     /// <summary>Класс валидации для модели HotelDto </summary>
-    public class HotelValidator : AbstractValidator<HotelDto>
+    public class HotelValidator : AbstractValidator<HotelCreateDto>
     {
         /// <summary> Конструктор класса с правилами валидации </summary>
         public HotelValidator()

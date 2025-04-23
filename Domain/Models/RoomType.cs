@@ -2,7 +2,7 @@
 {
   public class RoomType : BaseEntity
   {
-    public IEnumerable<Price> Prices { get; set; }
-    public IEnumerable<Room> Rooms { get; set; }
+    public ICollection<Price> Prices { get; set; }
+    public ICollection<Room> Rooms { get; set; }
   }
 }
