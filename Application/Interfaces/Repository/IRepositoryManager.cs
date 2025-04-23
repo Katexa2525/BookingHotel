@@ -14,6 +14,8 @@ namespace Application.Interfaces.Repository
     IHotelPhotoRepository HotelPhotoRepository { get; }
     ILocationRepository LocationRepository { get; }
     IReviewRepository ReviewRepository { get; }
+    IRoomTypeRepository RoomTypeRepository { get; }
+    ITypeFoodRepository TypeFoodRepository { get; }
 
     Task SaveAsync();
     void Save();

@@ -22,6 +22,9 @@ namespace Infrastructure.Repository
     private readonly Lazy<IHotelPhotoRepository> _hotelPhotoRepository;
     private readonly Lazy<ILocationRepository> _locationRepository;
     private readonly Lazy<IReviewRepository> _reviewRepository;
+    private readonly Lazy<IRoomTypeRepository> _roomTypeRepository;
+    private readonly Lazy<ITypeFoodRepository> _typeFoodRepository;
+    
 
     public RepositoryManager(RepositoryContext repositoryContext)
     {
@@ -37,6 +40,8 @@ namespace Infrastructure.Repository
       _hotelPhotoRepository = new Lazy<IHotelPhotoRepository>(() => new HotelPhotoRepository(repositoryContext));
       _locationRepository = new Lazy<ILocationRepository>(() => new LocationRepository(repositoryContext));
       _reviewRepository = new Lazy<IReviewRepository>(() => new ReviewRepository(repositoryContext));
+      _roomTypeRepository = new Lazy<IRoomTypeRepository>(() => new RoomTypeRepository(repositoryContext));
+      _typeFoodRepository = new Lazy<ITypeFoodRepository>(() => new TypeFoodRepository(repositoryContext));
     }
 
     public IRoomRepository RoomRepository => _roomRepository.Value;
@@ -49,6 +54,8 @@ namespace Infrastructure.Repository
     public IHotelPhotoRepository HotelPhotoRepository => _hotelPhotoRepository.Value;
     public ILocationRepository LocationRepository => _locationRepository.Value;
     public IReviewRepository ReviewRepository => _reviewRepository.Value;
+    public IRoomTypeRepository RoomTypeRepository => _roomTypeRepository.Value;
+    public ITypeFoodRepository TypeFoodRepository => _typeFoodRepository.Value;
 
     public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
     public void Save() => _repositoryContext.SaveChanges();
