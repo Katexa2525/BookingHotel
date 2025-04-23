@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250418085854_ChangeHotelModel")]
+    partial class ChangeHotelModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,75 +52,11 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Cur_Abbreviation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Cur_DateEnd")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Cur_DateStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Cur_ID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Cur_Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_NameMulti")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_Name_Bel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_Name_BelMulti")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_Name_Eng")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_Name_EngMulti")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Cur_ParentID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Cur_Periodicity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Cur_QuotName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_QuotName_Bel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_QuotName_Eng")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Cur_Scale")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Cur_ID");
 
                     b.ToTable("Currencies", "dbo");
                 });
@@ -339,36 +278,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Prices", "dbo");
                 });
 
-            modelBuilder.Entity("Domain.Models.Rate", b =>
-                {
-                    b.Property<int>("Cur_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Cur_ID"));
-
-                    b.Property<string>("Cur_Abbreviation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cur_Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Cur_OfficialRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Cur_Scale")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Cur_ID");
-
-                    b.ToTable("Rates", "dbo");
-                });
-
             modelBuilder.Entity("Domain.Models.Review", b =>
                 {
                     b.Property<Guid>("Id")
@@ -479,88 +388,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RoomTypes", "dbo");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("3ca90fe7-2be3-4d2b-893c-329e78f1795b"),
-                            Name = "Номер Стандарт"
-                        },
-                        new
-                        {
-                            Id = new Guid("68188476-48c6-48be-b4cc-f8b63b4f0b08"),
-                            Name = "Номер Делюкс"
-                        },
-                        new
-                        {
-                            Id = new Guid("109d81b2-58b8-4f48-aa96-469b1e9dd445"),
-                            Name = "Двухкомнатный Люкс"
-                        },
-                        new
-                        {
-                            Id = new Guid("91ed5eb9-d369-4788-bcdc-7bbaf1813a2a"),
-                            Name = "Номер «Восточный»"
-                        },
-                        new
-                        {
-                            Id = new Guid("32de15de-509d-46ff-8c5a-baf5cdc34405"),
-                            Name = "Президентский люкс"
-                        },
-                        new
-                        {
-                            Id = new Guid("4f9a65f2-de87-46b4-9860-e7c0262c92d9"),
-                            Name = "Улучшенные двухкомнатные апартаменты"
-                        },
-                        new
-                        {
-                            Id = new Guid("5046fcc4-fbef-49f1-b2f5-b5c64e380ea0"),
-                            Name = "Двухкомнатные апартаменты с одной спальней"
-                        },
-                        new
-                        {
-                            Id = new Guid("0282be52-3816-401e-af3f-074be089d921"),
-                            Name = "Студия"
-                        },
-                        new
-                        {
-                            Id = new Guid("0f4ef0eb-7f4d-4a8b-94c6-6d9f7e0b8c0d"),
-                            Name = "Двухкомнатный Полулюкс"
-                        },
-                        new
-                        {
-                            Id = new Guid("805175af-552e-4b6c-b3fd-5a49c3a226d8"),
-                            Name = "Трехкомнатные апартаменты с одной спальней"
-                        },
-                        new
-                        {
-                            Id = new Guid("ebf1c674-191c-4d27-ab38-aad7f7360c17"),
-                            Name = "Стандарт 3-х местный"
-                        },
-                        new
-                        {
-                            Id = new Guid("5afb6d3d-0ce3-4c34-a988-35187ffdf877"),
-                            Name = "Люкс двухкомнатный 8-ми местный"
-                        },
-                        new
-                        {
-                            Id = new Guid("072fc618-8703-437f-9662-5ba97d0ab4f0"),
-                            Name = "Полулюкс"
-                        },
-                        new
-                        {
-                            Id = new Guid("4776d7ce-cc8d-4c86-8b9d-40650651df33"),
-                            Name = "Стандарт Бизнес"
-                        },
-                        new
-                        {
-                            Id = new Guid("de0f70a9-b924-47ed-a599-295a4e8b4889"),
-                            Name = "Стандарт Бизнес (четырехместный )"
-                        },
-                        new
-                        {
-                            Id = new Guid("a19b9bbe-a941-4b3e-bb2d-07e75ed1850a"),
-                            Name = "Люкс Гранд Премиум"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Models.Service", b =>
@@ -599,38 +426,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TypeFoods", "dbo");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("072fc618-8703-437f-9662-5ba97d0ab4f0"),
-                            Name = "Завтрак"
-                        },
-                        new
-                        {
-                            Id = new Guid("4d53a1ed-9613-4406-8a31-a411c934e628"),
-                            Name = "Полупансион"
-                        },
-                        new
-                        {
-                            Id = new Guid("b2d7509e-c5b3-4936-8deb-26e51052446f"),
-                            Name = "Завтрак, обед и ужин"
-                        },
-                        new
-                        {
-                            Id = new Guid("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782"),
-                            Name = "Всё включено"
-                        },
-                        new
-                        {
-                            Id = new Guid("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"),
-                            Name = "Завтрак"
-                        },
-                        new
-                        {
-                            Id = new Guid("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"),
-                            Name = "Без питания"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Models.User", b =>

@@ -20,8 +20,8 @@
 }
 
 :root {
-    --brand: #448922;
-    --brand-hover: #5da030;
+  --brand: #2945a7; /*448922;*/
+  --brand-hover: #38bfe6; /*5da030;*/
 }
 
 body {
@@ -34,10 +34,10 @@ a {
 }
 
 .navbar {
-    border-bottom: 2px solid var(--brand);
-    background: linear-gradient(90deg, rgba(255,255,255,1) 5%, rgba(255,255,255,1) 100%),
-                url("../images/navbar-bg.jpg") no-repeat center;
-    background-size: cover;
+  /*border-bottom: 2px solid var(--brand);*/
+  /*background: linear-gradient(90deg, rgba(255,255,255,1) 5%, rgba(255,255,255,1) 100%), url("../images/navbar-bg.jpg") no-repeat center;*/
+  background: url("../images/navbar-bg.jpg") no-repeat center; /* Фоновое изображение */
+  background-size: cover; /* Растянуть изображение, чтобы оно покрывало весь элемент */
 }
 
 .btn-primary {
@@ -66,3 +66,29 @@ a {
     column-gap: 123px;
     row-gap: 75px;
 }
+
+.navbar-brand {
+  margin: 0px 0px 0px 0px; /* Внешние отступы */
+  padding: 0px; /* Внутренние отступы */
+}
+
+/*текст для класса validation-message будет красным. Этот класс используется компонентом ValidationMessage*/
+.validation-message{
+  color: red;
+}
+
+/*любой элемент input, textarea или select с классом invalid будет иметь красную рамку*/
+input.invalid,
+textarea.invalid,
+select.invalid {
+  border-color: red;
+}
+
+/*любой элемент input, textarea или select с классом valid и modified будет иметь зеленую рамку*/
+input.valid.modified,
+text.valid.modified,
+select.valid.modified {
+  border-color: green;
+}
+
+

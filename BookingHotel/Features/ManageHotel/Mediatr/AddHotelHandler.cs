@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using Application.DTO.Hotel.ClientRequest;
+using MediatR;
 using System.Net.Http.Json;
+using static System.Net.WebRequestMethods;
 
 namespace BookingHotel.Features.ManageHotel.Mediatr
 {
@@ -7,10 +9,12 @@ namespace BookingHotel.Features.ManageHotel.Mediatr
   public class AddHotelHandler : IRequestHandler<AddHotelRequest, AddHotelRequest.Response>
   {
     private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _clientFactory;
 
-    public AddHotelHandler(HttpClient httpClient)
+    public AddHotelHandler(HttpClient httpClient, IHttpClientFactory clientFactory)
     {
       _httpClient = httpClient;
+      _clientFactory = clientFactory;
     }
 
     /// <summary>Метод для обработки запроса Mediatr </summary>
@@ -20,18 +24,24 @@ namespace BookingHotel.Features.ManageHotel.Mediatr
     public async Task<AddHotelRequest.Response> Handle(AddHotelRequest request, CancellationToken cancellationToken)
     {
       // HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса
-      var response = await _httpClient.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
+      //var response = await _httpClient.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
+
+      // Защищенный HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса
+      HttpClient? client = _clientFactory.CreateClient("SecureAPIClient");
+      client.DefaultRequestHeaders.Add("Accept", "application/json");
+      var response = await client.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
 
       if (response.IsSuccessStatusCode)
       {
-        int hotelId = await response.Content.ReadFromJsonAsync<int>(cancellationToken);
+        //int hotelId = await response.Content.ReadFromJsonAsync<int>(cancellationToken);
+        Guid hotelId = await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
         // если запрос был успешным, то hotelId считывается из ответа и возвращается с помощью записи AddHotelRequest.Response
         return new AddHotelRequest.Response(hotelId);
       }
       else
       {
         // если запрос не выполнен
-        return new AddHotelRequest.Response(-1);
+        return new AddHotelRequest.Response(Guid.Empty);
       }
     }
   }

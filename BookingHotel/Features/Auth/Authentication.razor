@@ -1,0 +1,26 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager NavManager
+@inject SignOutSessionStateManager SignOutManager
+
+<RemoteAuthenticatorView Action="@Action">
+  <LogOut>
+    @{
+      // string authority = "http://localhost:8080/realms/BlazorWebApiRealm";
+      // string clientId = "blazor-client";
+      //NavManager.NavigateTo($"{authority}/logout?client_id={clientId}");
+
+      // Класс SignOutManager используется, чтобы предотвратить межсайтовые подделки запросов (CSRF) на конечной точке выхода.
+      // он задает некое состояние, которое проверяется в функции выхода компонента страницы аутентификации, прежде чем разрешить пользователю 
+      // пользователю завершить процесс выхода
+      SignOutManager.SetSignOutState();
+      NavManager.NavigateToLogout("authentication/logout");
+
+    }
+  </LogOut>
+</RemoteAuthenticatorView>
+
+@code {
+  [Parameter] public string? Action { get; set; }
+}
+

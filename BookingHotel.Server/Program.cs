@@ -12,8 +12,10 @@ using BookingHotel.Server.Extensions;
 using BookingHotel.Server.MappingProfile;
 using FluentValidation.AspNetCore;
 using Infrastructure;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,12 +32,17 @@ builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer
 builder.Services.AddSingleton<IDesignTimeDbContextFactory<RepositoryContext>, RepositoryContextFactory>();
 
 builder.Services.AddHttpClient();
+//builder.Services.AddHttpClient( client => client.BaseAddress = new Uri("https://localhost:7222"));
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7222") });
+
 //builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureCors();
-builder.Services.ConfigureJWT(builder.Configuration);
+//builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.ConfigureAuthenticationJWTKeycloak();
+builder.Services.AddAuthorization();
 // Добавляем регистрацию Identity
 builder.Services.ConfigureIdentity();
-
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
@@ -70,6 +77,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 
 // позволяет серверной части прослушивать приложение Blazor
 app.UseBlazorFrameworkFiles();
