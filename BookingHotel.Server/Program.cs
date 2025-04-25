@@ -37,8 +37,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureRepositoryManager();
 // Регистрируем бизнес логику
@@ -59,14 +59,14 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+  //app.UseSwagger();
+  //app.UseSwaggerUI();
   // позволяет отлаживать код Blazor WebAssembly
   app.UseWebAssemblyDebugging();
 }
 
 app.UseHttpsRedirection();
-app.UseCors("CorsPolicy");
+//app.UseCors("CorsPolicy");
 
 // позволяет серверной части прослушивать приложение Blazor
 app.UseBlazorFrameworkFiles();
