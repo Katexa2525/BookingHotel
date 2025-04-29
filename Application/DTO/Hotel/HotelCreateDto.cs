@@ -15,7 +15,7 @@ namespace Application.DTO.Hotel
     public string Location { get; set; } = string.Empty;
     public double Rating { get; set; }
     public int Star { get; set; }
-    public string? MainPhoto { get; set; }
+    public string? MainPhoto { get; set; } = string.Empty;
     public IEnumerable<RoomCreateDto>? Rooms { get; set; }
     public IEnumerable<FoodCreateDto>? Foods { get; set; }
     public IEnumerable<HotelFacilityCreateDto>? HotelFacilities { get; set; }

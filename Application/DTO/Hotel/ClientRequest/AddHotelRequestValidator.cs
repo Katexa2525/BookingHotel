@@ -9,7 +9,7 @@ namespace Application.DTO.Hotel.ClientRequest
     public AddHotelRequestValidator()
     {
       // Определяет HotelValidator в качестве валидатора свойства Hotel.
-      // Позволяет повторно использовать созданные нами ранее правила валидации
+      // Позволяет повторно использовать созданные ранее правила валидации
       RuleFor(p => p.Hotel).SetValidator(new HotelValidator());
     }
   }
