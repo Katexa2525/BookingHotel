@@ -124,12 +124,45 @@ else if (_errorMessage is not null)
       _submitSuccessful = false;
       return;
     }
+    if (_hotelImage is null)
+    {
+      _submitSuccessful = true;
+      ResetForm();
+      return;
+    }
+
+    await ProcessImage(response.hotelId);
+
     // создаю новый экземпляр HotelDto, который сбрасывает содержимое формы, готовя ее к вводу нового отеля
+    // _hotel = new HotelCreateDto();
+    // _errorMessage = null;
+    // _submitSuccessful = true;
+
+  }
+
+  private void ResetForm()
+  {
     _hotel = new HotelCreateDto();
-    _errorMessage = null;
-    _submitSuccessful = true;
+    _editContext = new EditContext(_hotel);
+    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
+    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+    _hotelImage = null;
   }
 
   private void LoadHotelImage(InputFileChangeEventArgs args) => _hotelImage = args.File;
+
+  private async Task ProcessImage(Guid hotelId)
+  {
+    var imageUploadResponse = await Mediator.Send(new UploadHotelImageRequest(hotelId, _hotelImage));
+
+    if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
+    {
+      _errorMessage = "Your hotel was saved, but there was a problem uploading the image.";
+      return;
+    }
+
+    _submitSuccessful = true;
+    ResetForm();
+  }
 
 }
