@@ -9,3 +9,4 @@ namespace Application.DTO.Hotel.ClientRequest
     public record Response(IEnumerable<HotelAllDto> Hotels);
   }
 }
+ 
