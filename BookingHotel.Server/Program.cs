@@ -5,6 +5,7 @@ using FluentValidation.AspNetCore;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,8 +71,14 @@ app.UseHttpsRedirection();
 
 // позволяет серверной части прослушивать приложение Blazor
 app.UseBlazorFrameworkFiles();
+
 // позволяет обслуживать статичекие файлы с помощью API
-app.UseStaticFiles();
+//app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{ 
+  FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
+  RequestPath = new Microsoft.AspNetCore.Http.PathString("/Images")
+});
 
 app.UseRouting();
 

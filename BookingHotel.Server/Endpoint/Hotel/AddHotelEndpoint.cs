@@ -1,5 +1,4 @@
-﻿using Application.DTO.Hotel;
-using Application.DTO.Hotel.ClientRequest;
+﻿using Application.DTO.Hotel.ClientRequest;
 using Application.DTO.Hotel.CQRS;
 using Ardalis.ApiEndpoints;
 using MediatR;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookingHotel.Server.Endpoint.Hotel
 {
+  /// <summary> Класс конечной точки для создания записи по новому отелю </summary>
   public class AddHotelEndpoint : BaseAsyncEndpoint.WithRequest<AddHotelRequest>.WithResponse<int>
   {
     private readonly IMediator _mediator;
