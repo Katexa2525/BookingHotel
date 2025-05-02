@@ -1,4 +1,5 @@
-﻿using Application.DTO.Hotel;
+﻿using Application.ConstMessages;
+using Application.DTO.Hotel;
 using Application.DTO.Hotel.ClientRequest;
 using Application.DTO.Hotel.CQRS;
 using Ardalis.ApiEndpoints;
@@ -7,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System.Diagnostics;
 
 namespace BookingHotel.Server.Endpoint.Hotel
 {
@@ -29,14 +31,14 @@ namespace BookingHotel.Server.Endpoint.Hotel
       HotelDto? hotel = await _mediator.Send(new GetByIdHotelQuery() { Id = hotelId });
       if (hotel is null)
       {
-        return BadRequest("Отель не существует");
+        return BadRequest(AppMessage.GetHotelByIdTextErrorMessage);
       }
 
       //Используя объект Request, пытаюсь загрузить файл, размещенный в запросе, и возвращаю сообщение "Фото не найдено", если файл не найден
       IFormFile? file = Request.Form.Files[0];
       if (file.Length == 0)
       {
-        return BadRequest("Фото отеля не найдено.");
+        return BadRequest(AppMessage.GetHotelImageTextErrorMessage);
       }
 
       //Создаю новое имя файла для загруженного изображения, безопасное для использования в приложении
@@ -53,14 +55,19 @@ namespace BookingHotel.Server.Endpoint.Hotel
       using var image = Image.Load(file.OpenReadStream());
       image.Mutate(x => x.Resize(resizeOptions));
       await image.SaveAsJpegAsync(saveLocation, cancellationToken: cancellationToken);
+      // Проверяет, есть ли у отеля, которому принадлежит изображение, уже существующее изображение
+      if (!string.IsNullOrWhiteSpace(hotel.MainPhoto))
+      {
+        // Если изображение есть, удаляем его из файловой системы
+        System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "Images", hotel.MainPhoto));
+      }
 
-      //Обновляю тропу, указав местоположение изображения тропы. Оно будет использоваться в интерфейсе для загрузки изображения
+      //Обновляю отель, указав местоположение фото отеля. Оно будет использоваться в интерфейсе для загрузки изображения
       hotel.MainPhoto = filename;
       await _mediator.Send(new UpdateHotelCommand() { Dto = _mapper.Map<HotelUpdateDto>(hotel) });
 
       return Ok(hotel.MainPhoto);
 
-      //throw new NotImplementedException();
     }
   }
 }
