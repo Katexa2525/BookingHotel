@@ -12,6 +12,7 @@ using Domain.Models;
 
 namespace BookingHotel.Server.MappingProfile
 {
+  /// <summary>Класс настройки отображения моделей для проекта  BookingHotel.Server </summary>
   public class MappingProfile : Profile
   {
     public MappingProfile() 
@@ -30,6 +31,8 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Hotel, HotelCreateDto>().ReverseMap();
       CreateMap<Hotel, HotelDto>().ReverseMap();
       CreateMap<Hotel, HotelUpdateDto>().ReverseMap();
+
+      CreateMap<HotelDto, HotelCreateDto>();
 
       // hotelFacility
       CreateMap<HotelFacility, HotelFacilityCreateDto>().ReverseMap();

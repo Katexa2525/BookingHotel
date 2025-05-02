@@ -4,6 +4,7 @@ using Application.DTO.HotelPhoto;
 using Application.DTO.Location;
 using Application.DTO.Price;
 using Application.DTO.Room;
+using Application.Enums;
 using Domain.Models;
 
 namespace Application.DTO.Hotel
@@ -16,7 +17,8 @@ namespace Application.DTO.Hotel
     public string Location { get; set; } = string.Empty;
     public double Rating { get; set; }
     public int Star { get; set; }
-    public string? MainPhoto { get; set; }
+    /// <summary> Image содержит имя файла существующего изображения отеля </summary>
+    public string? MainPhoto { get; set; } = string.Empty;
     public IEnumerable<RoomDto> Rooms { get; set; }
     public IEnumerable<FoodDto> Foods { get; set; }
     public IEnumerable<HotelFacilityDto> HotelFacilities { get; set; }
@@ -25,5 +27,8 @@ namespace Application.DTO.Hotel
     public IEnumerable<PriceDto> Prices { get; set; }
     public IEnumerable<Review> Reviews { get; set; }
     public HotelUsefulInfo? HotelUsefulInfo { get; set; }
+
+    /// <summary> ImageAction позволяет установить, какую операцию выполнить с изображением при обновлении тропы </summary>
+    public ImageAction ImageAction { get; set; }
   }
 }

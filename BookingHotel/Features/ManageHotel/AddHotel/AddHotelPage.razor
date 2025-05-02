@@ -1,12 +1,16 @@
 ﻿@page "/add-hotel"
 @inject IMediator Mediator
+@inject IMapper Mapper
 @inject HttpClient Http
+
+@using AutoMapper
 @using Application.DTO.Hotel.ClientRequest
 @using BookingHotel.Validation
 @using Microsoft.AspNetCore.Authorization
+
 @attribute [Authorize(Roles = "Administrator")]
 
-<PageTitle>Add Hotel</PageTitle>
+<PageTitle>Создание новой записи отеля</PageTitle>
 
 <NavigationСhain LastChainName="Add Hotel" />
 
@@ -14,155 +18,73 @@
 
 @if (_submitSuccessful)
 {
-  <div class="alert alert-success" role="alert">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-    fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16" />
-    <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384
-                                      7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0
-                                      1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1-1.05z" />
-    />
-    Your hotel has been submitted successfully!
-  </div>
-}
+  <SuccessAlert Message="Ваш отель был успешно создан!"/>
+} 
 else if (_errorMessage is not null)
 {
-  <div class="alert alert-danger" role="alert">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-    fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16" />
-    <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16
-                                 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647
-                                 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0
-                                 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
-    />
-    @_errorMessage
-  </div>
+  <ErrorAlert Message="@_errorMessage" />
 }
 
-<!--Компонент EditForm используется для определения формы Blazor. Как минимум должны быть определены модель и действие отправки -->
-<!--<EditForm Model="_hotel" OnValidSubmit="SubmitForm">-->
-<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
-  <FluentValidationValidator />
+<!--
+Исходный компонент EditForm заменен новым компонентом HotelForm. 
+Директива Blazor @ref используется для захвата ссылки на компонент. Она будет применяться для вызова метода ResetForm. 
+Также предоставлен обработчик OnSubmit компонента HotelForm
+-->
+<HotelForm @ref="_hotelForm" OnSubmit="SubmitNewHotel"/>
 
-  <FormSection Title="Базовая информация" HelpText="Эта информация используется для идентификации отеля ...">
-
-    <FormFieldSet Width="col-6">
-      <label for="hotelName" class="font-weight-bold text-secondary">Наименование отеля</label>
-      <InputText @bind-Value="_hotel.Name" class="form-control" id="hotelName" />
-      <ValidationMessage For="@(() => _hotel.Name )" />
-    </FormFieldSet>
-
-    <FormFieldSet Width="col">
-      <label for="hotelDescription" class="font-weight-bold text-secondary">Описание отеля</label>
-      <InputTextArea @bind-Value="_hotel.Description" rows="6" class="form-control" id="hotelDescription" />
-      <ValidationMessage For="@(() => _hotel.Description )" />
-    </FormFieldSet>
-
-    <FormFieldSet Width="col-6">
-      <label for="hotelLocation" class="font-weight-bold text-secondary">Расположение</label>
-      <InputText @bind-Value="_hotel.Location" class="form-control" id="hotelLocation" />
-      <ValidationMessage For="@(() => _hotel.Location )" />
-    </FormFieldSet>
-
-    <FormFieldSet Width="col-3">
-      <label for="hotelRating" class="font-weight-bold text-secondary">Рейтинг</label>
-      <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
-    </FormFieldSet>
-
-    <FormFieldSet Width="col-4">
-      <label for="hotelStar" class="font-weight-bold text-secondary">Количество звёзд</label>
-      <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" />
-    </FormFieldSet>
-
-    <FormFieldSet Width="col">
-      <label for="hotelImage" class="font-weight-bold text-secondary">Фото отеля</label>
-      <InputFile OnChange="LoadHotelImage" class="form-control-file" id="hotelImage" accept=".png,.jpg,.jpeg" />
-    </FormFieldSet>
-
-  </FormSection>
-
-  <div class="mt-4 mb-5">
-    <div class="row">
-      <div class="offset-4 col-8 text-right">
-        <button class="btn btn-outline-secondary" type="button"
-        onclick="@(() => _hotel=new HotelCreateDto())">
-          Reset
-        </button>
-        <button class="btn btn-primary" type="submit">
-          Submit
-        </button>
-      </div>
-    </div>
-  </div>
-
-</EditForm>
 
 @code {
-  private EditContext _editContext = default!;
-  private HotelCreateDto _hotel = new HotelCreateDto();
   private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private const string _textErrorMessage = "Возникла проблема с сохранением отеля!";
-  private IBrowserFile? _hotelImage;
+  private const string _textErrorMessage_1 = "Возникла проблема с сохранением отеля!";
+  private const string _textErrorMessage_2 = "Ваш отель был сохранен, но была проблема с загрузкой изображения!";
+  private HotelForm _hotelForm = default!;
 
-  protected override void OnInitialized()
+  private async Task SubmitNewHotel(HotelDto hotelDto, IBrowserFile? image)
   {
-    // создаю новый EditContext для модели отеля
-    _editContext = new EditContext(_hotel);
-    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
-    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-  }
-
-  // Метод вызывается взякий раз при вызове события OnInvalidSubmit компонента EditForm
-  private async Task SubmitForm()
-  {
-    // Mediatr используется для отправки AddHotelRequest и ожидания ответа
-    var response = await Mediator.Send(new AddHotelRequest(_hotel));
-    //if (response.HotelId == -1) // проверка на ошибку
-    if (response.hotelId == Guid.Empty) // проверка на ошибку
+    var response = await Mediator.Send(new AddHotelRequest(Mapper.Map<HotelCreateDto>(hotelDto)));
+    if (response.hotelId == Guid.Empty)
     {
-      _errorMessage = _textErrorMessage;
       _submitSuccessful = false;
+      _errorMessage = _textErrorMessage_1;
+      // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить
+      // пользовательский интерфейс сообщением об ошибке
+      StateHasChanged();
       return;
     }
-    if (_hotelImage is null)
+
+    if (image is null)
     {
       _submitSuccessful = true;
-      ResetForm();
+      // Если отель был успешно сохранён и для нее не было изображения,сбрасываем HotelForm через ссылку, захваченную в поле _hotelForm
+      _hotelForm.ResetForm();
+      // Показывает ручной вызов StateHasChanged для запуска обновления пользовательского интерфейса
+      StateHasChanged();
       return;
     }
 
-    await ProcessImage(response.hotelId);
+    _submitSuccessful = await ProcessImage(response.hotelId, image);
+    if (_submitSuccessful)
+    {
+      _hotelForm.ResetForm();
+    }
 
-    // создаю новый экземпляр HotelDto, который сбрасывает содержимое формы, готовя ее к вводу нового отеля
-    // _hotel = new HotelCreateDto();
-    // _errorMessage = null;
-    // _submitSuccessful = true;
-
+    // Если мы здесь, значит, есть попытка загрузить изображение отеля. 
+    // Запускаю обновление пользовательского интерфейса, чтобы показать результат этой операции
+    StateHasChanged();
   }
 
-  private void ResetForm()
+  private async Task<bool> ProcessImage(Guid hotelId, IBrowserFile hotelImage)
   {
-    _hotel = new HotelCreateDto();
-    _editContext = new EditContext(_hotel);
-    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
-    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-    _hotelImage = null;
-  }
-
-  private void LoadHotelImage(InputFileChangeEventArgs args) => _hotelImage = args.File;
-
-  private async Task ProcessImage(Guid hotelId)
-  {
-    var imageUploadResponse = await Mediator.Send(new UploadHotelImageRequest(hotelId, _hotelImage));
+    var imageUploadResponse = await Mediator.Send(new UploadHotelImageRequest(hotelId, hotelImage));
 
     if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
     {
-      _errorMessage = "Your hotel was saved, but there was a problem uploading the image.";
-      return;
+      _errorMessage = _textErrorMessage_2;
+      return false;
     }
 
-    _submitSuccessful = true;
-    ResetForm();
+    return true;
   }
 
 }
