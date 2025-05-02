@@ -34,8 +34,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\ManageHotel\EditHotel\" />
-  </ItemGroup>
-
 </Project>

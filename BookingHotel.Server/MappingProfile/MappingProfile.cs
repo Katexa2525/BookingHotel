@@ -33,6 +33,7 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Hotel, HotelUpdateDto>().ReverseMap();
 
       CreateMap<HotelDto, HotelCreateDto>();
+      CreateMap<HotelDto, HotelUpdateDto>();
 
       // hotelFacility
       CreateMap<HotelFacility, HotelFacilityCreateDto>().ReverseMap();

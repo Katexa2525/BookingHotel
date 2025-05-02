@@ -1,0 +1,101 @@
+﻿@page "/edit-hotel/{HotelId:int}"
+@inject IMediator Mediator
+
+@using Application.Enums
+@using AutoMapper
+@using Application.DTO.Hotel.ClientRequest
+
+<PageTitle>Редактирование записи отеля</PageTitle>
+
+<NavigationСhain LastChainName="Edit Hotel" />
+
+<h3 class="mt-5 mb-4">Форма редактирования отеля</h3>
+
+@if (_isLoading)
+{
+  <p>Загрузка отеля...</p>
+}
+else
+{
+  <h3 class="mt-5 mb-4">Editing trail: @_hotel.Name</h3>
+  @if (_submitSuccessful)
+  {
+    <SuccessAlert Message="Ваш отель был успешно отредактирован!" />
+  }
+  else if (_errorMessage is not null)
+  {
+    <ErrorAlert Message="@_errorMessage" />
+  }
+  <HotelForm Trail="_trail" OnSubmit="SubmitEditHotel" />
+}
+
+@code {
+  private bool _isLoading;
+  private bool _submitSuccessful;
+  private string? _errorMessage;
+  private HotelDto _hotel = new HotelDto();
+
+  [Parameter]
+  public Guid HotelId { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    _isLoading = true;
+    var response = await Mediator.Send(new GetHotelRequest(HotelId));
+    if (response is not null)
+    {
+      // если отель получен, сведения о нём копирую в локальное поле для передачи в HotelForm
+      _hotel = response.Hotel;
+    }
+    else
+    {
+      _errorMessage = AppMessage.HotelPageLoadTextErrorMessage;
+    }
+
+    // после загрузки отеля устанавливаю в false
+    _isLoading = false;
+  }
+
+  private async Task SubmitEditHotel(HotelDto hotelDto, IBrowserFile? image)
+  {
+    var response = await Mediator.Send(new EditHotelRequest(hotelDto));
+
+    //Если при сохранении тропы произошла ошибка, отображается сообщение об ошибке
+    if (!response.IsSuccess)
+    {
+      _submitSuccessful = false;
+      _errorMessage = AppMessage.HotelPageSaveTextErrorMessage;
+    }
+    else
+    {
+      // любые обновления, сделанные в экземпляре hotelDto из формы, применяются к тропе
+      _hotel = hotelDto;
+    }
+
+    _submitSuccessful = true;
+
+    // Если пользователь обновил изображение тропы, вызывается ProcessImage для загрузки нового изображения
+    if (hotelDto.ImageAction == ImageAction.Add)
+      _submitSuccessful = await ProcessImage(hotelDto.Id, image!);
+
+    // Если пользователь удалил изображение, свойство Image очищается
+    if (hotelDto.ImageAction == ImageAction.Remove)
+      _hotel.MainPhoto = "";
+
+    // Метод StateHasChanged вызывается для отрисовки любых обновлений пользовательского интерфейса на основе действий с изображением
+    StateHasChanged();
+  }
+
+  private async Task<bool> ProcessImage(Guid hotelId, IBrowserFile hotelImage)
+  {
+    var imageUploadResponse = await Mediator.Send(new UploadHotelImageRequest(hotelId, hotelImage));
+    if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
+    {
+      _errorMessage = AppMessage.AddHotelPageSaveImageTextErrorMessage;
+      return false;
+    }
+    // Если было выбрано новое изображение, обновляем свойство Image, указав новое имя файла
+    _hotel.MainPhoto = imageUploadResponse.ImageName;
+    return true;
+  }
+}

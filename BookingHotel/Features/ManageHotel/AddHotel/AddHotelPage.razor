@@ -36,8 +36,6 @@ else if (_errorMessage is not null)
 @code {
   private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private const string _textErrorMessage_1 = "Возникла проблема с сохранением отеля!";
-  private const string _textErrorMessage_2 = "Ваш отель был сохранен, но была проблема с загрузкой изображения!";
   private HotelForm _hotelForm = default!;
 
   private async Task SubmitNewHotel(HotelDto hotelDto, IBrowserFile? image)
@@ -46,7 +44,7 @@ else if (_errorMessage is not null)
     if (response.hotelId == Guid.Empty)
     {
       _submitSuccessful = false;
-      _errorMessage = _textErrorMessage_1;
+      _errorMessage = AppMessage.HotelPageSaveTextErrorMessage;
       // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить
       // пользовательский интерфейс сообщением об ошибке
       StateHasChanged();
@@ -80,7 +78,7 @@ else if (_errorMessage is not null)
 
     if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
     {
-      _errorMessage = _textErrorMessage_2;
+      _errorMessage = AppMessage.AddHotelPageSaveImageTextErrorMessage;
       return false;
     }
 

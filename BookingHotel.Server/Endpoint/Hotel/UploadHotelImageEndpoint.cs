@@ -2,6 +2,7 @@
 using Application.DTO.Hotel.ClientRequest;
 using Application.DTO.Hotel.CQRS;
 using Ardalis.ApiEndpoints;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
@@ -13,10 +14,12 @@ namespace BookingHotel.Server.Endpoint.Hotel
   public class UploadHotelImageEndpoint : BaseAsyncEndpoint.WithRequest<Guid>.WithResponse<string>
   {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public UploadHotelImageEndpoint(IMediator mediator)
+    public UploadHotelImageEndpoint(IMediator mediator, IMapper mapper)
     {
       _mediator = mediator;
+      _mapper = mapper;
     }
 
     [HttpPost(UploadHotelImageRequest.RouteTemplate)]
@@ -53,26 +56,7 @@ namespace BookingHotel.Server.Endpoint.Hotel
 
       //Обновляю тропу, указав местоположение изображения тропы. Оно будет использоваться в интерфейсе для загрузки изображения
       hotel.MainPhoto = filename;
-      await _mediator.Send(new UpdateHotelCommand() 
-      { 
-        Dto = new HotelUpdateDto
-        {
-          Id = hotel.Id,
-          Name = hotel.Name,
-          Description = hotel.Description,
-          Location = hotel.Location,
-          Rating = hotel.Rating,
-          Star = hotel.Star,
-          MainPhoto = hotel.MainPhoto,
-          Rooms = hotel.Rooms,
-          Foods = hotel.Foods,
-          HotelFacilities = hotel.HotelFacilities,
-          HotelPhotos = hotel.HotelPhotos,
-          Locations = hotel.Locations,
-          Prices = hotel.Prices,
-          HotelUsefulInfo = hotel.HotelUsefulInfo
-        }
-      });
+      await _mediator.Send(new UpdateHotelCommand() { Dto = _mapper.Map<HotelUpdateDto>(hotel) });
 
       return Ok(hotel.MainPhoto);
 
