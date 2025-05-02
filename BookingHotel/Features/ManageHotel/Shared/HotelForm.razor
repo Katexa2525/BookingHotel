@@ -1,4 +1,5 @@
-﻿@using BookingHotel.Validation
+﻿@using Application.Enums
+@using BookingHotel.Validation
 
 <!--Компонент EditForm используется для определения формы Blazor. Как минимум должны быть определены модель и действие отправки -->
 <!--<EditForm Model="_hotel" OnValidSubmit="SubmitForm">-->
@@ -35,9 +36,25 @@
       <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" />
     </FormFieldSet>
 
-    <FormFieldSet Width="col">
+    <FormFieldSet Width="col-6">
       <label for="hotelImage" class="font-weight-bold text-secondary">Фото отеля</label>
-      <InputFile OnChange="LoadHotelImage" class="form-control-file" id="hotelImage" accept=".png,.jpg,.jpeg" />
+      <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
+      @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
+      {
+        <InputFile OnChange="LoadHotelImage" class="form-control-file" id="hotelImage" accept=".png,.jpg,.jpeg" />
+      }
+      <!--Если у отеля есть изображение, отображаю его вместе с кнопкой, позволяющей удалить его-->
+      else
+      {
+      <div class="card bg-dark text-white">
+        <img src="images/@_hotel.MainPhoto" />
+        <div class="card-img-overlay">
+          <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
+            Удалить
+          </button>
+        </div>
+      </div>
+      }
     </FormFieldSet>
 
   </FormSection>
@@ -46,11 +63,11 @@
     <div class="row">
       <div class="offset-4 col-8 text-right">
         <button class="btn btn-outline-secondary" type="button"
-                onclick="@(() => _hotel=new HotelDto())">
-          Reset
+        onclick="@(() => _hotel=new HotelDto())">
+          Сбросить
         </button>
         <button class="btn btn-primary" type="submit">
-          Submit
+          Принять
         </button>
       </div>
     </div>
@@ -69,6 +86,10 @@
   [Parameter]
   public Func<HotelDto, IBrowserFile?, Task> OnSubmit { get; set; }
 
+  /// <summary> Параметр позволит передать существующий отель в форму </summary>
+  [Parameter]
+  public HotelDto? Hotel { get; set; }
+
   public void ResetForm()
   {
     _hotel = new HotelDto(); // new HotelCreateDto();
@@ -78,15 +99,30 @@
     _hotelImage = null;
   }
 
-  protected override void OnInitialized()
+  // Метод OnInitialized заменяется методом OnParametersSet. Он будет вызываться всякий раз
+  // при обновлении объекта, передаваемого через параметр Hotel.Это нужно, чтобы можно было
+  // обновить или удалить изображение после запуска обработчика SubmitEditHotel в EditHotelPage
+  protected override void OnParametersSet()
   {
     // создаю новый EditContext для модели отеля
     _editContext = new EditContext(_hotel);
     // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
     _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+
+    // Если есть отель, значит редактирую. Нужно скопировать сведения об отеле в локальное поле _hotel, к которому привязаны компоненты формы
+    if (Hotel is not null)
+    {
+      _hotel = Hotel;
+    }
   }
 
-  private void LoadHotelImage(InputFileChangeEventArgs args) => _hotelImage = args.File;
+  // protected override void OnInitialized()
+  // {
+  //   // создаю новый EditContext для модели отеля
+  //   _editContext = new EditContext(_hotel);
+  //   // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
+  //   _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+  // }
 
   /// <summary>
   /// Обработчик события OnValidSubmit из EditForm вызовет событие OnSubmit.
@@ -94,5 +130,21 @@
   /// </summary>
   /// <returns></returns>
   private async Task SubmitForm() => await OnSubmit(_hotel, _hotelImage);
+
+  private void LoadHotelImage(InputFileChangeEventArgs e)
+  {
+    _hotelImage = e.File;
+    _hotel.ImageAction = ImageAction.Add; //Задаю ImageAction для добавления при выборе изображения
+  }
+
+  /// <summary>
+  /// Этот метод вызывается при нажатии кнопки «Удалить изображение». Так сбрасываеncz свойство Image, инициируя отображение компонента InputFile,
+  /// а также помечаем изображение, которое нужно удалить на сервере
+  /// </summary>
+  private void RemoveHotelImage()
+  {
+    _hotel.MainPhoto = null;
+    _hotel.ImageAction = ImageAction.Remove;
+  }
 
 }
