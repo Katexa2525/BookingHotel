@@ -20,7 +20,7 @@ namespace BookingHotel.Features.ManageHotel.Mediatr
     /// <summary>Метод для обработки запроса Mediatr </summary>
     /// <param name="request">Запрос</param>
     /// <param name="cancellationToken">Токен отмены запроса</param>
-    /// <returns></returns>
+    /// <returns></returns> 
     public async Task<AddHotelRequest.Response> Handle(AddHotelRequest request, CancellationToken cancellationToken)
     {
       // HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса

@@ -26,10 +26,11 @@
 }
 else
 {
-    <HotelDetails Hotel="_selectedHotel"/> // данные передаются в параметры компонента с помощью атрибутов элемента
-    <HotelSearch/> // компонент TrailSearch 
+  <HotelDetails Hotel="_selectedHotel"/> // данные передаются в параметры компонента с помощью атрибутов элемента
+  <HotelSearch/> // компонент TrailSearch
+  <AddButton /> // компонент Кнопка Add
 
-    <div class="grid">
+  <div class="grid">
     @foreach (var hotel in _hotels)
     {
       <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />

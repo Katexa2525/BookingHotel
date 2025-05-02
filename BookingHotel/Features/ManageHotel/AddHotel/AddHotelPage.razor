@@ -1,0 +1,88 @@
+﻿@page "/add-hotel"
+@inject IMediator Mediator
+@inject IMapper Mapper
+@inject HttpClient Http
+
+@using AutoMapper
+@using Application.DTO.Hotel.ClientRequest
+@using BookingHotel.Validation
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Создание новой записи отеля</PageTitle>
+
+<NavigationСhain LastChainName="Add Hotel" />
+
+<h3 class="mt-5 mb-4">Форма создания отеля</h3>
+
+@if (_submitSuccessful)
+{
+  <SuccessAlert Message="Ваш отель был успешно создан!"/>
+} 
+else if (_errorMessage is not null)
+{
+  <ErrorAlert Message="@_errorMessage" />
+}
+
+<!--
+Исходный компонент EditForm заменен новым компонентом HotelForm. 
+Директива Blazor @ref используется для захвата ссылки на компонент. Она будет применяться для вызова метода ResetForm. 
+Также предоставлен обработчик OnSubmit компонента HotelForm
+-->
+<HotelForm @ref="_hotelForm" OnSubmit="SubmitNewHotel"/>
+
+
+@code {
+  private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
+  private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
+  private HotelForm _hotelForm = default!;
+
+  private async Task SubmitNewHotel(HotelDto hotelDto, IBrowserFile? image)
+  {
+    var response = await Mediator.Send(new AddHotelRequest(Mapper.Map<HotelCreateDto>(hotelDto)));
+    if (response.hotelId == Guid.Empty)
+    {
+      _submitSuccessful = false;
+      _errorMessage = AppMessage.HotelPageSaveTextErrorMessage;
+      // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить
+      // пользовательский интерфейс сообщением об ошибке
+      StateHasChanged();
+      return;
+    }
+
+    if (image is null)
+    {
+      _submitSuccessful = true;
+      // Если отель был успешно сохранён и для нее не было изображения,сбрасываем HotelForm через ссылку, захваченную в поле _hotelForm
+      _hotelForm.ResetForm();
+      // Показывает ручной вызов StateHasChanged для запуска обновления пользовательского интерфейса
+      StateHasChanged();
+      return;
+    }
+
+    _submitSuccessful = await ProcessImage(response.hotelId, image);
+    if (_submitSuccessful)
+    {
+      _hotelForm.ResetForm();
+    }
+
+    // Если мы здесь, значит, есть попытка загрузить изображение отеля. 
+    // Запускаю обновление пользовательского интерфейса, чтобы показать результат этой операции
+    StateHasChanged();
+  }
+
+  private async Task<bool> ProcessImage(Guid hotelId, IBrowserFile hotelImage)
+  {
+    var imageUploadResponse = await Mediator.Send(new UploadHotelImageRequest(hotelId, hotelImage));
+
+    if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
+    {
+      _errorMessage = AppMessage.AddHotelPageSaveImageTextErrorMessage;
+      return false;
+    }
+
+    return true;
+  }
+
+}
