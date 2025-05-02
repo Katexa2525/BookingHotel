@@ -2,6 +2,7 @@
 using Application.DTO.Hotel;
 using Application.Interfaces.Repository;
 using AutoMapper;
+using System.Diagnostics;
 using HotelEntity = Domain.Models.Hotel;
 
 namespace Application.BussinessLogic.Hotel
@@ -52,18 +53,18 @@ namespace Application.BussinessLogic.Hotel
 
     public async Task<HotelDto> GetByIdAsync(Guid id)
     {
-      //var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges: true);
-      var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges: true).FirstOrDefault();
+      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges: true);
+      //var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges: true).FirstOrDefault();
       if (hotel == null)
-        return new HotelDto();
+        return null;  //new HotelDto();
       else
         return  _mapper.Map<HotelDto>(hotel);
     }
 
     public async Task DeleteAsync(Guid hotelId)
     {
-      //var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == hotelId, trackChanges: true);
-      var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == hotelId, trackChanges: false).FirstOrDefault();
+      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == hotelId, trackChanges: true);
+      //var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == hotelId, trackChanges: false).FirstOrDefault();
 
       if (hotel is not null)
       {

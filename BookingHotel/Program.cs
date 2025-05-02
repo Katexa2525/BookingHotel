@@ -1,6 +1,7 @@
 using Application.BussinessLogic.RoleClaim;
 using Blazored.LocalStorage;
 using BookingHotel;
+using BookingHotel.MappingProfile;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -27,6 +28,8 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("NoAuthenticationClient"));
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+builder.Services.AddAutoMapper(typeof(MappingProfileClient));
 
 builder.Services.AddOidcAuthentication(options =>
 {
