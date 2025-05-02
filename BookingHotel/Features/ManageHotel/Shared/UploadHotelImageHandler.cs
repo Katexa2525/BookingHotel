@@ -1,7 +1,7 @@
 ﻿using Application.DTO.Hotel.ClientRequest;
 using MediatR;
 
-namespace BookingHotel.Features.ManageHotel.Mediatr
+namespace BookingHotel.Features.ManageHotel.Shared
 {
   public class UploadHotelImageHandler : IRequestHandler<UploadHotelImageRequest, UploadHotelImageRequest.Response>
   {

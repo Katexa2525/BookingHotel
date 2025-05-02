@@ -159,14 +159,5 @@ namespace Application.BussinessLogic.Hotel
       //await _repositoryHotel.SaveAsync();
       await _repositoryManager.SaveAsync();
     }
-
-    public async Task UploadImageAsync(Guid hotelId)
-    {
-      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == hotelId, trackChanges: false);
-      if (hotel is null)
-      {
-        return BadRequest("Отель не существует");
-      }
-    }
   }
 }

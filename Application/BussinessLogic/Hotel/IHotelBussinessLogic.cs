@@ -9,6 +9,5 @@ namespace Application.BussinessLogic.Hotel
     Task DeleteAsync(Guid hotelId);
     Task<HotelDto> GetByIdAsync(Guid id);
     Task UpdateAsync(HotelUpdateDto dto);
-    Task UploadImageAsync(Guid hotelId);
   }
 }
