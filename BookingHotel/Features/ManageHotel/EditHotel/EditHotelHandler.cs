@@ -7,6 +7,7 @@ namespace BookingHotel.Features.ManageHotel.EditHotel
   public class EditHotelHandler : IRequestHandler<EditHotelRequest, EditHotelRequest.Response>
   {
     private readonly HttpClient _httpClient;
+
     public EditHotelHandler(HttpClient httpClient)
     {
       _httpClient = httpClient;
