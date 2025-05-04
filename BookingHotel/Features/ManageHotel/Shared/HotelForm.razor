@@ -8,7 +8,7 @@
 
   <FormSection Title="Базовая информация" HelpText="Эта информация используется для идентификации отеля ...">
 
-    <FormFieldSet Width="col-6">
+    <FormFieldSet Width="col">
       <label for="hotelName" class="font-weight-bold text-secondary">Наименование отеля</label>
       <InputText @bind-Value="_hotel.Name" class="form-control" id="hotelName" />
       <ValidationMessage For="@(() => _hotel.Name )" />
@@ -20,7 +20,7 @@
       <ValidationMessage For="@(() => _hotel.Description )" />
     </FormFieldSet>
 
-    <FormFieldSet Width="col-6">
+    <FormFieldSet Width="col">
       <label for="hotelLocation" class="font-weight-bold text-secondary">Расположение</label>
       <InputText @bind-Value="_hotel.Location" class="form-control" id="hotelLocation" />
       <ValidationMessage For="@(() => _hotel.Location )" />
@@ -31,10 +31,12 @@
       <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
     </FormFieldSet>
 
-    <FormFieldSet Width="col-4">
+    <FormFieldSet Width="col-3">
       <label for="hotelStar" class="font-weight-bold text-secondary">Количество звёзд</label>
-      <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" />
+      <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
     </FormFieldSet>
+
+    <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
 
     <FormFieldSet Width="col-6">
       <label for="hotelImage" class="font-weight-bold text-secondary">Фото отеля</label>
@@ -80,6 +82,11 @@
   //private HotelCreateDto _hotel = new HotelCreateDto();
   private HotelDto _hotel = new HotelDto();
   private IBrowserFile? _hotelImage;
+
+  private void SetHotelStar(int star)
+  {
+    _hotel.Star = star;
+  }
 
   /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
   [Parameter, EditorRequired]
