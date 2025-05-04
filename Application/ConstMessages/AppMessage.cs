@@ -11,6 +11,8 @@
     public static readonly string AddHotelPageSaveImageTextErrorMessage = "Ваш отель был сохранен, но была проблема с загрузкой изображения!";
     public static readonly string HotelPageLoadTextErrorMessage = "Возникла проблема при загрузке отеля!";
     public static readonly string GetHotelByIdTextErrorMessage = "Отель не может быть найден.";
+    public static readonly string GetHotelAllTextErrorMessage = "Отели не могут быть найдены.";
+    public static readonly string GetHotelAllLoadTextErrorMessage = "Были проблемы с загрузкой данных по отелям.";
     public static readonly string GetHotelImageTextErrorMessage = "Фото отеля не найдено.";
   }
 }

@@ -45,14 +45,14 @@
       }
       else
       {
-      <div class="card bg-dark text-white">
-        <img src="images/@_hotel.MainPhoto" />
-        <div class="card-img-overlay">
-          <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
-            Удалить
-          </button>
+        <div class="card bg-dark text-white">
+          <img src="images/@_hotel.MainPhoto" />
+          <div class="card-img-overlay">
+            <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
+              Удалить
+            </button>
+          </div>
         </div>
-      </div>
       }
     </FormFieldSet>
 
@@ -82,8 +82,8 @@
   private IBrowserFile? _hotelImage;
 
   /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
-  [Parameter]
-  public Func<HotelDto, IBrowserFile?, Task> OnSubmit { get; set; }
+  [Parameter, EditorRequired]
+  public Func<HotelDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
 
   /// <summary> Параметр позволит передать существующий отель в форму </summary>
   [Parameter]
@@ -109,9 +109,25 @@
     _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
 
     // Если есть отель, значит редактирую. Нужно скопировать сведения об отеле в локальное поле _hotel, к которому привязаны компоненты формы
-    if (Hotel is not null)
+    if (Hotel != null)
     {
-      _hotel = Hotel;
+      //_hotel = Hotel;
+      _hotel.Id = Hotel.Id;
+      _hotel.Name = Hotel.Name;
+      _hotel.Description = Hotel.Description;
+      _hotel.Location = Hotel.Location;
+      _hotel.Star = Hotel.Star;
+      _hotel.MainPhoto = Hotel.MainPhoto;
+      _hotel.ImageAction = ImageAction.None;
+      _hotel.Rating = Hotel.Rating;
+      _hotel.Rooms = Hotel.Rooms;
+      _hotel.Foods = Hotel.Foods;
+      _hotel.Locations = Hotel.Locations;
+      _hotel.HotelFacilities = Hotel.HotelFacilities;
+      _hotel.HotelPhotos = Hotel.HotelPhotos;
+      _hotel.HotelUsefulInfo = Hotel.HotelUsefulInfo;
+      _hotel.Prices = Hotel.Prices;
+      _hotel.Reviews = Hotel.Reviews;
     }
   }
 

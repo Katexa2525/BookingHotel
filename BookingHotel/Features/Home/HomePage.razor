@@ -1,41 +1,56 @@
 ﻿@* определяет маршрут, за который отвечает этот компонент HomePage *@
-@page "/" 
+@page "/"
 
+@inject IMediator Mediator
 @*  для получения экземпляров объектов из контейнера внедрения зависимостей *@
 @* @inject HttpClient Http *@ 
-
 @inject IHttpClientFactory ClientFactory
+
 @using System.Security.Claims
+
 
 <PageTitle>Booking Hotel</PageTitle>
 
-<!--
-<AuthorizeView>
-    <Authorized>
-        The user: @context.User.FindFirst(ClaimTypes.Name).Value is authorized
-    </Authorized>
-    <NotAuthorized>
-        The User is not authorized
-    </NotAuthorized>
-</AuthorizeView>
--->
+@if (_allHotels is not null && _allHotels.Any())
+{
+  <div class="mb-4">
+    <p class="font-italic text-center">
+      У вас есть отель, который Вы хотели бы опубликовать?
+      <a href="add-hotel">Добавьте это здесь</a>.
+    </p>
+  </div>
 
-@if (_hotels == null)
-{
-  <p>Loading hotels...</p>
-}
-else
-{
-  <HotelDetails Hotel="_selectedHotel"/> // данные передаются в параметры компонента с помощью атрибутов элемента
-  <HotelSearch/> // компонент TrailSearch
-  <AddButton /> // компонент Кнопка Add
+  // данные передаются в параметры компонента с помощью атрибутов элемента
+  <HotelDetails Hotel="_selectedHotel" />
+
+  <HotelSearch />
 
   <div class="grid">
-    @foreach (var hotel in _hotels)
+    @foreach (var hotel in _allHotels)
     {
       <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
     }
-    </div>
+  </div>
+}
+else
+{
+  <div class="no-hotels">
+    <svg viewBox="0 0 16 16" class="bi bi-tree" fill="currentColor"
+         ➥xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M8 0a.5.5 0 0 1 .416.223l3
+                                   4.5A.5.5 0 0 1 11 5.5h-.098l2.022 3.235a.5.5 0 0 1-.424.765h-.191l1.638
+                                   3.276a.5.5 0 0 1-.447.724h-11a.5.5 0 0 1-.447-.724L3.69 9.5H3.5a.5.5 0
+                                   0 1-.424-.765L5.098 5.5H5a.5.5 0 0 1-.416-.777l3-4.5A.5.5 0 0 1 8
+                                   0zM5.934 4.5H6a.5.5 0 0 1 .424.765L4.402 8.5H4.5a.5.5 0 0 1 .447.724L3.31
+                                   12.5h9.382l-1.638-3.276A.5.5 0 0 1 11.5 8.5h.098L9.576 5.265A.5.5 0 0
+                                   1 10 4.5h.066L8 1.401 5.934 4.5z" />
+      <path d="M7 13.5h2V16H7v-2.5z" />
+    </svg>
+    <h3 class="text-muted font-weight-light">
+      В настоящее время у нас нет отелей,
+      <a href="add-hotel">почему бы не добавить один?</a>
+    </h3>
+  </div>
 }
 
 @code {
@@ -43,24 +58,38 @@ else
   // [Inject]
   // public HttpClient Http { get; set; }
 
-  // закрытое поле, содержащее данные о тропах
-  private IEnumerable<Hotel>? _hotels;
-  private Hotel? _selectedHotel;
+  private HotelDto? _selectedHotel;
+  // закрытое поле, содержащее данные об отелях
+  private IEnumerable<HotelDto>? _allHotels;
 
   protected override async Task OnInitializedAsync()
   {
     try
     {
+      // запрос на получения всех отелей через GetHotelsRequest и Mediator
+      var response = await Mediator.Send(new GetHotelsRequest());
+      _allHotels = response.Hotels.Select(p => new HotelDto
+        {
+          Id = p.Id,
+          Name = p.Name,
+          Description = p.Description,
+          Location = p.Location,
+          Rating = p.Rating,
+          Star = p.Star,
+          MainPhoto = p.MainPhoto
+        });
+
       // Http вызов загружает тестовые данные из json
       //_hotels = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
 
-      var client = ClientFactory.CreateClient("NoAuthenticationClient");
-      _hotels = await client.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
+      // var client = ClientFactory.CreateClient("NoAuthenticationClient");
+      // _hotels = await client.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
     }
     catch (HttpRequestException ex)
     {
       // обработка ответа о неудачном завершении Http вызова
-      Console.WriteLine($"There was a problem loading hotel data: {ex.Message}");
+      Console.Write(AppMessage.GetHotelAllLoadTextErrorMessage);
+      Console.WriteLine($": {ex.Message}");
     }
     catch (AccessTokenNotAvailableException ex)
     {
@@ -73,9 +102,10 @@ else
     }
   }
 
-  private void HandleHotelSelected(Hotel hotel)
+  //private void HandleHotelSelected(Hotel hotel)
+  private void HandleHotelSelected(HotelDto hotel)
   {
     _selectedHotel = hotel;
-     //StateHasChanged(); //- не нужен, т.к. тип EventCallback вызывает этот метод для обрабатывающего события компонента
+    //StateHasChanged(); //- не нужен, т.к. тип EventCallback вызывает этот метод для обрабатывающего события компонента
   }
 }

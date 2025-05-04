@@ -1,10 +1,15 @@
-﻿<div class="drawer-wrapper @(_isOpen ? "slide" : "")">
+﻿
+<div class="drawer-wrapper @(_isOpen ? "slide" : "")">
   <div class="drawer-mask"></div>
   <div class="drawer">
     @if (_activeHotel is not null)
     {
       <div class="drawer-content">
-        <img src="@_activeHotel.MainPhoto" />
+
+        <img src="@(!string.IsNullOrWhiteSpace(_activeHotel.MainPhoto) ? $"images/{_activeHotel.MainPhoto}"
+                                                                       : "images/NoImage.png")"
+             class="card-img-top" />
+
         <div class="trail-details">
           <h3>@_activeHotel.Name</h3>
           <div class="d-flex justify-content-between">
@@ -35,11 +40,11 @@
 
 @code {
   private bool _isOpen;
-  private Hotel? _activeHotel;
+  private HotelDto? _activeHotel;
 
   /// <summary>Параметр компонента определяется как открытое свойство, декорирование атрибутами</summary>
   [Parameter, EditorRequired]
-  public Hotel? Hotel { get; set; }
+  public HotelDto? Hotel { get; set; }
 
   protected override void OnParametersSet()
   {

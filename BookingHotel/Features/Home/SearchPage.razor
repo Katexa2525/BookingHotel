@@ -5,18 +5,19 @@
 @inject NavigationManager NavManager
 @* @inject HttpClient Http *@
 @inject IHttpClientFactory ClientFactory
+@inject IMediator Mediator
 
 <!-- цепочка навигации позволяет вернуться на главную страницу -->
 <NavigationСhain LastChainName="Search"/>
 
 <PageTitle>Search hotels</PageTitle>
 
-<h3 class="mt-5 mb-4">Search results for "@SearchTerm"</h3>
+<h3 class="mt-5 mb-4">Результаты поиска для "@SearchTerm"</h3>
 <SearchFilter SearchTerm="@SearchTerm" MinRating="MinRating" MaxRating="MaxRating" />
 
 @if(_searchResults==null)
 {
-  <p>Loading search results...</p>
+  <p>Загрузка результатов поиска...</p>
 }
 else
 {
@@ -30,9 +31,14 @@ else
 }
 
 @code {
-  private IEnumerable<Hotel>? _searchResults;
-  private Hotel? _selectedHotel;
-  private IEnumerable<Hotel>? _cachedSearchResults = Array.Empty<Hotel>(); // хранит копию неотфильтрованных результатов поиска
+  // private IEnumerable<Hotel>? _searchResults;
+  // private Hotel? _selectedHotel;
+  // private IEnumerable<Hotel>? _cachedSearchResults = Array.Empty<Hotel>(); // хранит копию неотфильтрованных результатов поиска
+
+  private IEnumerable<HotelDto>? _searchResults;
+  private HotelDto? _selectedHotel;
+  // хранит копию неотфильтрованных результатов поиска
+  private IEnumerable<HotelDto>? _cachedSearchResults = Array.Empty<HotelDto>();
 
   /// <summary> Параметр компонента, совпадающий с именем параметра маршрута, необходим для захвата его значения </summary>
   [Parameter]
@@ -49,17 +55,35 @@ else
   {
     try
     {
+      var response = await Mediator.Send(new GetHotelsRequest());
+      var _allHotels = response.Hotels.Select(p => new HotelDto
+        {
+          Id = p.Id,
+          Description = p.Description,
+          Location = p.Location,
+          Rating = p.Rating,
+          Star = p.Star,
+          MainPhoto = p.MainPhoto
+        });
+
+      _searchResults = _allHotels.Where(x => x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                                             x.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+      _cachedSearchResults = _searchResults;
+
+      UpdateFilters();
+
       //var allHotel = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
 
-      var client = ClientFactory.CreateClient("NoAuthenticationClient");
-      var allHotel = await client.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
-      _searchResults = allHotel!.Where(p => p.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) || 
-                                            p.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
-      _cachedSearchResults = _searchResults;
+      // var client = ClientFactory.CreateClient("NoAuthenticationClient");
+      // var allHotel = await client.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
+      // _searchResults = allHotel!.Where(p => p.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) || 
+      //                                       p.Location.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+      // _cachedSearchResults = _searchResults;
     }
     catch (HttpRequestException ex)
     {
-      Console.WriteLine($"There was a problem loading hotel data: {ex.Message}");
+      Console.Write(AppMessage.GetHotelAllLoadTextErrorMessage);
+      Console.WriteLine($": {ex.Message}");
     }
   }
 
@@ -78,12 +102,14 @@ else
 
   protected override void OnParametersSet() => UpdateFilters();
 
-  private void HandleHotelSelected(Hotel hotel) => _selectedHotel = hotel;
+  //private void HandleHotelSelected(Hotel hotel) => _selectedHotel = hotel;
+  private void HandleHotelSelected(HotelDto hotel) => _selectedHotel = hotel;
 
   private void UpdateFilters()
   {
     // переменная будет содержать список лямбда выражений на основе имеющихся поисковых фильтров
-    var filters = new List<Func<Hotel, bool>>();
+    //var filters = new List<Func<Hotel, bool>>();
+    var filters = new List<Func<HotelDto, bool>>();
 
     // если определeн фильтр MinRating, добавляем лямбда выражение для него в список фильтров
     if (MinRating is not null && MinRating > 0)
