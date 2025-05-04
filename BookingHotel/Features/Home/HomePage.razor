@@ -5,6 +5,7 @@
 @*  для получения экземпляров объектов из контейнера внедрения зависимостей *@
 @* @inject HttpClient Http *@ 
 @inject IHttpClientFactory ClientFactory
+@inject NavigationManager NavManager
 
 @using System.Security.Claims
 
@@ -25,12 +26,35 @@
 
   <HotelSearch />
 
-  <div class="grid">
-    @foreach (var hotel in _allHotels)
-    {
-      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
-    }
-  </div>
+  <ViewSwitcher Items="_allHotels" Context="hotel">
+    <GridTemplate>
+       <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected"/>
+    </GridTemplate>
+
+    <HeaderTemplate>                                               
+        <th>Наименование отеля</th>
+        <th>Расположение</th>
+        <th>Рейтинг</th>
+        <th>Кол-во звезд</th>
+        <th></th>
+    </HeaderTemplate>
+
+    <RowTemplate>
+      <th scope="col">@hotel.Name</th>
+      <td>@hotel.Location</td>
+      <td>@hotel.Rating</td>
+      <td>@hotel.Star</td>
+      <td class="text-right">
+        <button @onclick="@(() =>HandleHotelSelected (hotel))" title="Просмотр" class="btn btn-primary">
+          <i class="bi bi-binoculars"></i>
+        </button>
+        <button @onclick="@(() => NavManager.NavigateTo ($"/edit-trail/{hotel.Id}"))" title="Редактирование"
+                class="btn btn-outline-secondary">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </RowTemplate>
+  </ViewSwitcher>
 }
 else
 {
@@ -52,6 +76,8 @@ else
     </h3>
   </div>
 }
+
+
 
 @code {
   // это объявление свойства альтернатива выше указанной директиве @inject, представляющий синтаксический сахар свойства ниже
