@@ -1,22 +1,26 @@
 ﻿@* определяет маршрут, за который отвечает этот компонент HomePage *@
 @page "/" 
 
+@inject IMediator Mediator
 @*  для получения экземпляров объектов из контейнера внедрения зависимостей *@
 @* @inject HttpClient Http *@ 
-
 @inject IHttpClientFactory ClientFactory
+
 @using System.Security.Claims
+@using Application.ConstMessages
+@using Application.DTO.Hotel
+@using Application.DTO.Hotel.ClientRequest
 
 <PageTitle>Booking Hotel</PageTitle>
 
 <!--
 <AuthorizeView>
-    <Authorized>
-        The user: @context.User.FindFirst(ClaimTypes.Name).Value is authorized
-    </Authorized>
-    <NotAuthorized>
-        The User is not authorized
-    </NotAuthorized>
+<Authorized>
+The user: @context.User.FindFirst(ClaimTypes.Name).Value is authorized
+</Authorized>
+<NotAuthorized>
+The User is not authorized
+</NotAuthorized>
 </AuthorizeView>
 -->
 
@@ -28,14 +32,14 @@ else
 {
   <HotelDetails Hotel="_selectedHotel"/> // данные передаются в параметры компонента с помощью атрибутов элемента
   <HotelSearch/> // компонент TrailSearch
- @*  <AddButton /> *@ // компонент Кнопка Add
+  @*  <AddButton /> *@ // компонент Кнопка Add
 
   <div class="grid">
     @foreach (var hotel in _hotels)
     {
       <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
     }
-    </div>
+  </div>
 }
 
 @code {
@@ -46,11 +50,21 @@ else
   // закрытое поле, содержащее данные о тропах
   private IEnumerable<Hotel>? _hotels;
   private Hotel? _selectedHotel;
+  private IEnumerable<HotelDto>? _allHotels;
 
   protected override async Task OnInitializedAsync()
   {
     try
     {
+      //Guid Id, string Name, string Description, string Location, double Rating, int Star, string? MainPhoto
+      // запрос на получения всех отелей через GetHotelsRequest и Mediator
+      var response = await Mediator.Send(new GetHotelsRequest());
+      _allHotels = response.Hotels.Select(p => new HotelDto
+      {
+          Id = p.Id, Description = p.Description, Location = p.Location, Rating = p.Rating,
+          Star = p.Star, MainPhoto = p.MainPhoto
+      });
+
       // Http вызов загружает тестовые данные из json
       //_hotels = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
 
@@ -60,7 +74,8 @@ else
     catch (HttpRequestException ex)
     {
       // обработка ответа о неудачном завершении Http вызова
-      Console.WriteLine($"There was a problem loading hotel data: {ex.Message}");
+      Console.Write(AppMessage.GetHotelAllLoadTextErrorMessage);
+      Console.WriteLine($": {ex.Message}");
     }
     catch (AccessTokenNotAvailableException ex)
     {
