@@ -1,0 +1,35 @@
+﻿@page "/add-room"
+@inject IMediator Mediator
+
+<PageTitle>Создание новой записи номера отеля</PageTitle>
+
+<NavigationСhain LastChainName="Add Room" />
+
+<h3 class="mt-5 mb-4">Форма создания номера отеля</h3>
+
+@if (_submitSuccessful)
+{
+  <SuccessAlert Message="Ваш отель был успешно создан!"/>
+} 
+else if (_errorMessage is not null)
+{
+  <ErrorAlert Message="@_errorMessage" />
+}
+
+<!--
+Исходный компонент EditForm заменен новым компонентом HotelForm. 
+Директива Blazor @ref используется для захвата ссылки на компонент. Она будет применяться для вызова метода ResetForm. 
+Также предоставлен обработчик OnSubmit компонента HotelForm
+-->
+<RoomForm @ref="_roomForm" OnSubmit="SubmitNewRoom"/>
+
+@code {
+  private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
+  private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
+  private RoomForm _roomForm = default!;
+
+  private async Task SubmitNewRoom(RoomDto roomDto)
+  {
+    
+  }
+}
