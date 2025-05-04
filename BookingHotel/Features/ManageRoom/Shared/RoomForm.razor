@@ -6,7 +6,7 @@
   <FormSection Title="Базовая информация" HelpText="Эта информация используется для описания номера отеля ...">
 
     <FormFieldSet Width="col">
-      <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label>
+      @* <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label> *@
       @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
       <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
       @* <p>Выбрано: @selectedOption</p> *@
@@ -22,6 +22,12 @@
     <FormFieldSet Width="col-3">
       <label for="roomSquare" class="font-weight-bold text-secondary">Площадь, м2</label>
       <InputNumber @bind-Value="_room.Square" class="form-control" id="roomSquare" />
+    </FormFieldSet>
+
+    <FormFieldSet Width="col">
+      <label for="roomDescription" class="font-weight-bold text-secondary">Описание номера</label>
+      <InputTextArea @bind-Value="_room.Description" rows="6" class="form-control" id="roomDescription" />
+      <ValidationMessage For="@(() => _room.Description )" />
     </FormFieldSet>
 
     <FormFieldSet Width="col">
