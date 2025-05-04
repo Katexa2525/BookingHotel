@@ -1,0 +1,112 @@
+﻿@using BookingHotel.Validation
+
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+  @* <FluentValidationValidator /> *@
+
+  <FormSection Title="Базовая информация" HelpText="Эта информация используется для описания номера отеля ...">
+
+    <FormFieldSet Width="col">
+      @* <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label> *@
+      @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
+      <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
+      @* <p>Выбрано: @selectedOption</p> *@
+      <ValidationMessage For="@(() => _room.RoomTypeId )" />
+    </FormFieldSet>
+
+    <FormFieldSet Width="col-3">
+      <label for="roomPeopleNumber" class="font-weight-bold text-secondary">Кол-во человек</label>
+      <InputNumber @bind-Value="_room.PeopleNumber" rows="6" class="form-control" id="roomPeopleNumber" />
+      <ValidationMessage For="@(() => _room.PeopleNumber )" />
+    </FormFieldSet>
+
+    <FormFieldSet Width="col-3">
+      <label for="roomSquare" class="font-weight-bold text-secondary">Площадь, м2</label>
+      <InputNumber @bind-Value="_room.Square" class="form-control" id="roomSquare" />
+    </FormFieldSet>
+
+    <FormFieldSet Width="col">
+      <label for="roomDescription" class="font-weight-bold text-secondary">Описание номера</label>
+      <InputTextArea @bind-Value="_room.Description" rows="6" class="form-control" id="roomDescription" />
+      <ValidationMessage For="@(() => _room.Description )" />
+    </FormFieldSet>
+
+    <FormFieldSet Width="col">
+      <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства</label>
+      <MultiSelectList T="string" Options="@optionsFacilities" SelectedOptions="@selectedOptionsFacilities" OnSelectionChanged="@HandleSelection" />
+      <p>Выбрано: @string.Join(", ", selectedOptionsFacilities)</p>
+    </FormFieldSet>
+
+  </FormSection>
+
+  <div class="mt-4 mb-5">
+    <div class="row">
+      <div class="offset-4 col-8 text-right">
+        <button class="btn btn-outline-secondary" type="button"
+                onclick="@(() => _room=new RoomDto())">
+          Сбросить
+        </button>
+        <button class="btn btn-primary" type="submit">
+          Принять
+        </button>
+      </div>
+    </div>
+  </div>
+
+</EditForm>
+
+@code {
+  private EditContext _editContext = default!;
+  private RoomDto _room = new RoomDto();
+  private IBrowserFile? _hotelImage;
+
+  /// <summary> Параметр позволит передать существующий отель в форму </summary>
+  [Parameter]
+  public RoomDto? Room { get; set; }
+
+  private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
+  private List<string> selectedOptionsFacilities = new();
+
+  private void HandleSelection(List<string> values)
+  {
+    selectedOptionsFacilities = values;
+  }
+
+  public void ResetForm()
+  {
+    _room = new RoomDto();
+    _editContext = new EditContext(_room);
+    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
+    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+    _hotelImage = null;
+  }
+
+  // Метод OnInitialized заменяется методом OnParametersSet. Он будет вызываться всякий раз
+  // при обновлении объекта, передаваемого через параметр Hotel.Это нужно, чтобы можно было
+  // обновить или удалить изображение после запуска обработчика SubmitEditHotel в EditHotelPage
+  protected override void OnParametersSet()
+  {
+    // создаю новый EditContext для модели отеля
+    _editContext = new EditContext(_room);
+    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
+    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+  }
+
+  /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
+  [Parameter, EditorRequired]
+  public Func<RoomDto, Task> OnSubmit { get; set; } = default!;
+
+  /// <summary>
+  /// Обработчик события OnValidSubmit из EditForm вызовет событие OnSubmit.
+  /// Это позволит обработчику решить, как сохранить данные формы
+  /// </summary>
+  /// <returns></returns>
+  private async Task SubmitForm() => await OnSubmit(_room);
+
+  private List<string> optionsType = new() { "Студия", "Люкс Гранд Премиум", "Стандарт Бизнес (четырехместный)", "Номер стандарт", "Стандарт Бизнес" };
+  private string selectedOptionType = "Студия";
+
+  private void HandleSelection(string value)
+  {
+    selectedOptionType = value;
+  }
+}

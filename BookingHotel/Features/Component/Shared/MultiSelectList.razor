@@ -1,0 +1,36 @@
+﻿@typeparam T
+
+<div class="row">
+  <div class="col">
+    <div class="form-group">
+      <select multiple @onchange="HandleChange">
+        @foreach (var option in Options)
+        {
+          <option value="@option.ToString()" selected="@(SelectedOptions.Contains(option))">@option</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>
+
+
+
+@code {
+
+  [Parameter]
+  public List<T> Options { get; set; } = new();
+
+  [Parameter]
+  public List<T> SelectedOptions { get; set; } = new();
+
+  [Parameter]
+  public EventCallback<List<T>> OnSelectionChanged { get; set; }
+
+  private async Task HandleChange(ChangeEventArgs e)
+  {
+    var selectedValues = ((IEnumerable<object>)e.Value).Select(v => (T)Convert.ChangeType(v, typeof(T))).ToList();
+    SelectedOptions = selectedValues;
+    await OnSelectionChanged.InvokeAsync(SelectedOptions);
+  }
+
+}

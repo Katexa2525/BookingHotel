@@ -1,0 +1,30 @@
+﻿@page "/edit-room"
+@inject IMediator Mediator
+
+<PageTitle>Редактирование записи номера отеля</PageTitle>
+
+<NavigationСhain LastChainName="Edit Room" />
+
+<h3 class="mt-5 mb-4">Форма редактирования номера отеля</h3>
+
+@if (_submitSuccessful)
+{
+  <SuccessAlert Message="Ваш отель был успешно создан!" />
+}
+else if (_errorMessage is not null)
+{
+  <ErrorAlert Message="@_errorMessage" />
+}
+
+<RoomForm Room="_room" OnSubmit="SubmitEditRoom" />
+
+@code {
+  private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
+  private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
+  private RoomDto _room = new RoomDto();
+
+  private async Task SubmitEditRoom(RoomDto roomDto)
+  {
+
+  }
+}

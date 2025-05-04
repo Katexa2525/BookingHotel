@@ -5,11 +5,11 @@
   <div class="mb-3 text-end">
     <div class="btn-group">
       @* Эти две кнопки позволяют пользователю переключаться между двумя представлениями *@
-      <button @onclick="@(() => _mode = ViewMode.Grid)" title="Grid View" type="button"
+      <button @onclick="@(() => _mode = ViewMode.Grid)" title="Представление сетка" type="button"
               class="btn @(_mode == ViewMode.Grid ? "btn-secondary" : "btn-outline-secondary")">
         <i class="bi bi-grid-fill"></i>
       </button> 
-      <button @onclick="@(() => _mode = ViewMode.Table)" title="Table View" type="button"
+      <button @onclick="@(() => _mode = ViewMode.Table)" title="Табличное представление" type="button"
               class="btn @(_mode == ViewMode.Table ? "btn-secondary" : "btn-outline-secondary")">
         <i class="bi bi-table"></i>
       </button>

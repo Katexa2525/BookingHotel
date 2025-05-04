@@ -7,6 +7,8 @@
     public Hotel Hotel { get; set; }
     public int PeopleNumber { get; set; }
     public double Square { get; set; }
+    /// <summary> Описание номера </summary>
+    public string Description { get; set; } = string.Empty;
     public ICollection<Price> Prices { get; set; }
     public ICollection<RoomPhoto> RoomPhotos { get; set; }
     public ICollection<RoomFacility> RoomFacilities { get; set; }

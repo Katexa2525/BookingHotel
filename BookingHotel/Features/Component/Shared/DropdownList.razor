@@ -1,0 +1,25 @@
+﻿<select @onchange="HandleChange">
+  @foreach (var option in Options)
+  {
+    <option value="@option" selected="@(option == SelectedOption)">@option</option>
+  }
+</select>
+
+@code {
+
+  [Parameter]
+  public List<string> Options { get; set; } = new();
+
+  [Parameter]
+  public string SelectedOption { get; set; }
+
+  [Parameter]
+  public EventCallback<string> OnSelectionChanged { get; set; }
+
+  private async Task HandleChange(ChangeEventArgs e)
+  {
+    SelectedOption = e.Value?.ToString();
+    await OnSelectionChanged.InvokeAsync(SelectedOption);
+  }
+
+}
