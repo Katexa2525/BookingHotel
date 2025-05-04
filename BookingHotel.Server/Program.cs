@@ -66,7 +66,7 @@ if (app.Environment.IsDevelopment())
   app.UseWebAssemblyDebugging();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 //app.UseCors("CorsPolicy");
 
 // позволяет серверной части прослушивать приложение Blazor

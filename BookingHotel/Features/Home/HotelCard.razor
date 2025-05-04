@@ -1,4 +1,6 @@
-﻿<div class="card shadow" style="width: 18rem;">
+﻿@inject NavigationManager NavManager
+
+<div class="card shadow" style="width: 18rem;">
   <img src="@Hotel.MainPhoto" class="card-img-top" alt="@Hotel.Name">
   <div class="card-body">
     <h5 class="card-title">@Hotel.Name</h5>
@@ -9,7 +11,9 @@
     </div>
     <button class="btn btn-primary" title="View" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )"> @* вызывается делегат, передавая текущий отель *@
       <i class="bi bi-binoculars"></i>
-
+    </button>
+    <button @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))" title="Edit" class="btn btn-outline-secondary">
+      <i class="bi bi-pencil"></i>
     </button>
   </div>
 </div>
