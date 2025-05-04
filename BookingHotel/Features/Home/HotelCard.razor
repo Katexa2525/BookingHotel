@@ -6,7 +6,7 @@
 
   <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
                                                           : "images/NoImage.png")"
-       class="card-img-top" />
+       class="card-img-top" alt="@Hotel.Name">
 
   <div class="card-body">
     <h5 class="card-title">@Hotel.Name</h5>
@@ -24,7 +24,7 @@
     </button> *@
 
     <button class="btn btn-outline-secondary float-right" title="Редактирование" 
-            @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
+                   @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
       <i class="bi bi-pencil"></i>
     </button>
 
@@ -35,11 +35,9 @@
 
   [Parameter, EditorRequired]
   public HotelDto Hotel { get; set; } = default!; // определяет обязательный параметр компонента
-  //public Hotel Hotel { get; set; } = default!; // определяет обязательный параметр компонента
 
   /// <summary>События определяются с использованием типов делегатов Action или Func, или через тип EventCallback </summary>
   [Parameter, EditorRequired]
   public EventCallback<HotelDto> OnSelected { get; set; }
-  //public EventCallback<Hotel> OnSelected { get; set; }
 
 }

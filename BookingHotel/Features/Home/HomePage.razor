@@ -58,10 +58,8 @@ else
   // [Inject]
   // public HttpClient Http { get; set; }
 
-  // закрытое поле, содержащее данные о тропах
-  //private IEnumerable<Hotel>? _hotels;
-  //private Hotel? _selectedHotel;
   private HotelDto? _selectedHotel;
+  // закрытое поле, содержащее данные об отелях
   private IEnumerable<HotelDto>? _allHotels;
 
   protected override async Task OnInitializedAsync()
@@ -73,6 +71,7 @@ else
       _allHotels = response.Hotels.Select(p => new HotelDto
         {
           Id = p.Id,
+          Name = p.Name,
           Description = p.Description,
           Location = p.Location,
           Rating = p.Rating,

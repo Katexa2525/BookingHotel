@@ -6,7 +6,6 @@
     {
       <div class="drawer-content">
 
-        @* <img src="@_activeHotel.MainPhoto" /> *@
         <img src="@(!string.IsNullOrWhiteSpace(_activeHotel.MainPhoto) ? $"images/{_activeHotel.MainPhoto}"
                                                                        : "images/NoImage.png")"
              class="card-img-top" />
@@ -42,12 +41,10 @@
 @code {
   private bool _isOpen;
   private HotelDto? _activeHotel;
-  //private Hotel? _activeHotel;
 
   /// <summary>Параметр компонента определяется как открытое свойство, декорирование атрибутами</summary>
   [Parameter, EditorRequired]
   public HotelDto? Hotel { get; set; }
-  //public Hotel? Hotel { get; set; }
 
   protected override void OnParametersSet()
   {
