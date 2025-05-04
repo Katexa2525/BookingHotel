@@ -13,14 +13,14 @@
            @bind="_searchTerm"         
            @bind:event="oninput"       
            type="text"
-           placeholder="Search for a hotel..."
+           placeholder="Поиск отеля..."
            class="form-control form-control-lg"
     />
   </p>
 </div>
 
 @code {
-  private string _searchTerm;
+  private string _searchTerm = string.Empty;
 
   private void SearchForHotel(KeyboardEventArgs args)
   {

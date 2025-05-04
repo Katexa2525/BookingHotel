@@ -1,7 +1,13 @@
-﻿@inject NavigationManager NavManager
+﻿
+@inject NavigationManager NavManager
 
 <div class="card shadow" style="width: 18rem;">
-  <img src="@Hotel.MainPhoto" class="card-img-top" alt="@Hotel.Name">
+  @* <img src="@Hotel.MainPhoto" class="card-img-top" alt="@Hotel.Name"> *@
+
+  <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
+                                                          : "images/NoImage.png")"
+       class="card-img-top" />
+
   <div class="card-body">
     <h5 class="card-title">@Hotel.Name</h5>
     @* <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6> *@
@@ -12,17 +18,28 @@
     <button class="btn btn-primary" title="View" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )"> @* вызывается делегат, передавая текущий отель *@
       <i class="bi bi-binoculars"></i>
     </button>
-    <button @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))" title="Edit" class="btn btn-outline-secondary">
+
+    @* <button @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))" title="Edit" class="btn btn-outline-secondary">
+      <i class="bi bi-pencil"></i>
+    </button> *@
+
+    <button class="btn btn-outline-secondary float-right" title="Редактирование" 
+            @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
       <i class="bi bi-pencil"></i>
     </button>
+
   </div>
 </div>
 
 @code {
+
   [Parameter, EditorRequired]
-  public Hotel Hotel { get; set; } = default!; // определяет обязательный параметр компонента
+  public HotelDto Hotel { get; set; } = default!; // определяет обязательный параметр компонента
+  //public Hotel Hotel { get; set; } = default!; // определяет обязательный параметр компонента
 
   /// <summary>События определяются с использованием типов делегатов Action или Func, или через тип EventCallback </summary>
   [Parameter, EditorRequired]
-  public EventCallback<Hotel> OnSelected { get; set; }
+  public EventCallback<HotelDto> OnSelected { get; set; }
+  //public EventCallback<Hotel> OnSelected { get; set; }
+
 }
