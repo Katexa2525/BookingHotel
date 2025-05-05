@@ -59,6 +59,7 @@ else
       var _allHotels = response.Hotels.Select(p => new HotelDto
         {
           Id = p.Id,
+          Name = p.Name,
           Description = p.Description,
           Location = p.Location,
           Rating = p.Rating,
