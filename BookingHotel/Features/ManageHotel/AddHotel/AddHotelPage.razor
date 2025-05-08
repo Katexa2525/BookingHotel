@@ -8,7 +8,7 @@
 @using BookingHotel.Validation
 @using Microsoft.AspNetCore.Authorization
 
-@attribute [Authorize(Roles = "Administrator")]
+@attribute [Authorize(Roles = "Administrator, Hotel_owner")]
 
 <PageTitle>Создание новой записи отеля</PageTitle>
 
