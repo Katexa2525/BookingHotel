@@ -1,4 +1,4 @@
-﻿@page "/edit-hotel/{HotelId:guid}"
+﻿ @page "/edit-hotel/{HotelId:guid}"
 @inject IMediator Mediator
 
 @using Application.Enums
@@ -20,7 +20,7 @@ else
   <h3 class="mt-5 mb-4">@_hotel.Name</h3>
   @if (_submitSuccessful)
   {
-    <SuccessAlert Message="Ваш отель был успешно отредактирован!" />
+    <SuccessAlert Message="Отель был успешно отредактирован!" />
   }
   else if (_errorMessage is not null)
   {

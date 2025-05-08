@@ -5,11 +5,11 @@ namespace BookingHotel.Features.ManageHotel.Shared
 {
   public class UploadHotelImageHandler : IRequestHandler<UploadHotelImageRequest, UploadHotelImageRequest.Response>
   {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public UploadHotelImageHandler(HttpClient httpClient)
+    public UploadHotelImageHandler(IHttpClientFactory httpClientFactory)
     {
-      _httpClient = httpClient;
+      _httpClientFactory = httpClientFactory;
     }
 
     public async Task<UploadHotelImageRequest.Response> Handle(UploadHotelImageRequest request, CancellationToken cancellationToken)
@@ -21,8 +21,9 @@ namespace BookingHotel.Features.ManageHotel.Shared
       using var content = new MultipartFormDataContent();
       content.Add(new StreamContent(fileContent), "image", request.File.Name);
 
+      HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
       // файл отправляется в API серверной части, заменяю поле {hotelId} в шаблоне маршрута на идентификатор тропы, передаваемый в запросе
-      HttpResponseMessage? response = await _httpClient.PostAsync(UploadHotelImageRequest.RouteTemplate.Replace("{hotelId}", request.HotelId.ToString()), content, cancellationToken);
+      HttpResponseMessage? response = await httpClient.PostAsync(UploadHotelImageRequest.RouteTemplate.Replace("{hotelId}", request.HotelId.ToString()), content, cancellationToken);
 
       if (response.IsSuccessStatusCode)
       {

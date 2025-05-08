@@ -1,20 +1,17 @@
 ﻿using Application.DTO.Hotel.ClientRequest;
 using MediatR;
 using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
 
 namespace BookingHotel.Features.ManageHotel.Mediatr
 {
   /// <summary>Класс обработчика запросов по отелям</summary>
   public class AddHotelHandler : IRequestHandler<AddHotelRequest, AddHotelRequest.Response>
   {
-    private readonly HttpClient _httpClient;
-    private readonly IHttpClientFactory _clientFactory;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public AddHotelHandler(HttpClient httpClient, IHttpClientFactory clientFactory)
+    public AddHotelHandler(IHttpClientFactory httpClientFactory)
     {
-      _httpClient = httpClient;
-      _clientFactory = clientFactory;
+      _httpClientFactory = httpClientFactory;
     }
 
     /// <summary>Метод для обработки запроса Mediatr </summary>
@@ -27,9 +24,9 @@ namespace BookingHotel.Features.ManageHotel.Mediatr
       //var response = await _httpClient.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
 
       // Защищенный HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса
-      HttpClient? client = _clientFactory.CreateClient("SecureAPIClient");
-      client.DefaultRequestHeaders.Add("Accept", "application/json");
-      var response = await client.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
+      HttpClient? httpClient = _httpClientFactory.CreateClient("SecureAPIClient");
+      httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+      var response = await httpClient.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
 
       if (response.IsSuccessStatusCode)
       {

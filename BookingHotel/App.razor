@@ -1,23 +1,23 @@
 ﻿<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
-        <Found Context="routeData">
-            <!-- <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" /> -->
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-                <Authorizing>
-                    <text>Determining session state, please wait...</text>
-                </Authorizing>
-                <NotAuthorized>
-                    <text> You are not authorized to access this page. You need to log in.</text>
-                </NotAuthorized>
-            </AuthorizeRouteView>
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
-        <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <NavigationСhain LastChainName="Not found address" />
-                <p role="alert">Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
+  <Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+      <!-- <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" /> -->
+      <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+        <Authorizing>
+          <text>Определение состояния сеанса, пожалуйста, подождите ...</text>
+        </Authorizing>
+        <NotAuthorized>
+          <text> Нет прав, чтобы получить доступ к этой странице. Вам нужно войти в систему.</text>
+        </NotAuthorized>
+      </AuthorizeRouteView>
+      <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+      <PageTitle>Не найдено</PageTitle>
+      <LayoutView Layout="@typeof(MainLayout)">
+        <NavigationСhain LastChainName="Not found address" />
+        <p role="alert">Извините, по этому адресу нет ничего.</p>
+      </LayoutView>
+    </NotFound>
+  </Router>
 </CascadingAuthenticationState>

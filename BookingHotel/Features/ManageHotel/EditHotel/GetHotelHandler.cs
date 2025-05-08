@@ -6,11 +6,11 @@ namespace BookingHotel.Features.ManageHotel.EditHotel
 {
   public class GetHotelHandler : IRequestHandler<GetHotelRequest, GetHotelRequest.Response?>
   {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public GetHotelHandler(HttpClient httpClient)
+    public GetHotelHandler(IHttpClientFactory httpClientFactory)
     {
-      _httpClient = httpClient;
+      _httpClientFactory = httpClientFactory;
     }
 
     public async Task<GetHotelRequest.Response?> Handle(GetHotelRequest request, CancellationToken cancellationToken)
@@ -20,16 +20,17 @@ namespace BookingHotel.Features.ManageHotel.EditHotel
       {
         Console.WriteLine($"------- START GetHotelHandler Handle HotelId={request.hotelId} -------");
 
-        var res = _httpClient.GetFromJsonAsync<GetHotelRequest.Response>(GetHotelRequest.RouteTemplate.Replace("{hotelId}",
-                                                                            request.hotelId.ToString()),
-                                                                            cancellationToken);
+        // Незащищенный HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса
+        HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
+
+        var res = httpClient.GetFromJsonAsync<GetHotelRequest.Response>(
+                  GetHotelRequest.RouteTemplate.Replace("{hotelId}", request.hotelId.ToString()), cancellationToken);
 
         Console.WriteLine($"------- GetHotelHandler Handle res={res.Status} -------");
 
         //Заполнитель hotelId в RouteTemplate заменяется идентификатором отеля, подлежащему редактированию, перед выполнением HTTP-запроса
-        return await _httpClient.GetFromJsonAsync<GetHotelRequest.Response>(GetHotelRequest.RouteTemplate.Replace("{hotelId}", 
-                                                                            request.hotelId.ToString()),
-                                                                            cancellationToken);
+        return await httpClient.GetFromJsonAsync<GetHotelRequest.Response>(
+                  GetHotelRequest.RouteTemplate.Replace("{hotelId}", request.hotelId.ToString()), cancellationToken);
       }
       catch (HttpRequestException ex)
       {
