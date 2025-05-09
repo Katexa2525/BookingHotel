@@ -17,7 +17,8 @@ namespace BookingHotel.Server.Endpoint.Hotel
       _mediator = mediator;
     }
 
-    [HttpGet(GetHotelRequest.RouteTemplate)]
+    //[HttpGet(GetHotelRequest.RouteTemplate)]
+    [HttpGet("/api/hotels/v3/{hotelId}")]
     public override async Task<ActionResult<GetHotelRequest.Response>> HandleAsync(Guid request, CancellationToken cancellationToken = default)
     {
       // получаю отель из БД

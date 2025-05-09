@@ -1,4 +1,5 @@
-﻿using Application.DTO.Hotel.ClientRequest;
+﻿using Application.DTO.Hotel;
+using Application.DTO.Hotel.ClientRequest;
 using MediatR;
 using System.Net.Http.Json;
 
@@ -17,13 +18,30 @@ namespace BookingHotel.Features.ManageHotel.Shared
     {
       try
       {
-        HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
+       HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
+
         // Выполняется запрос к API. В случае успеха ответ десериализуется и возвращается вызывающей стороне
-        return await httpClient.GetFromJsonAsync<GetHotelsRequest.Response>(GetHotelsRequest.RouteTemplate);
+        var allHotels = await httpClient.GetFromJsonAsync<List<HotelAllDto>>(GetHotelsRequest.RouteTemplate, cancellationToken);
+        return new GetHotelsRequest.Response(allHotels);
+
+        //var allHotels = await httpClient.GetFromJsonAsync<GetHotelsRequest.Response>(route, cancellationToken);
+
+        //return new GetHotelsRequest.Response(
+        //  allHotels.Select(hotel => new GetHotelsRequest.AllHotel
+        //  (
+        //    hotel.Id, hotel.Name, hotel.Description, hotel.Location, hotel.Rating, hotel.Star, hotel.MainPhoto
+        //  ))
+        //);
+
       }
-      catch (HttpRequestException) 
+      catch (HttpRequestException)
       {
         //В противном случае вызывающая сторона получает в качестве ответа null
+        return default!;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
         return default!;
       }
     }

@@ -96,6 +96,7 @@ else
     {
       // запрос на получения всех отелей через GetHotelsRequest и Mediator
       var response = await Mediator.Send(new GetHotelsRequest());
+
       _allHotels = response.Hotels.Select(p => new HotelDto
         {
           Id = p.Id,
@@ -106,6 +107,7 @@ else
           Star = p.Star,
           MainPhoto = p.MainPhoto
         });
+
 
       // Http вызов загружает тестовые данные из json
       //_hotels = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");

@@ -5,11 +5,9 @@
 @using AutoMapper
 @using Application.DTO.Hotel.ClientRequest
 
-<PageTitle>Редактирование записи отеля</PageTitle>
+<PageTitle>Редактирование отеля</PageTitle>
 
 <NavigationСhain LastChainName="Edit Hotel" />
-
-<h3 class="mt-5 mb-4">Форма редактирования отеля</h3>
 
 @if (_isLoading)
 {
@@ -17,7 +15,7 @@
 }
 else
 {
-  <h3 class="mt-5 mb-4">@_hotel.Name</h3>
+  <h3 class="mt-5 mb-1">@_hotel.Name</h3>
   @if (_submitSuccessful)
   {
     <SuccessAlert Message="Отель был успешно отредактирован!" />
@@ -41,28 +39,13 @@ else
   protected override async Task OnInitializedAsync()
   {
     _isLoading = true;
-    Console.WriteLine("-------START EditHotelPage OnInitializedAsync -------");
+
     var response = await Mediator.Send(new GetHotelRequest(HotelId));
-    Console.WriteLine($"-------END EditHotelPage OnInitializedAsync HotelId={HotelId} -------");
+
     if (response is not null)
     {
       // если отель получен, сведения о нём копирую в локальное поле для передачи в HotelForm
-      //_hotel = response.Hotel;
-      _hotel.Id = HotelId;
-      _hotel.Name = response.Hotel.Name;
-      _hotel.Description = response.Hotel.Description;
-      _hotel.Location = response.Hotel.Location;
-      _hotel.Star = response.Hotel.Star;
-      _hotel.MainPhoto = response.Hotel.MainPhoto;
-      _hotel.Rating = response.Hotel.Rating;
-      _hotel.Rooms = response.Hotel.Rooms;
-      _hotel.Foods = response.Hotel.Foods;
-      _hotel.Locations = response.Hotel.Locations;
-      _hotel.HotelFacilities = response.Hotel.HotelFacilities;
-      _hotel.HotelPhotos = response.Hotel.HotelPhotos;
-      _hotel.HotelUsefulInfo = response.Hotel.HotelUsefulInfo;
-      _hotel.Prices = response.Hotel.Prices;
-      _hotel.Reviews = response.Hotel.Reviews;
+      _hotel = response.Hotel;
     }
     else
     {
