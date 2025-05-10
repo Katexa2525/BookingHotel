@@ -9,6 +9,8 @@ namespace Application.DTO.Hotel.ClientRequest
   {
     /// <summary>Адрес конечной точки</summary>
     public const string RouteTemplate = "api/hotels/create";
+    //public const string RouteTemplate = "api/hotels";
+
     /// <summary>Вложенная запись определяет данные ответа на запрос</summary>
     /// <param name="hotelId">Guid отеля</param>
     public record Response(Guid hotelId);

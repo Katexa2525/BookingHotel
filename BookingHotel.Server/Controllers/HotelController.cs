@@ -1,5 +1,6 @@
 ﻿using Application.DTO.Hotel;
 using Application.DTO.Hotel.CQRS;
+using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ namespace BookingHotel.Server.Controllers
     }
 
     [HttpPost]
-    [Route("create")]
+    //[Route("create")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] HotelCreateDto dto)
     {
