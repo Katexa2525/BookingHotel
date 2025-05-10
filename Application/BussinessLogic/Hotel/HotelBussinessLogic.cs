@@ -23,9 +23,9 @@ namespace Application.BussinessLogic.Hotel
       _repositoryManager = repositoryManager;
     }
 
-    public async Task<List<HotelAllDto>> GetAllAsync()
+    public async Task<List<HotelAllDto>> GetAllAsync(bool trackChanges)
     {
-      var listDB = _mapper.Map<List<HotelAllDto>>(await _repositoryManager.HotelRepository.GetAllAsync(trackChanges: true));
+      var listDB = _mapper.Map<List<HotelAllDto>>(await _repositoryManager.HotelRepository.GetAllAsync(trackChanges));
       return listDB.ToList();
     }
 
@@ -51,9 +51,9 @@ namespace Application.BussinessLogic.Hotel
       return entity.Id;
     }
 
-    public async Task<HotelDto> GetByIdAsync(Guid id)
+    public async Task<HotelDto> GetByIdAsync(Guid id, bool trackChanges)
     {
-      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges: true);
+      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges);
       //var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges: true).FirstOrDefault();
       if (hotel == null)
         return null;  //new HotelDto();
@@ -155,8 +155,9 @@ namespace Application.BussinessLogic.Hotel
             location => location.Id,
             dto => dto.Id
             );
-      
+
       //await _repositoryHotel.SaveAsync();
+      _repositoryManager.HotelRepository.UpdateEntity(entity);
       await _repositoryManager.SaveAsync();
     }
   }
