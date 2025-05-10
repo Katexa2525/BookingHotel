@@ -91,11 +91,12 @@ namespace Application.BussinessLogic.Hotel
     public async Task UpdateAsync(HotelUpdateDto dto)
     {
       //var entity = await _repositoryHotel.FindOneAsync(x => x.Id == dto.Id);
-      var entity = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == dto.Id);
+
+      var entity = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == dto.Id, trackChanges: true);
       if (entity == null) return;
 
       _mapper.Map(dto, entity);
-      
+
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Prices,
             dto.Prices,
