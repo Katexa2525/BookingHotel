@@ -28,15 +28,15 @@
 
   <ViewSwitcher Items="_allHotels" Context="hotel">
     <GridTemplate>
-       <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected"/>
+      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
     </GridTemplate>
 
-    <HeaderTemplate>                                               
-        <th>Наименование отеля</th>
-        <th>Расположение</th>
-        <th>Рейтинг</th>
-        <th>Кол-во звезд</th>
-        <th></th>
+    <HeaderTemplate>
+      <th>Наименование отеля</th>
+      <th>Расположение</th>
+      <th>Рейтинг</th>
+      <th>Кол-во звезд</th>
+      <th></th>
     </HeaderTemplate>
 
     <RowTemplate>
@@ -48,10 +48,12 @@
         <button @onclick="@(() =>HandleHotelSelected (hotel))" title="Просмотр" class="btn btn-primary">
           <i class="bi bi-binoculars"></i>
         </button>
-        <button @onclick="@(() => NavManager.NavigateTo ($"/edit-trail/{hotel.Id}"))" title="Редактирование"
-                class="btn btn-outline-secondary">
-          <i class="bi bi-pencil"></i>
-        </button>
+        <AuthorizeView>
+          <button @onclick="@(() => NavManager.NavigateTo ($"/edit-trail/{hotel.Id}"))" title="Редактирование"
+                  class="btn btn-outline-secondary">
+            <i class="bi bi-pencil"></i>
+          </button>
+        </AuthorizeView>
       </td>
     </RowTemplate>
   </ViewSwitcher>
@@ -94,6 +96,7 @@ else
     {
       // запрос на получения всех отелей через GetHotelsRequest и Mediator
       var response = await Mediator.Send(new GetHotelsRequest());
+
       _allHotels = response.Hotels.Select(p => new HotelDto
         {
           Id = p.Id,
@@ -104,6 +107,7 @@ else
           Star = p.Star,
           MainPhoto = p.MainPhoto
         });
+
 
       // Http вызов загружает тестовые данные из json
       //_hotels = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");

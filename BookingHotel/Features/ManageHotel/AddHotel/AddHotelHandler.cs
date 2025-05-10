@@ -1,20 +1,17 @@
 ﻿using Application.DTO.Hotel.ClientRequest;
 using MediatR;
 using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
 
 namespace BookingHotel.Features.ManageHotel.Mediatr
 {
   /// <summary>Класс обработчика запросов по отелям</summary>
   public class AddHotelHandler : IRequestHandler<AddHotelRequest, AddHotelRequest.Response>
   {
-    private readonly HttpClient _httpClient;
-    private readonly IHttpClientFactory _clientFactory;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public AddHotelHandler(HttpClient httpClient, IHttpClientFactory clientFactory)
+    public AddHotelHandler(IHttpClientFactory httpClientFactory)
     {
-      _httpClient = httpClient;
-      _clientFactory = clientFactory;
+      _httpClientFactory = httpClientFactory;
     }
 
     /// <summary>Метод для обработки запроса Mediatr </summary>
@@ -23,25 +20,34 @@ namespace BookingHotel.Features.ManageHotel.Mediatr
     /// <returns></returns> 
     public async Task<AddHotelRequest.Response> Handle(AddHotelRequest request, CancellationToken cancellationToken)
     {
-      // HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса
-      //var response = await _httpClient.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
-
-      // Защищенный HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса
-      HttpClient? client = _clientFactory.CreateClient("SecureAPIClient");
-      client.DefaultRequestHeaders.Add("Accept", "application/json");
-      var response = await client.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
-
-      if (response.IsSuccessStatusCode)
+      try
       {
-        //int hotelId = await response.Content.ReadFromJsonAsync<int>(cancellationToken);
-        Guid hotelId = await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
-        // если запрос был успешным, то hotelId считывается из ответа и возвращается с помощью записи AddHotelRequest.Response
-        return new AddHotelRequest.Response(hotelId);
+        // Защищенный HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса
+        HttpClient? httpClient = _httpClientFactory.CreateClient("SecureAPIClient");
+        //httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+        var response = await httpClient.PostAsJsonAsync(AddHotelRequest.RouteTemplate, request, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+          Guid hotelId = await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
+          // если запрос был успешным, то hotelId считывается из ответа и возвращается с помощью записи AddHotelRequest.Response
+          return new AddHotelRequest.Response(hotelId);
+        }
+        else
+        {
+          // если запрос не выполнен
+          return new AddHotelRequest.Response(Guid.Empty);
+        }
       }
-      else
+      catch (HttpRequestException)
       {
-        // если запрос не выполнен
-        return new AddHotelRequest.Response(Guid.Empty);
+        //В противном случае вызывающая сторона получает в качестве ответа null
+        return default!;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+        return default!;
       }
     }
   }

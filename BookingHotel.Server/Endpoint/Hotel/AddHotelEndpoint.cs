@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingHotel.Server.Endpoint.Hotel
 {
   /// <summary> Класс конечной точки для создания записи по новому отелю </summary>
-  public class AddHotelEndpoint : BaseAsyncEndpoint.WithRequest<AddHotelRequest>.WithResponse<int>
+  public class AddHotelEndpoint : BaseAsyncEndpoint.WithRequest<AddHotelRequest>.WithResponse<Guid>
   {
     private readonly IMediator _mediator;
 
@@ -17,7 +17,8 @@ namespace BookingHotel.Server.Endpoint.Hotel
     }
 
     [HttpPost(AddHotelRequest.RouteTemplate)]
-    public override async Task<ActionResult<int>> HandleAsync(AddHotelRequest request, CancellationToken cancellationToken = default)
+    //[HttpPost("api/hotels/v3/create")]
+    public override async Task<ActionResult<Guid>> HandleAsync(AddHotelRequest request, CancellationToken cancellationToken = default)
     {
       var result = await _mediator.Send(new CreateHotelCommand() { Dto = request.Hotel });
       return Ok(result);

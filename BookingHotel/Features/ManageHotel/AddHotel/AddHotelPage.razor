@@ -8,17 +8,17 @@
 @using BookingHotel.Validation
 @using Microsoft.AspNetCore.Authorization
 
-@attribute [Authorize(Roles = "Administrator")]
+@attribute [Authorize(Roles = "Administrator, Hotel_owner")]
 
-<PageTitle>Создание новой записи отеля</PageTitle>
+<PageTitle>Создание отеля</PageTitle>
 
 <NavigationСhain LastChainName="Add Hotel" />
 
-<h3 class="mt-5 mb-4">Форма создания отеля</h3>
+@* <h3 class="mt-5 mb-4">Форма создания отеля</h3> *@
 
 @if (_submitSuccessful)
 {
-  <SuccessAlert Message="Ваш отель был успешно создан!"/>
+  <SuccessAlert Message="Отель был успешно создан!"/>
 } 
 else if (_errorMessage is not null)
 {

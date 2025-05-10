@@ -15,7 +15,8 @@
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6>
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-star"></span> @Hotel.Rating </h6>
     </div>
-    <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )"> @* вызывается делегат, передавая текущий отель *@
+    @* вызывается делегат, передавая текущий отель *@
+    <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )"> 
       <i class="bi bi-binoculars"></i>
     </button>
     <button class="btn btn-outline-secondary float-right" title="Редактирование" 

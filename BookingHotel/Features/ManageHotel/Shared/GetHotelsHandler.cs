@@ -1,4 +1,5 @@
-﻿using Application.DTO.Hotel.ClientRequest;
+﻿using Application.DTO.Hotel;
+using Application.DTO.Hotel.ClientRequest;
 using MediatR;
 using System.Net.Http.Json;
 
@@ -6,23 +7,41 @@ namespace BookingHotel.Features.ManageHotel.Shared
 {
   public class GetHotelsHandler : IRequestHandler<GetHotelsRequest, GetHotelsRequest.Response?>
   {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public GetHotelsHandler(HttpClient httpClient)
+    public GetHotelsHandler(IHttpClientFactory httpClientFactory)
     {
-      _httpClient = httpClient;
+      _httpClientFactory = httpClientFactory;
     }
 
     public async Task<GetHotelsRequest.Response?> Handle(GetHotelsRequest request, CancellationToken cancellationToken)
     {
       try
       {
+       HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
+
         // Выполняется запрос к API. В случае успеха ответ десериализуется и возвращается вызывающей стороне
-        return await _httpClient.GetFromJsonAsync<GetHotelsRequest.Response>(GetHotelsRequest.RouteTemplate);
+        var allHotels = await httpClient.GetFromJsonAsync<List<HotelAllDto>>(GetHotelsRequest.RouteTemplate, cancellationToken);
+        return new GetHotelsRequest.Response(allHotels);
+
+        //var allHotels = await httpClient.GetFromJsonAsync<GetHotelsRequest.Response>(route, cancellationToken);
+
+        //return new GetHotelsRequest.Response(
+        //  allHotels.Select(hotel => new GetHotelsRequest.AllHotel
+        //  (
+        //    hotel.Id, hotel.Name, hotel.Description, hotel.Location, hotel.Rating, hotel.Star, hotel.MainPhoto
+        //  ))
+        //);
+
       }
-      catch (HttpRequestException) 
+      catch (HttpRequestException)
       {
         //В противном случае вызывающая сторона получает в качестве ответа null
+        return default!;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
         return default!;
       }
     }

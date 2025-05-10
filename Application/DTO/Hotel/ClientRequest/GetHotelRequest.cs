@@ -6,6 +6,6 @@ namespace Application.DTO.Hotel.ClientRequest
   {
     public const string RouteTemplate = "/api/hotels/{hotelId}";
 
-    public record Response(HotelDto Hotel);
+    public record Response(HotelDto? Hotel);
   }
 }

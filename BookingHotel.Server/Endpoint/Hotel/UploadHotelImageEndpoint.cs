@@ -24,7 +24,8 @@ namespace BookingHotel.Server.Endpoint.Hotel
       _mapper = mapper;
     }
 
-    [HttpPost(UploadHotelImageRequest.RouteTemplate)]
+    //[HttpPost(UploadHotelImageRequest.RouteTemplate)]
+    [HttpPost("/api/hotels/v3/{hotelId}/images")]
     public override async Task<ActionResult<string>> HandleAsync([FromRoute] Guid hotelId, CancellationToken cancellationToken = default)
     {
       // получаю отель по Id

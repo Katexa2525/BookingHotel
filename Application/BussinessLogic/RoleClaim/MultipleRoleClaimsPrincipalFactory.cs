@@ -13,10 +13,9 @@ namespace Application.BussinessLogic.RoleClaim
   public class MultipleRoleClaimsPrincipalFactory<TAccount> : AccountClaimsPrincipalFactory<TAccount>
                                              where TAccount : RemoteUserAccount
   {
-    public MultipleRoleClaimsPrincipalFactory(IAccessTokenProviderAccessor accessor)
-        : base(accessor)
-    {
-    }
+    public MultipleRoleClaimsPrincipalFactory(IAccessTokenProviderAccessor accessor) : base(accessor)
+    {    }
+
     public async override ValueTask<ClaimsPrincipal> CreateUserAsync(TAccount account,
         RemoteAuthenticationUserOptions options)
     {
@@ -28,6 +27,7 @@ namespace Application.BussinessLogic.RoleClaim
       }
       return user;
     }
+
     private static void MapArrayClaimsToMultipleSeparateClaims(TAccount account, ClaimsIdentity claimsIdentity)
     {
       foreach (var prop in account.AdditionalProperties)

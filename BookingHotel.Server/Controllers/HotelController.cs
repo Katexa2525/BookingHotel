@@ -1,32 +1,32 @@
 ﻿using Application.DTO.Hotel;
 using Application.DTO.Hotel.CQRS;
+using Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingHotel.Server.Controllers
 {
   [ApiController]
-  [Route("api/hotels/v3")]
+  [Route("api/hotels")]
   public class HotelController : ControllerBase
   {
     private readonly IMediator _mediator;
 
-    public HotelController(IMediator mediator)
+    public HotelController(IMediator mediator) 
     {
       _mediator = mediator;
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(List<HotelAllDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<List<HotelAllDto>>> GetAll()
     {
       var result = await _mediator.Send(new GetAllHotelQuery() { });
       return Ok(result);
     }
 
-    [Route("create")]
     [HttpPost]
+    //[Route("create")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] HotelCreateDto dto)
     {
@@ -36,7 +36,7 @@ namespace BookingHotel.Server.Controllers
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(HotelDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<HotelDto>> GetById([FromRoute] Guid id)
     {
       var result = await _mediator.Send(new GetByIdHotelQuery() { Id = id });
       return Ok(result);

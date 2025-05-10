@@ -21,7 +21,8 @@ namespace BookingHotel.Server.Endpoint.Hotel
       _mapper = mapper;
     }
 
-    [HttpPut(EditHotelRequest.RouteTemplate)]
+    //[HttpPut(EditHotelRequest.RouteTemplate)]
+    [HttpPut("/api/hotels/v3")]
     public override async Task<ActionResult<bool>> HandleAsync(EditHotelRequest request, CancellationToken cancellationToken = default)
     {
       // получаю отель из БД
