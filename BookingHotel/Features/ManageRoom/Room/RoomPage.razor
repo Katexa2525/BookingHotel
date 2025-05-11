@@ -1,0 +1,102 @@
+﻿@page "/rooms/{HotelId:guid}"
+
+@using Application.DTO.Room.ClientRequest
+
+@inject IMediator Mediator
+@inject NavigationManager NavManager
+
+<PageTitle>Номера</PageTitle>
+
+@if (_allRooms is not null && _allRooms.Any())
+{
+  <div class="mb-4">
+    <p class="font-italic text-center">
+      Есть номер, который хотели бы опубликовать?
+      <a href="add-hotel">Добавьте это здесь</a>.
+    </p>
+  </div>
+
+  // данные передаются в параметры компонента с помощью атрибутов элемента
+  <RoomDetails Room="_selectedRoom" />
+
+  @* <HotelSearch /> *@
+
+  <ViewSwitcher Items="_allRooms" Context="room">
+    <GridTemplate>
+      <RoomCard Hotel="room" OnSelected="HandleRoomSelected" />
+    </GridTemplate>
+
+    <HeaderTemplate>
+      <th>Тип номера</th>
+      <th>Кол-во человек</th>
+      <th>Площадь</th>
+      <th></th>
+    </HeaderTemplate>
+
+    <RowTemplate>
+      <th scope="col">@room.RoomTypeId</th>
+      <td>@room.PeopleNumber</td>
+      <td>@room.Square</td>
+      <td class="text-right">
+        <button @onclick="@(() =>HandleRoomSelected(room))" title="Просмотр" class="btn btn-primary">
+          <i class="bi bi-binoculars"></i>
+        </button>
+        <button @onclick="@(() => NavManager.NavigateTo ($"/edit-room/{room.Id}"))" title="Редактирование"
+        class="btn btn-outline-secondary">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </RowTemplate>
+  </ViewSwitcher>
+}
+else
+{
+  <div class="no-hotels">
+    <svg viewBox="0 0 16 16" class="bi bi-tree" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M8 0a.5.5 0 0 1 .416.223l3
+                                   4.5A.5.5 0 0 1 11 5.5h-.098l2.022 3.235a.5.5 0 0 1-.424.765h-.191l1.638
+                                   3.276a.5.5 0 0 1-.447.724h-11a.5.5 0 0 1-.447-.724L3.69 9.5H3.5a.5.5 0
+                                   0 1-.424-.765L5.098 5.5H5a.5.5 0 0 1-.416-.777l3-4.5A.5.5 0 0 1 8
+                                   0zM5.934 4.5H6a.5.5 0 0 1 .424.765L4.402 8.5H4.5a.5.5 0 0 1 .447.724L3.31
+                                   12.5h9.382l-1.638-3.276A.5.5 0 0 1 11.5 8.5h.098L9.576 5.265A.5.5 0 0
+                                   1 10 4.5h.066L8 1.401 5.934 4.5z" />
+      <path d="M7 13.5h2V16H7v-2.5z" />
+    </svg>
+    <h3 class="text-muted font-weight-light">
+      В настоящее время нет номеров,
+      <a href="add-room">почему бы не добавить один?</a>
+    </h3>
+  </div>
+}
+
+@code {
+
+  private RoomDto? _selectedRoom;
+  // закрытое поле, содержащее данные о номерах определенного отеля, или все номера всех отелей
+  private IEnumerable<RoomDto>? _allRooms;
+
+  /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
+  [Parameter]
+  public Guid HotelId { get; set; }
+
+  private void HandleRoomSelected(RoomDto room)
+  {
+    _selectedRoom = room;
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    // запрос на получения всех номеров отелей через GetHotelsRequest и Mediator
+    var response = await Mediator.Send(new GetRoomsRequest());
+
+    _allRooms = response.Rooms.Select(p => new RoomDto
+      {
+        Id = p.Id,
+        HotelId = p.HotelId,
+        Description = p.Description,
+        PeopleNumber = p.PeopleNumber,
+        Square = p.Square
+      });
+
+  }
+}

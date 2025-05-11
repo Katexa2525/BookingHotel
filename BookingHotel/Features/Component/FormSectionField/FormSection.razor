@@ -4,6 +4,9 @@
       <div class="col-4">
         <h4>@Title</h4>
         <p class="text-secondary">@HelpText</p>
+        <img src="@(!string.IsNullOrWhiteSpace(@HotelMainPhoto) ? $"images/{@HotelMainPhoto}"
+                                                                : "images/NoImage.png")"
+             class="card-img-top" alt="@HotelMainPhoto">
       </div>
       <div class="col-8">
         <!--Показывает содержимое, которое будет отображаться -->
@@ -22,7 +25,12 @@
   [Parameter, EditorRequired]
   public string HelpText { get; set; } = default!;
 
+  /// <summary> Раздел фото </summary>
+  [Parameter, EditorRequired]
+  public string HotelMainPhoto { get; set; } = default!;
+
   /// <summary> Содержимое, которое будет отображаться </summary>
   [Parameter, EditorRequired]
   public RenderFragment ChildContent { get; set; } = default!;
+
 }
