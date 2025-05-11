@@ -63,12 +63,12 @@
   <div class="mt-4 mb-5">
     <div class="row">
       <div class="offset-4 col-8 text-right">
-        <button class="btn btn-outline-secondary" type="button"
-        onclick="@(() => _hotel=new HotelDto())">
-          Сбросить
-        </button>
         <button class="btn btn-primary" type="submit">
-          Принять
+          @TextButtonAccept
+        </button>
+        <button class="btn btn-outline-secondary" type="button"
+                onclick="@(() => _hotel=new HotelDto())">
+          @TextButtonCancel
         </button>
       </div>
     </div>
@@ -87,6 +87,12 @@
   {
     _hotel.Star = star;
   }
+
+  [Parameter, EditorRequired]
+  public string TextButtonAccept { get; set;} = string.Empty;
+
+  [Parameter, EditorRequired]
+  public string TextButtonCancel { get; set;} = "Отмена";
 
   /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
   [Parameter, EditorRequired]
