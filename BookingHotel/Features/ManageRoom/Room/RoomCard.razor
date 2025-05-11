@@ -1,0 +1,36 @@
+﻿@inject NavigationManager NavManager
+
+<div class="card shadow" style="width: 18rem;">
+
+@*   <img src="@(!string.IsNullOrWhiteSpace(Room.MainPhoto) ? $"images/{Room.MainPhoto}"
+                                                          : "images/NoImage.png")"
+       class="card-img-top"> *@
+
+  <div class="card-body">
+    <h5 class="card-title">@Room.RoomTypeId</h5>
+    @* <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6> *@
+    <div class="d-flex justify-content-between">
+      <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-people"></span> @Room.PeopleNumber</h6>
+      <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-loop-square"></span> @Room.Square </h6>
+    </div>
+    @* вызывается делегат, передавая текущий отель *@
+    <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Room) )">
+      <i class="bi bi-binoculars"></i>
+    </button>
+    <button class="btn btn-outline-secondary float-right" title="Редактирование"
+            @onclick="@(() => NavManager.NavigateTo($"/edit-room/{Room.Id}"))">
+      <i class="bi bi-pencil"></i>
+    </button>
+
+  </div>
+</div>
+
+@code {
+
+  [Parameter, EditorRequired]
+  public RoomDto Room { get; set; } = default!; // определяет обязательный параметр компонента
+
+  /// <summary>События определяются с использованием типов делегатов Action или Func, или через тип EventCallback </summary>
+  [Parameter, EditorRequired]
+  public EventCallback<RoomDto> OnSelected { get; set; }
+}

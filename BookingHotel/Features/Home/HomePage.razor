@@ -10,13 +10,13 @@
 @using System.Security.Claims
 
 
-<PageTitle>Booking Hotel</PageTitle>
+<PageTitle>Отели</PageTitle>
 
 @if (_allHotels is not null && _allHotels.Any())
 {
   <div class="mb-4">
     <p class="font-italic text-center">
-      У вас есть отель, который Вы хотели бы опубликовать?
+      Есть отель, который хотели бы опубликовать?
       <a href="add-hotel">Добавьте это здесь</a>.
     </p>
   </div>
@@ -70,7 +70,7 @@ else
       <path d="M7 13.5h2V16H7v-2.5z" />
     </svg>
     <h3 class="text-muted font-weight-light">
-      В настоящее время у нас нет отелей,
+      В настоящее время нет отелей,
       <a href="add-hotel">почему бы не добавить один?</a>
     </h3>
   </div>

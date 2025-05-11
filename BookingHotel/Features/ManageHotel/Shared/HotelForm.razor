@@ -1,4 +1,6 @@
-﻿@using Application.Enums
+﻿@inject NavigationManager NavManager
+
+@using Application.Enums
 @using BookingHotel.Validation
 
 <!--Компонент EditForm используется для определения формы Blazor. Как минимум должны быть определены модель и действие отправки -->
@@ -11,39 +13,37 @@
       <div class="row">
         <div class="col-4">
           <div >
-          <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
-          @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
-          {
-            <img src="images/NoImage.png" class="card-img-top" />
-            <InputFile OnChange="LoadHotelImage" class="form-control-file mt-1"
-                       id="hotelImage" accept=".png,.jpg,.jpeg" />
-          }
-          else
-          {
-            <div class="card bg-dark text-white">
-              <img src="images/@_hotel.MainPhoto" class="card-img-top" />
-              <div class="card-img-overlay">
-                <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
-                  Удалить
-                </button>
+            <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
+            @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
+            {
+              <img src="images/NoImage.png" class="card-img-top" />
+              <InputFile OnChange="LoadHotelImage" class="form-control-file mt-1"
+              id="hotelImage" accept=".png,.jpg,.jpeg" />
+            }
+            else
+            {
+              <div class="card bg-dark text-white">
+                <img src="images/@_hotel.MainPhoto" class="card-img-top" />
+                <div class="card-img-overlay">
+                  <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
+                    Удалить
+                  </button>
+                </div>
               </div>
-            </div>
-          }
+            }
           </div>
 
           <div class="mt-5 mb-5">
-            <button @onclick="AddRoom">
+            <button @onclick="ShowRooms">
               <img src="images/room.png" alt="Комнаты" width="50" height="50">
             </button>
 
-            <button>
+            <button @onclick="ShowFacilities">
               <img src="images/Facility.png" alt="Удобства" width="50" height="50">
-              @* Удобства *@
             </button>
 
-            <button>
+            <button @onclick="ShowPhoto">
               <img src="images/camera.png" alt="Фото" width="50" height="50">
-              @* Фото *@
             </button>
           </div>
 
@@ -53,7 +53,7 @@
                 @TextButtonAccept
               </button>
               <button class="btn btn-outline-secondary" type="button"
-                      onclick="@(() => _hotel=new HotelDto())">
+              onclick="@(() => _hotel=new HotelDto())">
                 @TextButtonCancel
               </button>
             </div>
@@ -197,9 +197,19 @@
     _hotel.ImageAction = ImageAction.Remove;
   }
 
-  private void AddRoom()
+  /// <summary> Обработчик нажатия кнопки Room, чтобы добавлять или отобразить номер </summary>
+  private void ShowRooms()
   {
-    Console.WriteLine("Добавлена комната!");
+    NavManager.NavigateTo("/edit-room");
   }
 
+  private void ShowPhoto(MouseEventArgs args)
+  {
+    NavManager.NavigateTo("/show-photo");
+  }
+
+  private void ShowFacilities(MouseEventArgs args)
+  {
+    NavManager.NavigateTo("/show-facilities");
+  }
 }
