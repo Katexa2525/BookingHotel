@@ -6,61 +6,103 @@
 <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
   <FluentValidationValidator />
 
-  <FormSection Title="Базовая информация" HelpText="Эта информация используется для идентификации отеля ...">
+  @* <FormSection Title="" HelpText="" HotelMainPhoto="@_hotel.MainPhoto"> *@
 
-    <FormFieldSet Width="col">
-      <label for="hotelName" class="font-weight-bold text-secondary">Наименование отеля</label>
-      <InputText @bind-Value="_hotel.Name" class="form-control" id="hotelName" />
-      <ValidationMessage For="@(() => _hotel.Name )" />
-    </FormFieldSet>
+  <div class="card card-brand mb-4 shadow">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-4">
+          <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
+          @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
+          {
+            <img src="images/NoImage.png" class="top-image" />
+            <InputFile OnChange="LoadHotelImage" class="form-control-file" id="hotelImage" accept=".png,.jpg,.jpeg" />
+          }
+          else
+          {
+            <div class="card bg-dark text-white">
+              <img src="images/@_hotel.MainPhoto" class="top-image" />
+              <div class="card-img-overlay">
+                <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
+                  Удалить
+                </button>
+              </div>
+            </div>
+          }
 
-    <FormFieldSet Width="col">
-      <label for="hotelDescription" class="font-weight-bold text-secondary">Описание отеля</label>
-      <InputTextArea @bind-Value="_hotel.Description" rows="6" class="form-control" id="hotelDescription" />
-      <ValidationMessage For="@(() => _hotel.Description )" />
-    </FormFieldSet>
-
-    <FormFieldSet Width="col">
-      <label for="hotelLocation" class="font-weight-bold text-secondary">Расположение</label>
-      <InputText @bind-Value="_hotel.Location" class="form-control" id="hotelLocation" />
-      <ValidationMessage For="@(() => _hotel.Location )" />
-    </FormFieldSet>
-
-    <FormFieldSet Width="col-3">
-      <label for="hotelRating" class="font-weight-bold text-secondary">Рейтинг</label>
-      <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
-    </FormFieldSet>
-
-    <FormFieldSet Width="col-3">
-      <label for="hotelStar" class="font-weight-bold text-secondary">Количество звёзд</label>
-      <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
-    </FormFieldSet>
-
-    <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
-
-    <FormFieldSet Width="col-6">
-      <label for="hotelImage" class="font-weight-bold text-secondary">Фото отеля</label>
-      <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
-      @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
-      {
-        <InputFile OnChange="LoadHotelImage" class="form-control-file" id="hotelImage" accept=".png,.jpg,.jpeg" />
-      }
-      else
-      {
-        <div class="card bg-dark text-white">
-          <img src="images/@_hotel.MainPhoto" />
-          <div class="card-img-overlay">
-            <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
-              Удалить
-            </button>
+          <div class="row mt-5 mb-5">
+            <div class="col text-right">
+              <button class="btn btn-primary" type="submit">
+                @TextButtonAccept
+              </button>
+              <button class="btn btn-outline-secondary" type="button"
+                      onclick="@(() => _hotel=new HotelDto())">
+                @TextButtonCancel
+              </button>
+            </div>
           </div>
         </div>
-      }
-    </FormFieldSet>
 
-  </FormSection>
+        <div class="col-8">
 
-  <div class="mt-4 mb-5">
+          <FormFieldSet Width="col">
+            <label for="hotelName" class="font-weight-bold text-secondary">Наименование отеля</label>
+            <InputText @bind-Value="_hotel.Name" class="form-control" id="hotelName" />
+            <ValidationMessage For="@(() => _hotel.Name )" />
+          </FormFieldSet>
+
+          <FormFieldSet Width="col">
+            <label for="hotelDescription" class="font-weight-bold text-secondary">Описание отеля</label>
+            <InputTextArea @bind-Value="_hotel.Description" rows="6" class="form-control" id="hotelDescription" />
+            <ValidationMessage For="@(() => _hotel.Description )" />
+          </FormFieldSet>
+
+          <FormFieldSet Width="col">
+            <label for="hotelLocation" class="font-weight-bold text-secondary">Расположение</label>
+            <InputText @bind-Value="_hotel.Location" class="form-control" id="hotelLocation" />
+            <ValidationMessage For="@(() => _hotel.Location )" />
+          </FormFieldSet>
+
+          <FormFieldSet Width="col-3">
+            <label for="hotelRating" class="font-weight-bold text-secondary">Рейтинг</label>
+            <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
+          </FormFieldSet>
+
+          <FormFieldSet Width="col-3">
+            <label for="hotelStar" class="font-weight-bold text-secondary">Количество звёзд</label>
+            <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
+          </FormFieldSet>
+
+          <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
+
+          @* <FormFieldSet Width="col-6">
+            <label for="hotelImage" class="font-weight-bold text-secondary">Фото отеля</label>
+            <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
+            @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
+            {
+              <InputFile OnChange="LoadHotelImage" class="form-control-file" id="hotelImage" accept=".png,.jpg,.jpeg" />
+            }
+            else
+            {
+              <div class="card bg-dark text-white">
+                <img src="images/@_hotel.MainPhoto" />
+                <div class="card-img-overlay">
+                  <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
+                    Удалить
+                  </button>
+                </div>
+              </div>
+            }
+          </FormFieldSet> *@
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @* </FormSection> *@
+
+  @* <div class="mt-4 mb-5">
     <div class="row">
       <div class="offset-4 col-8 text-right">
         <button class="btn btn-primary" type="submit">
@@ -72,7 +114,7 @@
         </button>
       </div>
     </div>
-  </div>
+  </div> *@
 
 </EditForm>
 
@@ -89,10 +131,10 @@
   }
 
   [Parameter, EditorRequired]
-  public string TextButtonAccept { get; set;} = string.Empty;
+  public string TextButtonAccept { get; set; } = string.Empty;
 
   [Parameter, EditorRequired]
-  public string TextButtonCancel { get; set;} = "Отмена";
+  public string TextButtonCancel { get; set; } = "Отмена";
 
   /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
   [Parameter, EditorRequired]
