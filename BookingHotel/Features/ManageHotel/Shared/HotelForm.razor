@@ -200,7 +200,7 @@
   /// <summary> Обработчик нажатия кнопки Room, чтобы добавлять или отобразить номер </summary>
   private void ShowRooms()
   {
-    NavManager.NavigateTo("/edit-room");
+    NavManager.NavigateTo($"/rooms/{Hotel.Id}");
   }
 
   private void ShowPhoto(MouseEventArgs args)

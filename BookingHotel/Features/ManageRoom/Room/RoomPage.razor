@@ -1,5 +1,6 @@
-﻿@page "/rooms"
-@* @page "/rooms/{HotelId:guid}" *@
+﻿@page "/rooms/{HotelId:guid}"
+
+@using Application.DTO.Room.ClientRequest
 
 @inject IMediator Mediator
 @inject NavigationManager NavManager
@@ -74,8 +75,28 @@ else
   // закрытое поле, содержащее данные о номерах определенного отеля, или все номера всех отелей
   private IEnumerable<RoomDto>? _allRooms;
 
+  /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
+  [Parameter]
+  public Guid HotelId { get; set; }
+
   private void HandleRoomSelected(RoomDto room)
   {
     _selectedRoom = room;
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    // запрос на получения всех номеров отелей через GetHotelsRequest и Mediator
+    var response = await Mediator.Send(new GetRoomsRequest());
+
+    _allRooms = response.Rooms.Select(p => new RoomDto
+      {
+        Id = p.Id,
+        HotelId = p.HotelId,
+        Description = p.Description,
+        PeopleNumber = p.PeopleNumber,
+        Square = p.Square
+      });
+
   }
 }
