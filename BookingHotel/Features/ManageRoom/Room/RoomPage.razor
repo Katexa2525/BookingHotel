@@ -23,7 +23,7 @@
 
   <ViewSwitcher Items="_allRooms" Context="room">
     <GridTemplate>
-      <RoomCard Hotel="room" OnSelected="HandleRoomSelected" />
+      <RoomCard Room="room" OnSelected="HandleRoomSelected" />
     </GridTemplate>
 
     <HeaderTemplate>
@@ -95,7 +95,11 @@ else
         HotelId = p.HotelId,
         Description = p.Description,
         PeopleNumber = p.PeopleNumber,
-        Square = p.Square
+        Square = p.Square, 
+        RoomTypeId = p.RoomTypeId, 
+        Prices = p.Prices, 
+        RoomFacilities = p.RoomFacilities,
+        RoomPhotos = p.RoomPhotos
       });
 
   }
