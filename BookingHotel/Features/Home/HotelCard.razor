@@ -1,12 +1,13 @@
-﻿
-@inject NavigationManager NavManager
+﻿@inject NavigationManager NavManager
 
 <div class="card shadow" style="width: 18rem;">
   @* <img src="@Hotel.MainPhoto" class="card-img-top" alt="@Hotel.Name"> *@
 
-  <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
-                                                          : "images/NoImage.png")"
-       class="card-img-top" alt="@Hotel.Name">
+  <a href="/hotels/{@Hotel.Id}/rooms">
+    <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
+                                                            : "images/NoImage.png")"
+         class="card-img-top" alt="@Hotel.Name">
+  </a>
 
   <div class="card-body">
     <h5 class="card-title">@Hotel.Name</h5>
@@ -16,11 +17,11 @@
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-star"></span> @Hotel.Rating </h6>
     </div>
     @* вызывается делегат, передавая текущий отель *@
-    <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )"> 
+    <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )">
       <i class="bi bi-binoculars"></i>
     </button>
-    <button class="btn btn-outline-secondary float-right" title="Редактирование" 
-                   @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
+    <button class="btn btn-outline-secondary float-right" title="Редактирование"
+            @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
       <i class="bi bi-pencil"></i>
     </button>
 

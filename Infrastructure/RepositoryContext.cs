@@ -100,6 +100,17 @@ namespace Infrastructure
         new { Id = Guid.Parse("DCA48FFC-C572-4CA5-8217-7A7D370FED2A"), HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308"), RoomTypeId = Guid.Parse("68188476-48C6-48BE-B4CC-F8B63B4F0B08"), PeopleNumber = 3, Square = 40.5, Description = "Accumsan amet nonumy nonumy et amet euismod sed ipsum invidunt tincidunt ad. Ea dolor justo diam. Sea at labore duo iriure et ut ullamcorper in dignissim sit sit ipsum." }
         );
 
+
+      modelBuilder.Entity<RoomFacility>().HasData(
+        new { Id = Guid.Parse("4C17ADE5-2349-43FE-A9D1-D10AED6DDEBD"), Name = "Цифровое ТВ",      RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B")}, 
+        new { Id = Guid.Parse("6E69E113-EB98-4094-B417-83D61A9AB4EB"), Name = "Мини-холодильник", RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B")},
+        new { Id = Guid.Parse("D3FB6A18-F736-4CB5-BF64-69C36B3D489C"), Name = "Wi-Fi",            RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B")},
+        new { Id = Guid.Parse("13B17DAB-7ED0-40D9-93D5-B020EEA0AAD9"), Name = "Ванна",            RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500")},
+        new { Id = Guid.Parse("427BA46A-07E6-4DA2-AFED-C1760F02A636"), Name = "Фен",              RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500")},
+        new { Id = Guid.Parse("A774E890-3726-4E5B-8071-50E01F27B7B9"), Name = "Цифровое ТВ",      RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500")},
+        new { Id = Guid.Parse("573716D8-E318-4BA0-957C-2A1A0BE4AF30"), Name = "Wi-Fi",            RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500")}
+        );
+
       modelBuilder.Entity<Room>()
           .HasMany(r => r.RoomFacilities)
           .WithOne(rf => rf.Room)

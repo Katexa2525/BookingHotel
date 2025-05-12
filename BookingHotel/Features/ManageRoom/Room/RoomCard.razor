@@ -1,25 +1,59 @@
 ﻿@inject NavigationManager NavManager
 
-<div class="card shadow" style="width: 18rem;">
+<div class="card shadow">
 
-@*   <img src="@(!string.IsNullOrWhiteSpace(Room.MainPhoto) ? $"images/{Room.MainPhoto}"
-                                                          : "images/NoImage.png")"
-       class="card-img-top"> *@
+
 
   <div class="card-body">
-    <h5 class="card-title">@Room.RoomTypeId</h5>
-    <div class="d-flex justify-content-between">
-      <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-people"></span> @Room.PeopleNumber</h6>
-      <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-loop-square"></span> @Room.Square </h6>
+    <div class="container">
+      <div class="row">
+
+        <div class="col-3">
+          <img src="images/NoImage.png" class="card-img-top">
+        </div>
+
+        <div class="col-5">
+
+          @if (Room.RoomType is not null)
+          {
+            <h5 class="card-title">@Room.RoomType.Name</h5>
+          }
+          else
+          {
+            <h5 class="card-title">@Room.Id</h5>
+          }
+          <div class="d-flex justify-content-between">
+            <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-people"></span> @Room.PeopleNumber</h6>
+            <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-loop-square"></span> @Room.Square </h6>
+          </div>
+
+          @* Удобства в номере *@
+          <div class="row align-items-start">
+            <div class="col-sm-8">
+              <div class="d-flex">
+                @foreach (var item in Room.RoomFacilities)
+                {
+                  <h6 class="m-3">@item.Name</h6>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 align-bottom">
+            <button class="btn btn-outline-secondary float-right" title="Редактирование"
+                    @onclick="@(() => NavManager.NavigateTo($"/edit-room/{Room.Id}"))">
+              <i class="bi bi-pencil"></i>
+            </button>
+          </div>
+
+        </div>
+
+        <div class="col-4">
+          <h5 class="card-body">@Room.Description</h5>
+        </div>
+
+      </div>
     </div>
-    @* вызывается делегат, передавая текущий отель *@
-    <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Room) )">
-      <i class="bi bi-binoculars"></i>
-    </button>
-    <button class="btn btn-outline-secondary float-right" title="Редактирование"
-            @onclick="@(() => NavManager.NavigateTo($"/edit-room/{Room.Id}"))">
-      <i class="bi bi-pencil"></i>
-    </button>
 
   </div>
 </div>
