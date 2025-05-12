@@ -7,6 +7,7 @@ using Application.DTO.Price;
 using Application.DTO.Room;
 using Application.DTO.RoomFacility;
 using Application.DTO.RoomPhoto;
+using Application.DTO.RoomType;
 using AutoMapper;
 using Domain.Models;
 
@@ -50,6 +51,10 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Room, RoomCreateDto>().ReverseMap();
       CreateMap<Room, RoomDto>().ReverseMap();
       CreateMap<Room, RoomUpdateDto>().ReverseMap();
+
+      CreateMap<RoomType, RoomTypeDto>().ReverseMap()
+                                        .ForPath(p=>p.Rooms, opt=>opt.Ignore())
+                                        .ForPath(p => p.Prices, opt => opt.Ignore());
 
       // roomFacility
       CreateMap<RoomFacility, RoomFacilityCreateDto>().ReverseMap();
