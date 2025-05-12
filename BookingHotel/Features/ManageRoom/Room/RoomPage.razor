@@ -1,4 +1,4 @@
-﻿@page "/rooms/{HotelId:guid}"
+﻿@page "/hotels/{HotelId:guid}/rooms"
 
 @using Application.DTO.Room.ClientRequest
 
@@ -23,7 +23,7 @@
 
   <ViewSwitcher Items="_allRooms" Context="room">
     <GridTemplate>
-      <RoomCard Hotel="room" OnSelected="HandleRoomSelected" />
+      <RoomCard Room="room" OnSelected="HandleRoomSelected" />
     </GridTemplate>
 
     <HeaderTemplate>
@@ -86,8 +86,8 @@ else
 
   protected override async Task OnInitializedAsync()
   {
-    // запрос на получения всех номеров отелей через GetHotelsRequest и Mediator
-    var response = await Mediator.Send(new GetRoomsRequest());
+    // запрос на получения всех номеров отелей через GetRoomsRequest и Mediator
+    var response = await Mediator.Send(new GetRoomsRequest(HotelId));
 
     _allRooms = response.Rooms.Select(p => new RoomDto
       {
@@ -95,7 +95,11 @@ else
         HotelId = p.HotelId,
         Description = p.Description,
         PeopleNumber = p.PeopleNumber,
-        Square = p.Square
+        Square = p.Square, 
+        RoomTypeId = p.RoomTypeId, 
+        Prices = p.Prices, 
+        RoomFacilities = p.RoomFacilities,
+        RoomPhotos = p.RoomPhotos
       });
 
   }
