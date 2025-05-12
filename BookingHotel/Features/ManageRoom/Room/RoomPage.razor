@@ -1,4 +1,4 @@
-﻿@page "/rooms/{HotelId:guid}"
+﻿@page "/hotels/{HotelId:guid}/rooms"
 
 @using Application.DTO.Room.ClientRequest
 
@@ -86,8 +86,8 @@ else
 
   protected override async Task OnInitializedAsync()
   {
-    // запрос на получения всех номеров отелей через GetHotelsRequest и Mediator
-    var response = await Mediator.Send(new GetRoomsRequest());
+    // запрос на получения всех номеров отелей через GetRoomsRequest и Mediator
+    var response = await Mediator.Send(new GetRoomsRequest(HotelId));
 
     _allRooms = response.Rooms.Select(p => new RoomDto
       {

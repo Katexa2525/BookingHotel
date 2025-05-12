@@ -9,7 +9,7 @@ namespace Application.DTO.Hotel.ClientRequest
     //public record AllHotel(Guid Id, string Name, string Description, string Location, double Rating, int Star, string? MainPhoto);
 
     //public record Response(IEnumerable<AllHotel> Hotels);
-    public record Response(List<HotelAllDto> Hotels);
+    public record Response(List<HotelAllDto>? Hotels);
   }
 }
  

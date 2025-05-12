@@ -1,42 +1,25 @@
 ﻿using Application.BussinessLogic.GeneralMethods;
-using Application.DTO.Hotel;
 using Application.DTO.Room;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using PriceEntity = Domain.Models.Price;
+using System.Linq.Expressions;
 using RoomEntity = Domain.Models.Room;
-using RoomFacilityEntity = Domain.Models.RoomFacility;
-using RoomPhotoEntity = Domain.Models.RoomPhoto;
 
 
 namespace Application.BussinessLogic.Room
 {
   public class RoomBussinessLogic : IRoomBussinessLogic
   {
-    //private readonly IRepositoryBase<RoomEntity> _repositoryRoom;
-    //private readonly IRepositoryBase<PriceEntity> _repositoryPrice;
-    //private readonly IRepositoryBase<RoomPhotoEntity> _repositoryRoomPhoto;
-    //private readonly IRepositoryBase<RoomFacilityEntity> _repositoryRoomFacility;
     private readonly IGeneralBussinessLogic _generalBussinessLogic;
     private readonly IMapper _mapper;
     private readonly IRepositoryManager _repositoryManager;
 
-    public RoomBussinessLogic(/*IRepositoryBase<RoomEntity> repositoryRoom,
-                              IRepositoryBase<PriceEntity> repositoryPrice,
-                              IRepositoryBase<RoomPhotoEntity> repositoryRoomPhoto,
-                              IRepositoryBase<RoomFacilityEntity> repositoryRoomFacility,*/
-                              IGeneralBussinessLogic generalBussinessLogic,
-                              IMapper mapper,
+    public RoomBussinessLogic(IGeneralBussinessLogic generalBussinessLogic, IMapper mapper,
                               IRepositoryManager repositoryManager)
                                               
     {
-      //_repositoryRoom = repositoryRoom;
-      //_repositoryPrice = repositoryPrice;
-      //_repositoryRoomPhoto = repositoryRoomPhoto;
-      //_repositoryRoomFacility = repositoryRoomFacility;
       _generalBussinessLogic = generalBussinessLogic;
       _mapper = mapper;
       _repositoryManager = repositoryManager;
@@ -44,10 +27,6 @@ namespace Application.BussinessLogic.Room
 
     public async Task<List<RoomAllDto>> GetAllAsync()
     {
-      /*return await _repositoryRoom.FindAll()
-                                  .ProjectTo<RoomAllDto>(_mapper.ConfigurationProvider)
-                                  .ToListAsync();*/
-
       return await _repositoryManager.RoomRepository.GetAll(trackChanges: true).AsQueryable()
                                   .ProjectTo<RoomAllDto>(_mapper.ConfigurationProvider)
                                   .ToListAsync();
@@ -55,14 +34,17 @@ namespace Application.BussinessLogic.Room
 
     public async Task<RoomDto> GetByIdAsync(Guid id)
     {
-      /*var entityDto = await _repositoryRoom.FindAll()
-                           .ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
-                           .FirstOrDefaultAsync(x => x.Id == id);*/
-
       var entityDto = await _repositoryManager.RoomRepository.GetByCondition(x => x.Id == id, trackChanges: true)
                            .AsQueryable().ProjectTo<RoomDto>(_mapper.ConfigurationProvider).FirstAsync();
 
       return entityDto;
+    }
+
+    public List<RoomDto> GetByCondition(Expression<Func<Domain.Models.Room, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.RoomRepository.GetByCondition(expression, trackChanges: true).AsQueryable()
+                                  .ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
+                                  .ToList();
     }
 
     public async Task<Guid> CreateAsync(RoomCreateDto dto)
@@ -82,20 +64,11 @@ namespace Application.BussinessLogic.Room
 
     public async Task DeleteAsync(Guid roomId)
     {
-      //var room = await _repositoryRoom.FindOneAsync(x => x.Id == roomId);
-
       var room = await _repositoryManager.RoomRepository.GetOneAsync(x => x.Id == roomId);
-
-      //await _repositoryPrice.DeleteRangeAsync(room.Prices);
-      //await _repositoryRoomPhoto.DeleteRangeAsync(room.RoomPhotos);
-      //await _repositoryRoomFacility.DeleteRangeAsync(room.RoomFacilities);
 
       await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(room.Prices);
       await _repositoryManager.RoomPhotoRepository.DeleteEntityRangeAsync(room.RoomPhotos);
       await _repositoryManager.RoomFacilityRepository.DeleteEntityRangeAsync(room.RoomFacilities);
-
-      //_repositoryRoom.Delete(room);
-      //await _repositoryRoom.SaveAsync();
 
       _repositoryManager.RoomRepository.DeleteEntity(room);
       await _repositoryManager.SaveAsync();
@@ -141,5 +114,6 @@ namespace Application.BussinessLogic.Room
 
       await _repositoryManager.SaveAsync();
     }
+    
   }
 }
