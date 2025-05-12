@@ -90,7 +90,15 @@ namespace Infrastructure
           .HasMany(r => r.RoomPhotos)
           .WithOne(rp => rp.Room)
           .HasForeignKey(rp => rp.RoomId)
-          .OnDelete(DeleteBehavior.Restrict); 
+          .OnDelete(DeleteBehavior.Restrict);
+
+      modelBuilder.Entity<Room>().HasData(
+        new { Id = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), RoomTypeId= Guid.Parse("0282BE52-3816-401E-AF3F-074BE089D921"), PeopleNumber = 2, Square = 40.0, Description = "Takimata consectetuer lorem facilisis ipsum nibh sit accusam aliquyam justo clita" },
+        new { Id = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), RoomTypeId = Guid.Parse("A19B9BBE-A941-4B3E-BB2D-07E75ED1850A"), PeopleNumber = 4, Square = 52.0, Description = "Elitr sed enim stet dolore consectetuer consetetur et facer diam eirmod dolores tempor ea sit." },
+        new { Id = Guid.Parse("1088F86A-F6F2-4CC8-88FA-1D0BEB5E95D8"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), RoomTypeId = Guid.Parse("4776D7CE-CC8D-4C86-8B9D-40650651DF33"), PeopleNumber = 2, Square = 34.0, Description = "Nibh vero illum sit. Dolor consetetur tempor amet sea lorem consequat diam dolor ea accusam no te at ea clita diam." },
+        new { Id = Guid.Parse("9D551953-1B52-4CB1-AD90-31C8653955FA"), HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308"), RoomTypeId = Guid.Parse("072FC618-8703-437F-9662-5BA97D0AB4F0"), PeopleNumber = 3, Square = 38.0, Description = "Zzril tation clita stet." },
+        new { Id = Guid.Parse("DCA48FFC-C572-4CA5-8217-7A7D370FED2A"), HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308"), RoomTypeId = Guid.Parse("68188476-48C6-48BE-B4CC-F8B63B4F0B08"), PeopleNumber = 3, Square = 40.5, Description = "Accumsan amet nonumy nonumy et amet euismod sed ipsum invidunt tincidunt ad. Ea dolor justo diam. Sea at labore duo iriure et ut ullamcorper in dignissim sit sit ipsum." }
+        );
 
       modelBuilder.Entity<Room>()
           .HasMany(r => r.RoomFacilities)
