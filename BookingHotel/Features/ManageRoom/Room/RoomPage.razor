@@ -17,37 +17,20 @@
   </div>
 
   // данные передаются в параметры компонента с помощью атрибутов элемента
-  <RoomDetails Room="_selectedRoom" />
+  @* <RoomDetails Room="_selectedRoom" /> *@
 
   @* <HotelSearch /> *@
 
-  <ViewSwitcher Items="_allRooms" Context="room">
-    <GridTemplate>
-      <RoomCard Room="room" OnSelected="HandleRoomSelected" />
-    </GridTemplate>
-
-    <HeaderTemplate>
-      <th>Тип номера</th>
-      <th>Кол-во человек</th>
-      <th>Площадь</th>
-      <th></th>
-    </HeaderTemplate>
-
-    <RowTemplate>
-      <th scope="col">@room.RoomTypeId</th>
-      <td>@room.PeopleNumber</td>
-      <td>@room.Square</td>
-      <td class="text-right">
-        <button @onclick="@(() =>HandleRoomSelected(room))" title="Просмотр" class="btn btn-primary">
-          <i class="bi bi-binoculars"></i>
-        </button>
-        <button @onclick="@(() => NavManager.NavigateTo ($"/edit-room/{room.Id}"))" title="Редактирование"
-        class="btn btn-outline-secondary">
-          <i class="bi bi-pencil"></i>
-        </button>
-      </td>
-    </RowTemplate>
-  </ViewSwitcher>
+  <div class="card-container">
+    @foreach (var room in _allRooms)
+    {
+      <div class="card shadow">
+        <div class="card-body">
+          <RoomCard Room="room" OnSelected="HandleRoomSelected" />
+        </div>
+      </div>
+    }
+  </div>
 }
 else
 {

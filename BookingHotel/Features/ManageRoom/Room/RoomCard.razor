@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager NavManager
 
-<div class="card shadow" style="width: 18rem;">
+<div class="card shadow" >
 
 @*   <img src="@(!string.IsNullOrWhiteSpace(Room.MainPhoto) ? $"images/{Room.MainPhoto}"
                                                           : "images/NoImage.png")"
@@ -12,7 +12,7 @@
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-people"></span> @Room.PeopleNumber</h6>
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-loop-square"></span> @Room.Square </h6>
     </div>
-    @* вызывается делегат, передавая текущий отель *@
+    @* вызывается делегат, передавая текущий номер *@
     <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Room) )">
       <i class="bi bi-binoculars"></i>
     </button>
