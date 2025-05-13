@@ -1,7 +1,6 @@
 ﻿using Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Specialized;
 
 namespace Infrastructure
 {
@@ -38,23 +37,11 @@ namespace Infrastructure
           .HasForeignKey(p => p.RoomId)
           .OnDelete(DeleteBehavior.Restrict); 
 
-      //modelBuilder.Entity<Price>()
-      //    .HasOne(p => p.Hotel)
-      //    .WithMany(h => h.Prices)
-      //    .HasForeignKey(p => p.HotelId)
-      //    .OnDelete(DeleteBehavior.Restrict);
-
       modelBuilder.Entity<Price>()
           .HasOne(p => p.Currency)
           .WithMany()
           .HasForeignKey(p => p.CurrencyId)
           .OnDelete(DeleteBehavior.Restrict); 
-
-      //modelBuilder.Entity<Price>()
-      //    .HasOne(p => p.RoomType)
-      //    .WithMany(rt => rt.Prices)
-      //    .HasForeignKey(p => p.RoomTypeId)
-      //    .OnDelete(DeleteBehavior.Restrict); 
 
       // Применяем каскадное удаление только для нужных внешних ключей
       modelBuilder.Entity<Booking>()
@@ -188,6 +175,13 @@ namespace Infrastructure
 
       //установка альтернативного ключа
       modelBuilder.Entity<Currency>().HasAlternateKey(u => u.Cur_ID);
+
+      modelBuilder.Entity<Currency>().HasData(
+        new { Id = Guid.Parse("ABBE09FC-5E77-414C-8940-E77E934DE88F"), Name = "RUB", Cur_ID = 456, Cur_ParentID = 190, Cur_Code = "643", Cur_Abbreviation = "RUB", Cur_Name = "Российский рубль", Cur_Name_Bel = "Расійскі рубель", Cur_Name_Eng = "Russian Ruble", Cur_QuotName = "100 Российских рублей", Cur_QuotName_Bel = "100 Расійскіх рублёў", Cur_QuotName_Eng = "100 Russian Rubles", Cur_NameMulti = "Российских рублей", Cur_Name_BelMulti = "Расійскіх рублёў", Cur_Name_EngMulti = "Russian Rubles", Cur_Scale = 100, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("2021-07-09T00:00:00"), Cur_DateEnd = DateTime.Parse("2050-01-01T00:00:00") },
+        new { Id = Guid.Parse("F3CA1C7B-C275-4FEB-9790-9A42EFB878EE"), Name = "USD", Cur_ID = 145, Cur_ParentID = 145, Cur_Code = "840", Cur_Abbreviation = "USD", Cur_Name = "Доллар США", Cur_Name_Bel = "Долар ЗША", Cur_Name_Eng = "US Dollar", Cur_QuotName = "1 Доллар США", Cur_QuotName_Bel = "1 Долар ЗША", Cur_QuotName_Eng = "1 US Dollar", Cur_NameMulti = "Долларов США", Cur_Name_BelMulti = "Долараў ЗША", Cur_Name_EngMulti = "US Dollars", Cur_Scale = 1, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("1991-01-01T00:00:00"), Cur_DateEnd = DateTime.Parse("2021-07-08T00:00:00") },
+        new { Id = Guid.Parse("F3524EFF-E305-4305-8AE3-2731AD415FE9"), Name = "EUR", Cur_ID = 451, Cur_ParentID = 19, Cur_Code = "978", Cur_Abbreviation = "EUR", Cur_Name = "Евро", Cur_Name_Bel = "Еўра", Cur_Name_Eng = "Euro", Cur_QuotName = "1 Евро", Cur_QuotName_Bel = "1 Еўра", Cur_QuotName_Eng = "1 Euro", Cur_NameMulti = "Евро", Cur_Name_BelMulti = "Еўра", Cur_Name_EngMulti = "Euros", Cur_Scale = 1, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("2021-07-09T00:00:00"), Cur_DateEnd = DateTime.Parse("2050-01-01T00:00:00") }
+      );
+
 
       modelBuilder.Entity<Rate>().Property(o => o.Cur_OfficialRate).HasColumnType("decimal(18,2)");
 
