@@ -53,8 +53,8 @@ namespace Application.BussinessLogic.Hotel
 
     public async Task<HotelDto> GetByIdAsync(Guid id, bool trackChanges)
     {
-      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges);
-      //var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges: true).FirstOrDefault();
+      //var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges);
+      var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges).FirstOrDefault();
       if (hotel == null)
         return null;  //new HotelDto();
       else
