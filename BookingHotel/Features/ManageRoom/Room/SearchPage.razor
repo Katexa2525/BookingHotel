@@ -1,0 +1,85 @@
+﻿<!-- параметры маршрута определяются с помощью фигурных скобок в сегменте маршрута -->
+@page "/hotels/{HotelId:guid}/rooms/searchRoom/{SearchTerm}"
+
+@inject NavigationManager NavManager
+@inject IHttpClientFactory ClientFactory
+@inject IMediator Mediator
+
+<!-- цепочка навигации позволяет вернуться на главную страницу -->
+<NavigationСhain LastChainName="Search" />
+
+<PageTitle>Поиск номеров</PageTitle>
+
+<h3 class="mt-5 mb-4">Результаты поиска для "@SearchTerm"</h3>
+
+@if (_searchResults == null)
+{
+  <p>Загрузка результатов поиска...</p>
+}
+else
+{
+  <div class="card-container">
+    @foreach (var room in _searchResults)
+    {
+      <div class="card shadow">
+        <div class="card-body">
+          <RoomCard Room="room" OnSelected="HandleRoomSelected" />
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@code {
+
+  private IEnumerable<RoomDto>? _searchResults;
+  private RoomDto? _selectedRoom;
+  // хранит копию неотфильтрованных результатов поиска
+  private IEnumerable<RoomDto>? _cachedSearchResults = Array.Empty<RoomDto>();
+
+  /// <summary> Параметр компонента, совпадающий с именем параметра маршрута, необходим для захвата его значения </summary>
+  [Parameter]
+  public string SearchTerm { get; set; } = default!;
+
+  /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
+  [Parameter]
+  public Guid HotelId { get; set; }
+
+  // Когда компонент загружается, он получает все еотели из фиктивного файла данных и находит все отели, в названии или местоположении
+  // которых содержится поисковый запрос
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      var response = await Mediator.Send(new GetRoomsRequest(HotelId));
+      var _allRooms = response.Rooms.Select(p => new RoomDto
+        {
+          Id = p.Id,
+          HotelId = p.HotelId,
+          PeopleNumber = p.PeopleNumber,
+          Description = p.Description,
+          Square = p.Square,
+          Prices = p.Prices,
+          RoomPhotos = p.RoomPhotos,
+          RoomFacilities = p.RoomFacilities,
+          RoomType = p.RoomType
+        });
+
+      _searchResults = _allRooms.Where(x => x.Description.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                                            x.RoomType.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                                            x.RoomFacilities.Any(p => p.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase))
+      );
+      _cachedSearchResults = _searchResults;
+
+     }
+    catch (HttpRequestException ex)
+    {
+      Console.Write(AppMessage.GetHotelAllLoadTextErrorMessage);
+      Console.WriteLine($": {ex.Message}");
+    }
+  }
+
+  private void HandleRoomSelected(RoomDto room) => _selectedRoom = room;
+
+}
