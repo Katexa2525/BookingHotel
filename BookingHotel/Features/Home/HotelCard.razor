@@ -10,7 +10,9 @@
   </a>
 
   <div class="card-body">
-    <h5 class="card-title">@Hotel.Name</h5>
+    <a href="/hotels/{@Hotel.Id}/rooms">
+      <h5 class="card-title">@Hotel.Name</h5>
+    </a>
     @* <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6> *@
     <div class="d-flex justify-content-between">
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6>

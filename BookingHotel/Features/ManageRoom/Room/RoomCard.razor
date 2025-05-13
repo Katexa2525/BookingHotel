@@ -37,11 +37,16 @@
             </div>
           </div>
 
-          <div class="mt-4 align-bottom">
-            <button class="btn btn-outline-secondary float-right" title="Редактирование"
-                    @onclick="@(() => NavManager.NavigateTo($"/edit-room/{Room.Id}"))">
-              <i class="bi bi-pencil"></i>
-            </button>
+          <div class="d-flex justify-content-between">
+            <div class="mt-4 align-bottom">
+              <button class="btn btn-outline-secondary float-right" title="Редактирование"
+                      @onclick="@(() => NavManager.NavigateTo($"/edit-room/{Room.Id}"))">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </div>
+            <div class="mt-4 align-bottom">
+              <button type="button" class="btn btn-warning">Забронировать</button>
+            </div>
           </div>
 
         </div>
