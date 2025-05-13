@@ -17,9 +17,8 @@
   </div>
 
   // данные передаются в параметры компонента с помощью атрибутов элемента
-  @* <RoomDetails Room="_selectedRoom" /> *@
-
-  @* <HotelSearch /> *@
+  <SearchComponent Placeholder="Поиск номера отеля..." TextNavigateTo=@routeSearch />
+  <SearchDateComponent/>
 
   <div class="card-container">
     @foreach (var room in _allRooms)
@@ -57,6 +56,8 @@ else
   private RoomDto? _selectedRoom;
   // закрытое поле, содержащее данные о номерах определенного отеля, или все номера всех отелей
   private IEnumerable<RoomDto>? _allRooms;
+  /// <summary> Путь на страницу поиска </summary>
+  private string routeSearch = string.Empty;
 
   /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
   [Parameter]
@@ -78,13 +79,15 @@ else
         HotelId = p.HotelId,
         Description = p.Description,
         PeopleNumber = p.PeopleNumber,
-        Square = p.Square, 
-        RoomTypeId = p.RoomTypeId, 
-        Prices = p.Prices, 
+        Square = p.Square,
+        RoomTypeId = p.RoomTypeId,
+        Prices = p.Prices,
         RoomFacilities = p.RoomFacilities,
         RoomPhotos = p.RoomPhotos,
         RoomType = p.RoomType
       });
 
+    // устанавливаю маршрут для поиска в переменную
+    routeSearch = $"hotels/{HotelId}/rooms/searchRoom";
   }
 }
