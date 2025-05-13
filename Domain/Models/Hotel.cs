@@ -12,6 +12,10 @@
     public int Star { get; set; }
     /// <summary> Местоположение самого отеля </summary>
     public string Location { get; set; } = string.Empty;
+    /// <summary>Время заезда в часах, например, с 14:00  </summary>
+    public string Arrival { get; set; } = string.Empty;
+    /// <summary>Время выезда в часах, например, до 12:00  </summary>
+    public string Departure { get; set; } = string.Empty;
     /// <summary> Коллекция номеров в отеле </summary>
     public ICollection<Room> Rooms { get; set; }
     /// <summary> Типы питания, предостовляемые отелем </summary>

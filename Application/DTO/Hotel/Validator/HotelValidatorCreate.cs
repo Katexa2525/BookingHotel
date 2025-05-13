@@ -13,6 +13,8 @@ namespace Application.DTO.Hotel.Validator
       RuleFor(x => x.Description).NotEmpty().WithMessage(AppMessage.ValidatorHotelDescriptionMessage);
       RuleFor(x => x.Location).NotEmpty().WithMessage(AppMessage.ValidatorHotelLocationMessage);
       RuleFor(x => x.Star).NotEmpty().WithMessage(AppMessage.ValidatorHotelStarMessage);
+      RuleFor(x => x.Arrival).NotEmpty().WithMessage(AppMessage.ValidatorHotelArrivalMessage);
+      RuleFor(x => x.Departure).NotEmpty().WithMessage(AppMessage.ValidatorHotelDepartureMessage);
     }
   }
 }

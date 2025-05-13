@@ -18,14 +18,22 @@
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6>
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-star"></span> @Hotel.Rating </h6>
     </div>
+
     @* вызывается делегат, передавая текущий отель *@
-    <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )">
-      <i class="bi bi-binoculars"></i>
-    </button>
-    <button class="btn btn-outline-secondary float-right" title="Редактирование"
-            @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
-      <i class="bi bi-pencil"></i>
-    </button>
+    <div class="d-flex justify-content-between">
+      <div>
+        <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )">
+          <i class="bi bi-binoculars"></i>
+        </button>
+        <button class="btn btn-outline-secondary float-right" title="Редактирование"
+                @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </div>
+      <button class="btn btn-outline-secondary float-right" title="Избранное">
+        <i class="bi bi-heart"></i>
+      </button>
+    </div>
 
   </div>
 </div>

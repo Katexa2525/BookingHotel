@@ -12,13 +12,13 @@
     <div class="card-body">
       <div class="row">
         <div class="col-4">
-          <div >
+          <div>
             <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
             @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
             {
               <img src="images/NoImage.png" class="card-img-top" />
               <InputFile OnChange="LoadHotelImage" class="form-control-file mt-1"
-              id="hotelImage" accept=".png,.jpg,.jpeg" />
+                         id="hotelImage" accept=".png,.jpg,.jpeg" />
             }
             else
             {
@@ -53,7 +53,7 @@
                 @TextButtonAccept
               </button>
               <button class="btn btn-outline-secondary" type="button"
-              onclick="@(() => _hotel=new HotelDto())">
+                      onclick="@(() => _hotel=new HotelDto())">
                 @TextButtonCancel
               </button>
             </div>
@@ -80,17 +80,33 @@
             <ValidationMessage For="@(() => _hotel.Location )" />
           </FormFieldSet>
 
-          <FormFieldSet Width="col-3">
-            <label for="hotelRating" class="font-weight-bold text-secondary">Рейтинг</label>
-            <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
-          </FormFieldSet>
+          <div class="row">
+            <div class="col-6">
+              <FormFieldSet Width="col">
+                <label for="hotelArrival" class="font-weight-bold text-secondary">Заезд с</label>
+                <InputText @bind-Value="_hotel.Arrival" class="form-control" id="hotelArrival" />
+              </FormFieldSet>
 
-          <FormFieldSet Width="col-3">
-            <label for="hotelStar" class="font-weight-bold text-secondary">Количество звёзд</label>
-            <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
-          </FormFieldSet>
+              <FormFieldSet Width="col">
+                <label for="hotelDeparture" class="font-weight-bold text-secondary">Выезд до</label>
+                <InputText @bind-Value="_hotel.Departure" class="form-control" id="hotelDeparture" />
+              </FormFieldSet>
+            </div>
+            <div class="col-6">
+              <FormFieldSet Width="col">
+                <label for="hotelRating" class="font-weight-bold text-secondary">Рейтинг</label>
+                <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
+              </FormFieldSet>
 
-          <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
+              <FormFieldSet Width="col">
+                <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label>
+                <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
+              </FormFieldSet>
+
+              <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
+            </div>
+          </div>
+
 
         </div>
       </div>
@@ -155,6 +171,8 @@
       _hotel.MainPhoto = Hotel.MainPhoto;
       _hotel.ImageAction = ImageAction.None;
       _hotel.Rating = Hotel.Rating;
+      _hotel.Arrival = Hotel.Arrival;
+      _hotel.Departure = Hotel.Departure;
       _hotel.Rooms = Hotel.Rooms;
       _hotel.Foods = Hotel.Foods;
       _hotel.Locations = Hotel.Locations;

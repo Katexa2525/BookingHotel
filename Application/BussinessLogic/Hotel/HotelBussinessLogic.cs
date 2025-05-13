@@ -53,8 +53,8 @@ namespace Application.BussinessLogic.Hotel
 
     public async Task<HotelDto> GetByIdAsync(Guid id, bool trackChanges)
     {
-      var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges);
-      //var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges: true).FirstOrDefault();
+      //var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges);
+      var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges).FirstOrDefault();
       if (hotel == null)
         return null;  //new HotelDto();
       else
@@ -96,16 +96,6 @@ namespace Application.BussinessLogic.Hotel
       if (entity == null) return;
 
       _mapper.Map(dto, entity);
-
-      //await _generalBussinessLogic.UpdateCollectionAsync(
-      //      entity.Prices,
-      //      dto.Prices,
-      //      //_repositoryPrice,
-      //      null,
-      //      (item, hotelId) => item.HotelId = hotelId,
-      //      price => price.Id,
-      //      dto => dto.Id
-      //      );
 
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Rooms,

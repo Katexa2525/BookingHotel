@@ -6,6 +6,8 @@
     public static readonly string ValidatorHotelDescriptionMessage = "Пожалуйста введите описание отеля";
     public static readonly string ValidatorHotelLocationMessage = "Пожалуйста введите местоположение отеля";
     public static readonly string ValidatorHotelStarMessage = "Пожалуйста введите кол-во звезд у отеля";
+    public static readonly string ValidatorHotelArrivalMessage = "Пожалуйста введите время заезда отеля";
+    public static readonly string ValidatorHotelDepartureMessage = "Пожалуйста введите время выезда отеля";
 
     public static readonly string HotelPageSaveTextErrorMessage = "Возникла проблема с сохранением отеля!";
     public static readonly string AddHotelPageSaveImageTextErrorMessage = "Ваш отель был сохранен, но была проблема с загрузкой изображения!";

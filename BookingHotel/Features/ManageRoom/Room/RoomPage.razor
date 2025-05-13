@@ -16,10 +16,18 @@
     </p>
   </div>
 
+  @* Данные по отелю *@
+  <p class="h1">@_hotel.Name, @_hotel.Star*</p>
+  <div class="d-flex">
+    <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-star"></span> @_hotel.Rating </h6>&nbsp;&nbsp;&nbsp;
+    <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @_hotel.Location</h6>
+  </div>
+
   // данные передаются в параметры компонента с помощью атрибутов элемента
   <SearchComponent Placeholder="Поиск номера отеля..." TextNavigateTo=@routeSearch />
-  <SearchDateComponent/>
+  <SearchDateComponent />
 
+  // номера по отелю
   <div class="card-container">
     @foreach (var room in _allRooms)
     {
@@ -30,6 +38,10 @@
       </div>
     }
   </div>
+
+  // про отель
+  <AboutHotel Hotel="@_hotel" />
+
 }
 else
 {
@@ -58,6 +70,8 @@ else
   private IEnumerable<RoomDto>? _allRooms;
   /// <summary> Путь на страницу поиска </summary>
   private string routeSearch = string.Empty;
+  private HotelDto _hotel = new HotelDto();
+  private string? _errorMessage;
 
   /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
   [Parameter]
@@ -70,7 +84,7 @@ else
 
   protected override async Task OnInitializedAsync()
   {
-    // запрос на получения всех номеров отелей через GetRoomsRequest и Mediator
+    // запрос на получения всех номеров отеля HotelId через GetRoomsRequest и Mediator
     var response = await Mediator.Send(new GetRoomsRequest(HotelId));
 
     _allRooms = response.Rooms.Select(p => new RoomDto
@@ -86,6 +100,19 @@ else
         RoomPhotos = p.RoomPhotos,
         RoomType = p.RoomType
       });
+
+    // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами
+    var responseHotel = await Mediator.Send(new GetHotelRequest(HotelId));
+
+    if (responseHotel is not null)
+    {
+      // если отель получен, сведения о нём копирую в локальное поле для передачи в HotelForm
+      _hotel = responseHotel.Hotel;
+    }
+    else
+    {
+      _errorMessage = AppMessage.HotelPageLoadTextErrorMessage;
+    }
 
     // устанавливаю маршрут для поиска в переменную
     routeSearch = $"hotels/{HotelId}/rooms/searchRoom";
