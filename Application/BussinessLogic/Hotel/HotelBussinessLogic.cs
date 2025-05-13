@@ -97,16 +97,6 @@ namespace Application.BussinessLogic.Hotel
 
       _mapper.Map(dto, entity);
 
-      //await _generalBussinessLogic.UpdateCollectionAsync(
-      //      entity.Prices,
-      //      dto.Prices,
-      //      //_repositoryPrice,
-      //      null,
-      //      (item, hotelId) => item.HotelId = hotelId,
-      //      price => price.Id,
-      //      dto => dto.Id
-      //      );
-
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Rooms,
             dto.Rooms,

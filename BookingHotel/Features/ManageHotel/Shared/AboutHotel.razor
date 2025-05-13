@@ -1,0 +1,31 @@
+﻿<div class="card shadow">
+  <div class="card-body">
+    <p class="h3">Про отель</p>
+
+    <div class="container px-4">
+      <div class="row gx-5">
+        <div class="col">
+          <div class="h4 border bg-light">Заезд с</div>
+          <div class="h4 border bg-light">@Hotel.Arrival</div>
+        </div>
+        <div class="col">
+          <div class="h4 border bg-light">Выезд до</div>
+          <div class="h4 border bg-light">@Hotel.Departure</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="row">
+          <p class="h4">@Hotel.Description</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+  [Parameter, EditorRequired]
+  public HotelDto Hotel { get; set; }
+}
