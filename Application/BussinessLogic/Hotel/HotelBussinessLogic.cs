@@ -43,8 +43,8 @@ namespace Application.BussinessLogic.Hotel
         hotelPhoto.HotelId = entity.Id;
       foreach (var location in entity.Locations)
         location.HotelId = entity.Id;
-      foreach (var price in entity.Prices)
-        price.HotelId = entity.Id;
+      //foreach (var price in entity.Prices)
+      //  price.HotelId = entity.Id;
 
       await _repositoryManager.HotelRepository.CreateEntityAsync(entity);
       await _repositoryManager.SaveAsync();
@@ -78,8 +78,8 @@ namespace Application.BussinessLogic.Hotel
           await _repositoryManager.HotelPhotoRepository.DeleteEntityRangeAsync(hotel.HotelPhotos);
         if (hotel.Locations is not null)
           await _repositoryManager.LocationRepository.DeleteEntityRangeAsync(hotel.Locations);
-        if (hotel.Prices is not null)
-          await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(hotel.Prices);
+        //if (hotel.Prices is not null)
+        //  await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(hotel.Prices);
         if (hotel.Reviews is not null)
           await _repositoryManager.ReviewRepository.DeleteEntityRangeAsync(hotel.Reviews);
 
@@ -97,15 +97,15 @@ namespace Application.BussinessLogic.Hotel
 
       _mapper.Map(dto, entity);
 
-      await _generalBussinessLogic.UpdateCollectionAsync(
-            entity.Prices,
-            dto.Prices,
-            //_repositoryPrice,
-            null,
-            (item, hotelId) => item.HotelId = hotelId,
-            price => price.Id,
-            dto => dto.Id
-            );
+      //await _generalBussinessLogic.UpdateCollectionAsync(
+      //      entity.Prices,
+      //      dto.Prices,
+      //      //_repositoryPrice,
+      //      null,
+      //      (item, hotelId) => item.HotelId = hotelId,
+      //      price => price.Id,
+      //      dto => dto.Id
+      //      );
 
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Rooms,

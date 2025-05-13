@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250513073115_CurrencyHasData")]
+    partial class CurrencyHasData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,50 +216,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("TypeFoodId");
 
                     b.ToTable("Foods", "dbo");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("3e67a939-ef3d-4b29-ac4e-856d9db456be"),
-                            HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
-                            Name = "Завтрак",
-                            TypeFoodId = new Guid("072fc618-8703-437f-9662-5ba97d0ab4f0")
-                        },
-                        new
-                        {
-                            Id = new Guid("d95e677e-9e2e-4534-bfe4-0c26d2602973"),
-                            HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
-                            Name = "Полупансион",
-                            TypeFoodId = new Guid("4d53a1ed-9613-4406-8a31-a411c934e628")
-                        },
-                        new
-                        {
-                            Id = new Guid("0375cbb1-a4c1-42bf-b4ff-46a70d5ca365"),
-                            HotelId = new Guid("f6a9207d-ad8b-4d5f-bea5-1cd2f87a0308"),
-                            Name = "Завтрак, обед и ужин",
-                            TypeFoodId = new Guid("b2d7509e-c5b3-4936-8deb-26e51052446f")
-                        },
-                        new
-                        {
-                            Id = new Guid("4321b0f8-fa4b-447f-91b0-89d119e02977"),
-                            HotelId = new Guid("ffe1c64a-ad2b-443e-b5ac-2ce60eca6340"),
-                            Name = "Всё включено",
-                            TypeFoodId = new Guid("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782")
-                        },
-                        new
-                        {
-                            Id = new Guid("7dbfc4df-a227-4ddb-87c0-011a057b4403"),
-                            HotelId = new Guid("f6a9207d-ad8b-4d5f-bea5-1cd2f87a0308"),
-                            Name = "Завтрак полноценный",
-                            TypeFoodId = new Guid("e0a5a158-5ef8-414c-896a-49fdf04dc7a4")
-                        },
-                        new
-                        {
-                            Id = new Guid("00f7e7f9-387c-47f3-a728-cf91782f6ee3"),
-                            HotelId = new Guid("ffe1c64a-ad2b-443e-b5ac-2ce60eca6340"),
-                            Name = "Без питания",
-                            TypeFoodId = new Guid("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd")
-                        });
                 });
 
             modelBuilder.Entity("Domain.Models.Guest", b =>
@@ -915,7 +874,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"),
-                            Name = "Завтрак полноценный"
+                            Name = "Завтрак"
                         },
                         new
                         {

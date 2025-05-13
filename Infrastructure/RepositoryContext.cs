@@ -1,7 +1,6 @@
 ﻿using Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Specialized;
 
 namespace Infrastructure
 {
@@ -39,21 +38,9 @@ namespace Infrastructure
           .OnDelete(DeleteBehavior.Restrict); 
 
       modelBuilder.Entity<Price>()
-          .HasOne(p => p.Hotel)
-          .WithMany(h => h.Prices)
-          .HasForeignKey(p => p.HotelId)
-          .OnDelete(DeleteBehavior.Restrict);
-
-      modelBuilder.Entity<Price>()
           .HasOne(p => p.Currency)
           .WithMany()
           .HasForeignKey(p => p.CurrencyId)
-          .OnDelete(DeleteBehavior.Restrict); 
-
-      modelBuilder.Entity<Price>()
-          .HasOne(p => p.RoomType)
-          .WithMany(rt => rt.Prices)
-          .HasForeignKey(p => p.RoomTypeId)
           .OnDelete(DeleteBehavior.Restrict); 
 
       // Применяем каскадное удаление только для нужных внешних ключей
@@ -172,8 +159,16 @@ namespace Infrastructure
         new { Id = Guid.Parse("4d53a1ed-9613-4406-8a31-a411c934e628"), Name = "Полупансион" },
         new { Id = Guid.Parse("b2d7509e-c5b3-4936-8deb-26e51052446f"), Name = "Завтрак, обед и ужин" },
         new { Id = Guid.Parse("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782"), Name = "Всё включено" },
-        new { Id = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), Name = "Завтрак" },
+        new { Id = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), Name = "Завтрак полноценный" },
         new { Id = Guid.Parse("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"), Name = "Без питания" });
+
+      modelBuilder.Entity<Food>().HasData(
+        new { Id = Guid.Parse("3E67A939-EF3D-4B29-AC4E-856D9DB456BE"), Name = "Завтрак", TypeFoodId = Guid.Parse("072fc618-8703-437f-9662-5ba97d0ab4f0"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
+        new { Id = Guid.Parse("D95E677E-9E2E-4534-BFE4-0C26D2602973"), Name = "Полупансион", TypeFoodId = Guid.Parse("4d53a1ed-9613-4406-8a31-a411c934e628"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
+        new { Id = Guid.Parse("0375CBB1-A4C1-42BF-B4FF-46A70D5CA365"), Name = "Завтрак, обед и ужин", TypeFoodId = Guid.Parse("b2d7509e-c5b3-4936-8deb-26e51052446f"), HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
+        new { Id = Guid.Parse("4321B0F8-FA4B-447F-91B0-89D119E02977"), Name = "Всё включено", TypeFoodId = Guid.Parse("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782"), HotelId = Guid.Parse("FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340") },
+        new { Id = Guid.Parse("7DBFC4DF-A227-4DDB-87C0-011A057B4403"), Name = "Завтрак полноценный", TypeFoodId = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
+        new { Id = Guid.Parse("00F7E7F9-387C-47F3-A728-CF91782F6EE3"), Name = "Без питания", TypeFoodId = Guid.Parse("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"), HotelId = Guid.Parse("FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340") });
 
       modelBuilder.Entity<Review>()
           .HasOne(rt => rt.Hotel)
@@ -188,6 +183,13 @@ namespace Infrastructure
 
       //установка альтернативного ключа
       modelBuilder.Entity<Currency>().HasAlternateKey(u => u.Cur_ID);
+
+      modelBuilder.Entity<Currency>().HasData(
+        new { Id = Guid.Parse("ABBE09FC-5E77-414C-8940-E77E934DE88F"), Name = "RUB", Cur_ID = 456, Cur_ParentID = 190, Cur_Code = "643", Cur_Abbreviation = "RUB", Cur_Name = "Российский рубль", Cur_Name_Bel = "Расійскі рубель", Cur_Name_Eng = "Russian Ruble", Cur_QuotName = "100 Российских рублей", Cur_QuotName_Bel = "100 Расійскіх рублёў", Cur_QuotName_Eng = "100 Russian Rubles", Cur_NameMulti = "Российских рублей", Cur_Name_BelMulti = "Расійскіх рублёў", Cur_Name_EngMulti = "Russian Rubles", Cur_Scale = 100, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("2021-07-09T00:00:00"), Cur_DateEnd = DateTime.Parse("2050-01-01T00:00:00") },
+        new { Id = Guid.Parse("F3CA1C7B-C275-4FEB-9790-9A42EFB878EE"), Name = "USD", Cur_ID = 145, Cur_ParentID = 145, Cur_Code = "840", Cur_Abbreviation = "USD", Cur_Name = "Доллар США", Cur_Name_Bel = "Долар ЗША", Cur_Name_Eng = "US Dollar", Cur_QuotName = "1 Доллар США", Cur_QuotName_Bel = "1 Долар ЗША", Cur_QuotName_Eng = "1 US Dollar", Cur_NameMulti = "Долларов США", Cur_Name_BelMulti = "Долараў ЗША", Cur_Name_EngMulti = "US Dollars", Cur_Scale = 1, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("1991-01-01T00:00:00"), Cur_DateEnd = DateTime.Parse("2021-07-08T00:00:00") },
+        new { Id = Guid.Parse("F3524EFF-E305-4305-8AE3-2731AD415FE9"), Name = "EUR", Cur_ID = 451, Cur_ParentID = 19, Cur_Code = "978", Cur_Abbreviation = "EUR", Cur_Name = "Евро", Cur_Name_Bel = "Еўра", Cur_Name_Eng = "Euro", Cur_QuotName = "1 Евро", Cur_QuotName_Bel = "1 Еўра", Cur_QuotName_Eng = "1 Euro", Cur_NameMulti = "Евро", Cur_Name_BelMulti = "Еўра", Cur_Name_EngMulti = "Euros", Cur_Scale = 1, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("2021-07-09T00:00:00"), Cur_DateEnd = DateTime.Parse("2050-01-01T00:00:00") }
+      );
+
 
       modelBuilder.Entity<Rate>().Property(o => o.Cur_OfficialRate).HasColumnType("decimal(18,2)");
 

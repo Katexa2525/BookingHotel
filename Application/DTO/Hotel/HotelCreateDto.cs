@@ -21,7 +21,7 @@ namespace Application.DTO.Hotel
     public IEnumerable<HotelFacilityCreateDto>? HotelFacilities { get; set; }
     public IEnumerable<HotelPhotoCreateDto>? HotelPhotos { get; set; }
     public IEnumerable<LocationCreateDto>? Locations { get; set; }
-    public IEnumerable<PriceCreateDto>? Prices { get; set; }
+    //public IEnumerable<PriceCreateDto>? Prices { get; set; }
     public HotelUsefulInfo? HotelUsefulInfo { get; set; }
   }
 }

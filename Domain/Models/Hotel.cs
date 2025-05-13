@@ -22,7 +22,7 @@
     public ICollection<HotelPhoto> HotelPhotos { get; set; }
     /// <summary> Местоположение рядом находящихся объектов, например, рядом аэропорт, рядом подъемник, ботанический сад в 15 км и тд </summary>
     public ICollection<Location> Locations { get; set; }
-    public ICollection<Price> Prices { get; set; }
+    //public ICollection<Price> Prices { get; set; }
     /// <summary> Отзывы по отелю </summary>
     public ICollection<Review> Reviews { get; set; }
     /// <summary>Связь один-к-одному по полезной информации по отелю </summary>

@@ -4,13 +4,17 @@
   {
     public Guid Id { get; set; }
     public Guid RoomId { get; set; }
-    public Room Room { get; set; }
-    public Guid HotelId { get; set; }
-    public Hotel Hotel { get; set; }
-    public Guid RoomTypeId { get; set; }
-    public RoomType RoomType { get; set; }
     public Guid CurrencyId { get; set; }
-    public Currency Currency { get; set; }
+
+    /// <summary>дата начала действия цены по номеру </summary>
+    public DateTime DateStart { get; set; }
+    /// <summary>дата окончания действия цены по номеру</summary>
+    public DateTime DateEnd { get; set; }
+    /// <summary> Цена за день или ночь </summary>
     public double DayPrice { get; set; }
+
+    public Room Room { get; set; }
+    public Currency Currency { get; set; }
+    
   }
 }
