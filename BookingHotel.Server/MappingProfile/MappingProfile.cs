@@ -25,10 +25,11 @@ namespace BookingHotel.Server.MappingProfile
                                      .ForPath(s => s.Foods, opt => opt.Ignore())
                                      .ForPath(s => s.Reviews, opt => opt.Ignore())
                                      .ForPath(s => s.Rooms, opt => opt.Ignore())
-                                     .ForPath(s => s.Prices, opt => opt.Ignore())
                                      .ForPath(s => s.Locations, opt => opt.Ignore())
                                      .ForPath(s => s.HotelUsefulInfo, opt => opt.Ignore())
+                                     //.ForPath(s => s.Prices, opt => opt.Ignore())
                                      ;
+
       CreateMap<Hotel, HotelCreateDto>().ReverseMap();
       CreateMap<Hotel, HotelDto>().ReverseMap();
       CreateMap<Hotel, HotelUpdateDto>().ReverseMap();

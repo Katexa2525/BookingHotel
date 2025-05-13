@@ -38,11 +38,11 @@ namespace Infrastructure
           .HasForeignKey(p => p.RoomId)
           .OnDelete(DeleteBehavior.Restrict); 
 
-      modelBuilder.Entity<Price>()
-          .HasOne(p => p.Hotel)
-          .WithMany(h => h.Prices)
-          .HasForeignKey(p => p.HotelId)
-          .OnDelete(DeleteBehavior.Restrict);
+      //modelBuilder.Entity<Price>()
+      //    .HasOne(p => p.Hotel)
+      //    .WithMany(h => h.Prices)
+      //    .HasForeignKey(p => p.HotelId)
+      //    .OnDelete(DeleteBehavior.Restrict);
 
       modelBuilder.Entity<Price>()
           .HasOne(p => p.Currency)
@@ -50,11 +50,11 @@ namespace Infrastructure
           .HasForeignKey(p => p.CurrencyId)
           .OnDelete(DeleteBehavior.Restrict); 
 
-      modelBuilder.Entity<Price>()
-          .HasOne(p => p.RoomType)
-          .WithMany(rt => rt.Prices)
-          .HasForeignKey(p => p.RoomTypeId)
-          .OnDelete(DeleteBehavior.Restrict); 
+      //modelBuilder.Entity<Price>()
+      //    .HasOne(p => p.RoomType)
+      //    .WithMany(rt => rt.Prices)
+      //    .HasForeignKey(p => p.RoomTypeId)
+      //    .OnDelete(DeleteBehavior.Restrict); 
 
       // Применяем каскадное удаление только для нужных внешних ключей
       modelBuilder.Entity<Booking>()
