@@ -19,6 +19,10 @@ namespace Application.DTO.Hotel
     public int Star { get; set; }
     /// <summary> Image содержит имя файла существующего изображения отеля </summary>
     public string? MainPhoto { get; set; } = string.Empty;
+    /// <summary>Время заезда в часах, например, с 14:00  </summary>
+    public string Arrival { get; set; } = string.Empty;
+    /// <summary>Время выезда в часах, например, до 12:00  </summary>
+    public string Departure { get; set; } = string.Empty;
     public IEnumerable<RoomDto> Rooms { get; set; }
     public IEnumerable<FoodDto> Foods { get; set; }
     public IEnumerable<HotelFacilityDto> HotelFacilities { get; set; }
