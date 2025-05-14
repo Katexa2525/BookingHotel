@@ -108,7 +108,18 @@ namespace Infrastructure
           .HasOne(hf => hf.Hotel)
           .WithMany(h => h.HotelFacilities)
           .HasForeignKey(hf => hf.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); 
+          .OnDelete(DeleteBehavior.Restrict);
+
+      modelBuilder.Entity<HotelFacility>().HasData(
+        new { Id = Guid.Parse("839DE6A2-33F1-4737-B4F8-A3AB2A7D62C9"), Name = "Wi-Fi", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
+        new { Id = Guid.Parse("3C546736-F3CB-4502-80F9-75543BEBF5FB"), Name = "Парковка", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
+        new { Id = Guid.Parse("828E84E6-BA0C-4E50-8BE6-7C58C33BE64B"), Name = "Оплата картой", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
+        new { Id = Guid.Parse("AC6EB263-EC82-432D-89EF-043CB803948F"), Name = "Wi-Fi", HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
+        new { Id = Guid.Parse("CAFBC71D-E834-462B-BC1D-B81954014516"), Name = "Бассейн", HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
+        new { Id = Guid.Parse("2AB2E0BC-E522-4B82-A85D-8A2AFD8B589D"), Name = "Парковка", HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
+        new { Id = Guid.Parse("878DA153-3A2A-492F-8391-819B6011F460"), Name = "Тренажёрный зал", HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
+        new { Id = Guid.Parse("93124016-D871-4999-B3CA-BB1D592743F3"), Name = "Оплата картой", HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") }
+        );
 
       modelBuilder.Entity<HotelPhoto>()
           .HasOne(hp => hp.Hotel)
