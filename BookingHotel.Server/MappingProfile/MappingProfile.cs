@@ -1,4 +1,5 @@
-﻿using Application.DTO.Food;
+﻿using Application.DTO.Booking;
+using Application.DTO.Food;
 using Application.DTO.Hotel;
 using Application.DTO.HotelFacility;
 using Application.DTO.HotelPhoto;
@@ -82,6 +83,11 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Price, PriceCreateWithIdDto>().ReverseMap();
       CreateMap<Price, PriceDto>().ReverseMap();
 
+      
+      CreateMap<Booking, BookingCreateDto>().ReverseMap();
+      CreateMap<Booking, BookingCreateDto>().ReverseMap();
+      CreateMap<Booking, BookingDto>().ReverseMap();
+      CreateMap<Booking, BookingUpdateDto>().ReverseMap();
 
     }
   }
