@@ -45,7 +45,9 @@
               </button>
             </div>
             <div class="mt-4 align-bottom">
-              <button type="button" class="btn btn-warning">Забронировать</button>
+              <button type="button" class="btn btn-warning" @onclick="@(async () => OnSelected.InvokeAsync(Room))">
+                Забронировать
+              </button>
             </div>
           </div>
 

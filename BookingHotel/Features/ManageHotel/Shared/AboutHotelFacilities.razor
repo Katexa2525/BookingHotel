@@ -1,0 +1,68 @@
+﻿@* Удобства и услуги | Питание отеля *@
+<div class="card shadow">
+  <div class="card-body">
+
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-body">
+            <p class="h3">@CaptionFacilities</p>
+
+            <div class="card shadow">
+              <div class="card-body">
+                <div class="row align-items-start">
+                  <div class="col-sm-8">
+                    <div class="d-flex">
+                      @foreach (var item in @Hotel.HotelFacilities)
+                      {
+                        <h6 class="m-3">@item.Name</h6>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-body">
+            <p class="h3">@CaptionFoods</p>
+
+            <div class="card shadow">
+              <div class="card-body">
+                <div class="row align-items-start">
+                  <div class="col-sm-8">
+                    <div class="d-flex">
+                      @foreach (var item in @Hotel.Foods)
+                      {
+                        <h6 class="m-3">@item.Name</h6>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+
+  [Parameter, EditorRequired]
+  public HotelDto Hotel { get; set; }
+
+  [Parameter, EditorRequired]
+  public string CaptionFacilities { get; set; }
+
+  [Parameter, EditorRequired]
+  public string CaptionFoods { get; set; }
+
+}

@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +37,15 @@ builder.Services.ConfigureIdentity();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 //builder.Services.AddControllers();
-builder.Services.AddControllers().AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
+builder.Services.AddControllers()
+    .AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")))
+    //.AddJsonOptions(options =>
+    //{
+    //  options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    //  //options.JsonSerializerOptions.WriteIndented = true; // Optional: for better readability
+    //})
+    ;
+ 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 //builder.Services.AddEndpointsApiExplorer();
