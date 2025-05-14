@@ -14,5 +14,6 @@
     public ICollection<RoomFacility> RoomFacilities { get; set; }
     public Guid RoomTypeId { get; set; }
     public RoomType RoomType { get; set; }
+    public ICollection<Booking> Bookings { get; set; }
   }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.DTO.Booking;
 using Application.DTO.Food;
+using Application.DTO.Guest;
 using Application.DTO.Hotel;
 using Application.DTO.HotelFacility;
 using Application.DTO.HotelPhoto;
@@ -9,6 +10,7 @@ using Application.DTO.Room;
 using Application.DTO.RoomFacility;
 using Application.DTO.RoomPhoto;
 using Application.DTO.RoomType;
+using Application.DTO.Service;
 using AutoMapper;
 using Domain.Models;
 
@@ -88,6 +90,9 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Booking, BookingCreateDto>().ReverseMap();
       CreateMap<Booking, BookingDto>().ReverseMap();
       CreateMap<Booking, BookingUpdateDto>().ReverseMap();
+
+      CreateMap<Guest, GuestDto>().ReverseMap();
+      CreateMap<Service, ServiceDto>().ReverseMap();
 
     }
   }
