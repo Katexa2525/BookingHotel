@@ -131,7 +131,18 @@ namespace Infrastructure
           .HasOne(l => l.Hotel)
           .WithMany(h => h.Locations)
           .HasForeignKey(l => l.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); 
+          .OnDelete(DeleteBehavior.Restrict);
+
+      modelBuilder.Entity<Location>().HasData(
+        new { Id = Guid.Parse("19231977-A4B6-4925-93DE-5B7674DF7C2F"), Name = "350 м до центра", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
+        new { Id = Guid.Parse("D347A13C-C8CB-494A-8A1C-79400B256736"), Name = "ост. «Главная городская площадь» 106 м", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
+        new { Id = Guid.Parse("A1CAD93E-020D-4AD0-B924-EC40782C7C45"), Name = "ост. «ЦКР» 350 м", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
+        new { Id = Guid.Parse("D89FBCD6-8EA5-4E6A-BC2A-690B9A5CF23A"), Name = "Площадь Тукая 1 км", HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
+        new { Id = Guid.Parse("646F990A-81A2-425C-9016-428DB3D58FD8"), Name = "8,6 км до центра", HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
+        new { Id = Guid.Parse("BC2E63B0-8B5C-4EA6-BF47-48F5767705C9"), Name = "1 км до центра", HotelId = Guid.Parse("FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340") },
+        new { Id = Guid.Parse("8C0B9FDD-209A-4E07-BABB-C32F6308A25F"), Name = "2 км до футбольного стадиона", HotelId = Guid.Parse("FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340") },
+        new { Id = Guid.Parse("7D2A919D-E7D5-435A-AE0A-592037D489E3"), Name = "ост. «Реликтовый лес» 960 м", HotelId = Guid.Parse("2CEDEA9F-912D-48C7-9125-3C11769F71A7") }
+        );
 
       modelBuilder.Entity<RoomType>()
           .HasMany(rt => rt.Rooms)
