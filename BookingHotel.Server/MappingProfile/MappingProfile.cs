@@ -6,6 +6,7 @@ using Application.DTO.HotelFacility;
 using Application.DTO.HotelPhoto;
 using Application.DTO.Location;
 using Application.DTO.Price;
+using Application.DTO.Review;
 using Application.DTO.Room;
 using Application.DTO.RoomFacility;
 using Application.DTO.RoomPhoto;
@@ -93,6 +94,7 @@ namespace BookingHotel.Server.MappingProfile
 
       CreateMap<Guest, GuestDto>().ReverseMap();
       CreateMap<Service, ServiceDto>().ReverseMap();
+      CreateMap<Review, ReviewDto>().ReverseMap();
 
     }
   }

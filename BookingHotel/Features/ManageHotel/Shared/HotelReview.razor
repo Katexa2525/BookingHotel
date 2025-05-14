@@ -1,20 +1,27 @@
 ﻿<div class="card shadow">
   <div class="card-body">
     <p class="h3">@Caption</p>
-
-    <div class="card shadow">
-      <div class="card-body">
         <div class="row">
           @foreach (var item in @Hotel.Reviews)
           {
-            <div class="d-flex justify-content-between">
-              <h5 class="card-subtitle mb-3 "> @item.Name</h5>
-              <h5 class="card-subtitle mb-3"> @item.Star </h5>
+            <div class="card shadow">
+              <div class="card-body">
+                <div class="row">
+                  <div class="d-flex justify-content-between">
+                    <h5 class="card-subtitle mb-3 "> @item.Name</h5>
+                    <StarComponent StarCount="@item.Star" />
+                  </div>
+                </div>
+                <div class="row">
+                  <h5 class="card-subtitle mb-3 "> @item.DateTimeReview</h5>
+                </div>
+                <div class="row">
+                  <h5 class="card-subtitle mb-3 "> @item.Description</h5>
+                </div>
+              </div>
             </div>
           }
         </div>
-      </div>
-    </div>
   </div>
 </div>
 
