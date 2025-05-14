@@ -1,4 +1,5 @@
-﻿using Application.DTO.Price;
+﻿using Application.DTO.Booking;
+using Application.DTO.Price;
 using Application.DTO.RoomFacility;
 using Application.DTO.RoomPhoto;
 using Application.DTO.RoomType;
@@ -18,5 +19,6 @@ namespace Application.DTO.Room
     public IEnumerable<RoomPhotoDto> RoomPhotos { get; set; }
     public IEnumerable<RoomFacilityDto> RoomFacilities { get; set; }
     public RoomTypeDto RoomType { get; set; }
+    public IEnumerable<BookingDto> Bookings { get; set; }
   }
 }

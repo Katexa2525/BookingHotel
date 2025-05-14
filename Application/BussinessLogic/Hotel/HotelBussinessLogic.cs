@@ -2,7 +2,6 @@
 using Application.DTO.Hotel;
 using Application.Interfaces.Repository;
 using AutoMapper;
-using System.Diagnostics;
 using HotelEntity = Domain.Models.Hotel;
 
 namespace Application.BussinessLogic.Hotel
@@ -11,7 +10,6 @@ namespace Application.BussinessLogic.Hotel
   {
     private readonly IGeneralBussinessLogic _generalBussinessLogic;
     private readonly IRepositoryManager _repositoryManager;
-
     private readonly IMapper _mapper;
 
     public HotelBussinessLogic(IGeneralBussinessLogic generalBussinessLogic,

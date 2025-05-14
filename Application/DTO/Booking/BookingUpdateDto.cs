@@ -1,17 +1,21 @@
-﻿namespace Domain.Models
+﻿using Application.DTO.Guest;
+using Application.DTO.Service;
+using Domain.Models;
+
+namespace Application.DTO.Booking
 {
-  public class Booking : RoomRelatedEntity
+  public class BookingUpdateDto
   {
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
     public int NumberOfAdults { get; set; }
     /// <summary> Дата начала  </summary>
     public DateTime ArrivalDate { get; set; }
     /// <summary> Дата окончания </summary>
     public DateTime DepartureDate { get; set; }
-    //public Guid RoomId { get; set; }
     /// <summary> Комментарий к бронированию </summary>
     public string Description { get; set; } = string.Empty;
-    public ICollection<Guest> Guests { get; set; }
-    public ICollection<Service> Services { get; set; }
-    //public Room Room { get; set; }
+    public IEnumerable<GuestDto> Guests { get; set; }
+    public IEnumerable<ServiceDto> Services { get; set; }
   }
 }

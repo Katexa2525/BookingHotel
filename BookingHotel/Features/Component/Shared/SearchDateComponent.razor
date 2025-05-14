@@ -11,9 +11,9 @@
     <div class="col">
       <InputNumber @bind-Value="CountAdult" class="form-control" id="adult" />
     </div>
-    <div class="col">
+    @* <div class="col">
       <InputNumber @bind-Value="CountChildren" class="form-control" id="adult"/>
-    </div>
+    </div> *@
     <div class="col">
       <button class="btn btn-primary" title="Поиск на даты..." @onclick="@(() => DoClick() )">
         <i class="bi bi-binoculars"></i>
@@ -34,8 +34,8 @@
   [Parameter]
   public int CountAdult { get; set; }
 
-  [Parameter]
-  public int CountChildren { get; set; }
+  // [Parameter]
+  // public int CountChildren { get; set; }
 
   private void DoClick() => Console.WriteLine("DoClick");
 }
