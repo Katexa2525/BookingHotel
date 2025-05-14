@@ -1,0 +1,31 @@
+﻿<div class="card shadow">
+  <div class="card-body">
+    <p class="h3">@Caption</p>
+
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="row align-items-start">
+          <div class="col-sm-8">
+            <div class="d-flex">
+              @foreach (var item in @Hotel.HotelFacilities)
+              {
+                <h6 class="m-3">@item.Name</h6>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+@code {
+
+  [Parameter, EditorRequired]
+  public HotelDto Hotel { get; set; }
+
+  [Parameter, EditorRequired]
+  public string Caption { get; set; }
+
+}
