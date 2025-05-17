@@ -38,6 +38,8 @@ namespace BookingHotel.Server.Endpoint.Hotel
       hotel.Location = request.hotel.Location;
       hotel.Rating = request.hotel.Rating;
       hotel.Star = request.hotel.Star;
+      hotel.Arrival = request.hotel.Arrival;
+      hotel.Departure = request.hotel.Departure;
 
       if (request.hotel.ImageAction == ImageAction.Remove)
       {

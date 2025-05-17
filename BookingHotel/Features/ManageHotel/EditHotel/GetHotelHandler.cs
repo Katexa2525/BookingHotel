@@ -24,7 +24,6 @@ namespace BookingHotel.Features.ManageHotel.EditHotel
         //Заполнитель hotelId в RouteTemplate заменяется идентификатором отеля, подлежащему редактированию, перед выполнением HTTP-запроса
         string route = GetHotelRequest.RouteTemplate.Replace("{hotelId}", request.hotelId.ToString());
 
-        //return await httpClient.GetFromJsonAsync<GetHotelRequest.Response>(route, cancellationToken);
         var res = await httpClient.GetFromJsonAsync<HotelDto?>(route, cancellationToken);
 
         return new GetHotelRequest.Response(res);

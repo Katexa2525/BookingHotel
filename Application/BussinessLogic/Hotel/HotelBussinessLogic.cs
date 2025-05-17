@@ -12,9 +12,9 @@ namespace Application.BussinessLogic.Hotel
     private readonly IRepositoryManager _repositoryManager;
     private readonly IMapper _mapper;
 
+
     public HotelBussinessLogic(IGeneralBussinessLogic generalBussinessLogic,
-                               IMapper mapper,
-                               IRepositoryManager repositoryManager)
+                               IMapper mapper, IRepositoryManager repositoryManager)
     {
       _generalBussinessLogic = generalBussinessLogic;
       _mapper = mapper;
@@ -95,11 +95,15 @@ namespace Application.BussinessLogic.Hotel
 
       _mapper.Map(dto, entity);
 
+      _repositoryManager.HotelRepository.UpdateEntity(entity);
+      await _repositoryManager.SaveAsync();
+
+      /*
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Rooms,
             dto.Rooms,
-            //_repositoryRoom,
-            null,
+            _repositoryRoom,
+           // null,
             (item, hotelId) => item.HotelId = hotelId,
             room => room.Id,
             dto => dto.Id
@@ -108,8 +112,7 @@ namespace Application.BussinessLogic.Hotel
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Foods,
             dto.Foods,
-            //_repositoryFood,
-            null,
+            _repositoryFood,
             (item, hotelId) => item.HotelId = hotelId,
             food => food.Id,
             dto => dto.Id
@@ -118,8 +121,7 @@ namespace Application.BussinessLogic.Hotel
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.HotelFacilities,
             dto.HotelFacilities,
-            //_repositoryHotelFacility,
-            null,
+            _repositoryFacility,
             (item, hotelId) => item.HotelId = hotelId,
             hotelFacility => hotelFacility.Id,
             dto => dto.Id
@@ -128,8 +130,7 @@ namespace Application.BussinessLogic.Hotel
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.HotelPhotos,
             dto.HotelPhotos,
-            //_repositoryHotelPhoto,
-            null,
+            _repositoryPhoto,
             (item, hotelId) => item.HotelId = hotelId,
             hotelPhoto => hotelPhoto.Id,
             dto => dto.Id
@@ -138,16 +139,23 @@ namespace Application.BussinessLogic.Hotel
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Locations,
             dto.Locations,
-            //_repositoryLocation,
-            null,
+            _repositoryLocation,
             (item, hotelId) => item.HotelId = hotelId,
             location => location.Id,
             dto => dto.Id
             );
 
+      await _generalBussinessLogic.UpdateCollectionAsync(
+            entity.Reviews,
+            dto.Reviews,
+            _repositoryReview,
+            (item, hotelId) => item.HotelId = hotelId,
+            location => location.Id,
+            dto => dto.Id
+            );
+      */
+
       //await _repositoryHotel.SaveAsync();
-      _repositoryManager.HotelRepository.UpdateEntity(entity);
-      await _repositoryManager.SaveAsync();
     }
   }
 }
