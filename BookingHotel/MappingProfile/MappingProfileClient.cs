@@ -1,4 +1,5 @@
 ﻿using Application.DTO.Hotel;
+using Application.DTO.Room;
 using AutoMapper;
 
 namespace BookingHotel.MappingProfile

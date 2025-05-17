@@ -1,7 +1,6 @@
-﻿namespace Domain.Models
+﻿namespace Application.DTO.Review
 {
-  /// <summary> Отзывы по отелю </summary>
-  public class Review : HotelRelatedEntity
+  public class ReviewDto
   {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -11,6 +10,5 @@
     public string Description { get; set; } = string.Empty;
     /// <summary> Кол-во звезд для отеля по отзыву. На основании звезд будет вычисляться общий рейтинг отеля </summary>
     public int Star { get; set; }
-    public Guid HotelId { get; set; }
   }
 }

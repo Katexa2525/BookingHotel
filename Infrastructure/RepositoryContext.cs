@@ -30,16 +30,9 @@ namespace Infrastructure
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      // Для Price, избегаем каскадного удаления
-      modelBuilder.Entity<Price>()
-          .HasOne(p => p.Room)
-          .WithMany(r => r.Prices)
-          .HasForeignKey(p => p.RoomId)
-          .OnDelete(DeleteBehavior.Restrict); 
-
-      modelBuilder.Entity<Price>()
-          .HasOne(p => p.Currency)
-          .WithMany()
+      modelBuilder.Entity<Currency>()
+          .HasMany(r => r.Prices)
+          .WithOne(rp => rp.Currency)
           .HasForeignKey(p => p.CurrencyId)
           .OnDelete(DeleteBehavior.Restrict); 
 
@@ -56,31 +49,93 @@ namespace Infrastructure
           .HasForeignKey(s => s.BookingId)
           .OnDelete(DeleteBehavior.Cascade); // Каскадное удаление для Services
 
+      modelBuilder.Entity<Room>()
+          .HasMany(r => r.RoomPhotos)
+          .WithOne(rp => rp.Room)
+          .HasForeignKey(rp => rp.RoomId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+      modelBuilder.Entity<Room>()
+          .HasMany(r => r.RoomFacilities)
+          .WithOne(rf => rf.Room)
+          .HasForeignKey(rf => rf.RoomId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+      modelBuilder.Entity<Room>()
+          .HasMany(r => r.Prices)
+          .WithOne(rf => rf.Room)
+          .HasForeignKey(rf => rf.RoomId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+      modelBuilder.Entity<Room>()
+          .HasMany(r => r.Bookings)
+          .WithOne(rf => rf.Room)
+          .HasForeignKey(rf => rf.RoomId)
+          .OnDelete(DeleteBehavior.Cascade);
+
       modelBuilder.Entity<Hotel>()
           .HasMany(h => h.Rooms)
           .WithOne(r => r.Hotel)
           .HasForeignKey(r => r.HotelId)
           .OnDelete(DeleteBehavior.Cascade);
 
-      modelBuilder.Entity<Hotel>().HasData(
-        new { Id = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), Name = "Hotel, Singapore, Fullerton bay", Arrival = "14:00", Departure = "12:00", Location = "Durbach, Germany",   Rating = 4.9, Star = 3, MainPhoto = "B3C83220-D255-46D7-AC76-114ECE1D925A.jpg", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat orci at augue ultricies fermentum. Ut massa lectus, dignissim sed molestie ut, viverra vel diam. Fusce at iaculis magna. Suspendisse vel est et est luctus ornare venenatis ut neque. Pellentesque varius lacus sed arcu pellentesque, a porttitor velit gravida. Nunc nunc lectus, rhoncus consectetur metus eget, fermentum laoreet mauris. Cras ac gravida ante. Ut in ante ex. Proin tristique a ligula vel pharetra. Vestibulum blandit nisl dui, in pulvinar metus mollis pharetra. Duis cursus porttitor libero, quis lacinia velit. Curabitur tincidunt laoreet mi, eu maximus nibh vestibulum sed. Phasellus orci." },
-        new { Id = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308"), Name = "Hotel, Nature, Switzerland",      Arrival = "14:00", Departure = "12:00", Location = "Nottingham, UK",     Rating = 2.4, Star = 4, MainPhoto = "F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308.jpg", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a semper lacus. Vestibulum vehicula elementum auctor. Vestibulum malesuada, nibh a pretium ullamcorper, tortor nisi tincidunt ante, sed gravida purus mi in ligula. In malesuada ligula vitae risus iaculis, et sollicitudin lorem ornare. Nullam nec ullamcorper est. Donec efficitur et ipsum auctor semper. In id eros risus. Suspendisse quis massa convallis, suscipit eros eget, ullamcorper metus. Phasellus laoreet nulla quam, vel porttitor diam efficitur vitae. Etiam sollicitudin urna vel auctor accumsan. Suspendisse commodo pulvinar mauris, quis viverra lectus hendrerit dictum. In sed lorem tempus ipsum rutrum suscipit vitae sed mauris. Nunc." },
-        new { Id = Guid.Parse("FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340"), Name = "Lanzarote, Hotel, Heaven",        Arrival = "14:00", Departure = "12:00", Location = "Furna, Switzerland", Rating = 4.7, Star = 3, MainPhoto = "FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340.jpg", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut imperdiet ex ac euismod pulvinar. Cras lorem nulla, posuere sed semper sed, scelerisque non nulla. Sed mi lorem, condimentum nec magna ac, ultricies lobortis ante. Integer tincidunt, metus eget mattis hendrerit, nibh metus sagittis diam, sed imperdiet metus nisi ac magna. Pellentesque iaculis mi purus, a porta tortor sodales consequat. Pellentesque vel mattis ligula. Fusce ac massa id ex rutrum eleifend. Nunc porta tortor dictum, ornare metus quis, laoreet ante. Nullam ullamcorper magna eget eleifend consequat. In nulla ex, iaculis vestibulum eros ac, vestibulum euismod arcu. Nullam sollicitudin at neque et." },
-        new { Id = Guid.Parse("2CEDEA9F-912D-48C7-9125-3C11769F71A7"), Name = "Hotel, Building, House, Shops",   Arrival = "14:00", Departure = "12:00", Location = "Gearstones, UK",     Rating = 4.8, Star = 5, MainPhoto = "2CEDEA9F-912D-48C7-9125-3C11769F71A7.jpg", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut laoreet, justo ut egestas pulvinar, est dui elementum neque, ac elementum lectus tellus in libero. Cras ullamcorper tellus id velit finibus, at rutrum odio convallis. Donec gravida nec mauris eget iaculis. Praesent faucibus ante fringilla, ullamcorper enim sit amet, suscipit leo. Sed libero erat, facilisis vel nunc et, venenatis volutpat quam. Integer sit amet lobortis risus, ut hendrerit orci. Vivamus pulvinar lectus dui, a dictum odio eleifend vitae. Pellentesque gravida risus eu ipsum efficitur consectetur. Nulla lectus leo, pharetra vel ante ut, mollis pharetra arcu. Morbi vitae metus ante. Integer lacinia." },
-        new { Id = Guid.Parse("6C294357-66E3-49B1-AB63-42173553E89C"), Name = "Hotel, Winter, Season",           Arrival = "14:00", Departure = "12:00", Location = "Ockle, Scotland",    Rating = 3.6, Star = 4, MainPhoto = "",                                         Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer facilisis magna eget sem feugiat, non pulvinar dui interdum. Proin quis tincidunt ex. Pellentesque dictum nibh dolor, cursus porta magna sodales a. Morbi vitae tortor nisi. Nullam molestie dui tempus, lobortis dolor sit amet, hendrerit libero. Quisque sed massa id lacus ornare faucibus eget facilisis mi. Donec interdum bibendum leo nec facilisis. In semper nec eros id tincidunt. Nunc sed sagittis justo. Ut massa ligula, posuere sed iaculis sit amet, laoreet ut ipsum. Nulla facilisi. Vestibulum iaculis risus nulla. Nunc congue elit et erat blandit vulputate. Praesent vulputate tortor at augue." },
-        new { Id = Guid.Parse("C48CBBE7-6A94-4480-9C60-48B54AF81545"), Name = "Marina bay sands, Singapore",     Arrival = "14:00", Departure = "12:00", Location = "Ocluder, Singopour", Rating = 4.2, Star = 5, MainPhoto = "",                                         Description = "Singapore skyline with urban buildings over water" },
-        new { Id = Guid.Parse("E0C80AAF-2224-40D5-8D54-66BF4FBBFCD8"), Name = "Hotel, High, Stone image",        Arrival = "14:00", Departure = "12:00", Location = "Madrid, Espane",     Rating = 4.1, Star = 4, MainPhoto = "E0C80AAF-2224-40D5-8D54-66BF4FBBFCD8.jpg", Description = "Lorem ipsum dolor sit amet sed diam sadipscing sit stet amet invidunt nibh autem voluptua justo tempor tation sed. Consetetur labore accusam ut nonumy justo dolore kasd. Duis odio labore dolore stet. Kasd vel dolor feugait illum accusam veniam dolore dignissim labore. Ut sed elitr elitr amet gubergren ipsum tempor sed duo erat justo no nibh id voluptua ut." },
-        new { Id = Guid.Parse("95175BFC-AF50-4588-9373-68EE30E88F75"), Name = "Hotel, Invalidendom",             Arrival = "14:00", Departure = "12:00", Location = "Paris, France",      Rating = 4.9, Star = 5, MainPhoto = "",                                         Description = "Lorem ipsum dolor sit amet gubergren ipsum vulputate invidunt vel sit dolor liber. Elitr ut et vulputate est. Justo ut nonummy est. Dolor ipsum duis rebum lorem laoreet autem elitr vero gubergren sea est clita wisi et dolore. Ut duo lorem ipsum takimata facilisis est sanctus sea at accusam sanctus clita labore et dolor. Eos illum delenit et ipsum sed amet. Gubergren accusam consetetur." }
-        );
+      modelBuilder.Entity<HotelFacility>()
+          .HasOne(hf => hf.Hotel)
+          .WithMany(h => h.HotelFacilities)
+          .HasForeignKey(hf => hf.HotelId)
+          .OnDelete(DeleteBehavior.Cascade);
 
-      modelBuilder.Entity<Room>()
-          .HasMany(r => r.RoomPhotos)
-          .WithOne(rp => rp.Room)
-          .HasForeignKey(rp => rp.RoomId)
+      modelBuilder.Entity<HotelPhoto>()
+          .HasOne(hp => hp.Hotel)
+          .WithMany(h => h.HotelPhotos)
+          .HasForeignKey(hp => hp.HotelId)
+          .OnDelete(DeleteBehavior.Cascade); 
+
+      modelBuilder.Entity<Location>()
+          .HasOne(l => l.Hotel)
+          .WithMany(h => h.Locations)
+          .HasForeignKey(l => l.HotelId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+      modelBuilder.Entity<Review>()
+          .HasOne(rt => rt.Hotel)
+          .WithMany(r => r.Reviews)
+          .HasForeignKey(r => r.HotelId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+      modelBuilder.Entity<HotelUsefulInfo>()
+          .HasOne(rt => rt.Hotel)
+          .WithOne(r => r.HotelUsefulInfo)
+          .OnDelete(DeleteBehavior.Cascade);
+
+      modelBuilder.Entity<RoomType>()
+          .HasMany(rt => rt.Rooms)
+          .WithOne(r => r.RoomType)
+          .HasForeignKey(r => r.RoomTypeId)
           .OnDelete(DeleteBehavior.Restrict);
 
+      modelBuilder.Entity<TypeFood>()
+          .HasMany(rt => rt.Foods)
+          .WithOne(r => r.TypeFood)
+          .HasForeignKey(r => r.TypeFoodId)
+          .OnDelete(DeleteBehavior.Restrict);
+
+      //установка альтернативного ключа
+      modelBuilder.Entity<Currency>().HasAlternateKey(u => u.Cur_ID);
+
+      modelBuilder.Entity<Hotel>().HasData(
+        new { Id = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), Name = "Hotel, Singapore, Fullerton bay", Arrival = "14:00", Departure = "12:00", Location = "Durbach, Germany", Rating = 4.9, Star = 3, MainPhoto = "B3C83220-D255-46D7-AC76-114ECE1D925A.jpg", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat orci at augue ultricies fermentum. Ut massa lectus, dignissim sed molestie ut, viverra vel diam. Fusce at iaculis magna. Suspendisse vel est et est luctus ornare venenatis ut neque. Pellentesque varius lacus sed arcu pellentesque, a porttitor velit gravida. Nunc nunc lectus, rhoncus consectetur metus eget, fermentum laoreet mauris. Cras ac gravida ante. Ut in ante ex. Proin tristique a ligula vel pharetra. Vestibulum blandit nisl dui, in pulvinar metus mollis pharetra. Duis cursus porttitor libero, quis lacinia velit. Curabitur tincidunt laoreet mi, eu maximus nibh vestibulum sed. Phasellus orci." },
+        new { Id = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308"), Name = "Hotel, Nature, Switzerland", Arrival = "14:00", Departure = "12:00", Location = "Nottingham, UK", Rating = 2.4, Star = 4, MainPhoto = "F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308.jpg", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a semper lacus. Vestibulum vehicula elementum auctor. Vestibulum malesuada, nibh a pretium ullamcorper, tortor nisi tincidunt ante, sed gravida purus mi in ligula. In malesuada ligula vitae risus iaculis, et sollicitudin lorem ornare. Nullam nec ullamcorper est. Donec efficitur et ipsum auctor semper. In id eros risus. Suspendisse quis massa convallis, suscipit eros eget, ullamcorper metus. Phasellus laoreet nulla quam, vel porttitor diam efficitur vitae. Etiam sollicitudin urna vel auctor accumsan. Suspendisse commodo pulvinar mauris, quis viverra lectus hendrerit dictum. In sed lorem tempus ipsum rutrum suscipit vitae sed mauris. Nunc." },
+        new { Id = Guid.Parse("FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340"), Name = "Lanzarote, Hotel, Heaven", Arrival = "14:00", Departure = "12:00", Location = "Furna, Switzerland", Rating = 4.7, Star = 3, MainPhoto = "FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340.jpg", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut imperdiet ex ac euismod pulvinar. Cras lorem nulla, posuere sed semper sed, scelerisque non nulla. Sed mi lorem, condimentum nec magna ac, ultricies lobortis ante. Integer tincidunt, metus eget mattis hendrerit, nibh metus sagittis diam, sed imperdiet metus nisi ac magna. Pellentesque iaculis mi purus, a porta tortor sodales consequat. Pellentesque vel mattis ligula. Fusce ac massa id ex rutrum eleifend. Nunc porta tortor dictum, ornare metus quis, laoreet ante. Nullam ullamcorper magna eget eleifend consequat. In nulla ex, iaculis vestibulum eros ac, vestibulum euismod arcu. Nullam sollicitudin at neque et." },
+        new { Id = Guid.Parse("2CEDEA9F-912D-48C7-9125-3C11769F71A7"), Name = "Hotel, Building, House, Shops", Arrival = "14:00", Departure = "12:00", Location = "Gearstones, UK", Rating = 4.8, Star = 5, MainPhoto = "2CEDEA9F-912D-48C7-9125-3C11769F71A7.jpg", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut laoreet, justo ut egestas pulvinar, est dui elementum neque, ac elementum lectus tellus in libero. Cras ullamcorper tellus id velit finibus, at rutrum odio convallis. Donec gravida nec mauris eget iaculis. Praesent faucibus ante fringilla, ullamcorper enim sit amet, suscipit leo. Sed libero erat, facilisis vel nunc et, venenatis volutpat quam. Integer sit amet lobortis risus, ut hendrerit orci. Vivamus pulvinar lectus dui, a dictum odio eleifend vitae. Pellentesque gravida risus eu ipsum efficitur consectetur. Nulla lectus leo, pharetra vel ante ut, mollis pharetra arcu. Morbi vitae metus ante. Integer lacinia." },
+        new { Id = Guid.Parse("6C294357-66E3-49B1-AB63-42173553E89C"), Name = "Hotel, Winter, Season", Arrival = "14:00", Departure = "12:00", Location = "Ockle, Scotland", Rating = 3.6, Star = 4, MainPhoto = "", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer facilisis magna eget sem feugiat, non pulvinar dui interdum. Proin quis tincidunt ex. Pellentesque dictum nibh dolor, cursus porta magna sodales a. Morbi vitae tortor nisi. Nullam molestie dui tempus, lobortis dolor sit amet, hendrerit libero. Quisque sed massa id lacus ornare faucibus eget facilisis mi. Donec interdum bibendum leo nec facilisis. In semper nec eros id tincidunt. Nunc sed sagittis justo. Ut massa ligula, posuere sed iaculis sit amet, laoreet ut ipsum. Nulla facilisi. Vestibulum iaculis risus nulla. Nunc congue elit et erat blandit vulputate. Praesent vulputate tortor at augue." },
+        new { Id = Guid.Parse("C48CBBE7-6A94-4480-9C60-48B54AF81545"), Name = "Marina bay sands, Singapore", Arrival = "14:00", Departure = "12:00", Location = "Ocluder, Singopour", Rating = 4.2, Star = 5, MainPhoto = "", Description = "Singapore skyline with urban buildings over water" },
+        new { Id = Guid.Parse("E0C80AAF-2224-40D5-8D54-66BF4FBBFCD8"), Name = "Hotel, High, Stone image", Arrival = "14:00", Departure = "12:00", Location = "Madrid, Espane", Rating = 4.1, Star = 4, MainPhoto = "E0C80AAF-2224-40D5-8D54-66BF4FBBFCD8.jpg", Description = "Lorem ipsum dolor sit amet sed diam sadipscing sit stet amet invidunt nibh autem voluptua justo tempor tation sed. Consetetur labore accusam ut nonumy justo dolore kasd. Duis odio labore dolore stet. Kasd vel dolor feugait illum accusam veniam dolore dignissim labore. Ut sed elitr elitr amet gubergren ipsum tempor sed duo erat justo no nibh id voluptua ut." },
+        new { Id = Guid.Parse("95175BFC-AF50-4588-9373-68EE30E88F75"), Name = "Hotel, Invalidendom", Arrival = "14:00", Departure = "12:00", Location = "Paris, France", Rating = 4.9, Star = 5, MainPhoto = "", Description = "Lorem ipsum dolor sit amet gubergren ipsum vulputate invidunt vel sit dolor liber. Elitr ut et vulputate est. Justo ut nonummy est. Dolor ipsum duis rebum lorem laoreet autem elitr vero gubergren sea est clita wisi et dolore. Ut duo lorem ipsum takimata facilisis est sanctus sea at accusam sanctus clita labore et dolor. Eos illum delenit et ipsum sed amet. Gubergren accusam consetetur." }
+        );
+
       modelBuilder.Entity<Room>().HasData(
-        new { Id = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), RoomTypeId= Guid.Parse("0282BE52-3816-401E-AF3F-074BE089D921"), PeopleNumber = 2, Square = 40.0, Description = "Takimata consectetuer lorem facilisis ipsum nibh sit accusam aliquyam justo clita" },
+        new { Id = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), RoomTypeId = Guid.Parse("0282BE52-3816-401E-AF3F-074BE089D921"), PeopleNumber = 2, Square = 40.0, Description = "Takimata consectetuer lorem facilisis ipsum nibh sit accusam aliquyam justo clita" },
         new { Id = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), RoomTypeId = Guid.Parse("A19B9BBE-A941-4B3E-BB2D-07E75ED1850A"), PeopleNumber = 4, Square = 52.0, Description = "Elitr sed enim stet dolore consectetuer consetetur et facer diam eirmod dolores tempor ea sit." },
         new { Id = Guid.Parse("1088F86A-F6F2-4CC8-88FA-1D0BEB5E95D8"), HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), RoomTypeId = Guid.Parse("4776D7CE-CC8D-4C86-8B9D-40650651DF33"), PeopleNumber = 2, Square = 34.0, Description = "Nibh vero illum sit. Dolor consetetur tempor amet sea lorem consequat diam dolor ea accusam no te at ea clita diam." },
         new { Id = Guid.Parse("9D551953-1B52-4CB1-AD90-31C8653955FA"), HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308"), RoomTypeId = Guid.Parse("072FC618-8703-437F-9662-5BA97D0AB4F0"), PeopleNumber = 3, Square = 38.0, Description = "Zzril tation clita stet." },
@@ -89,26 +144,14 @@ namespace Infrastructure
 
 
       modelBuilder.Entity<RoomFacility>().HasData(
-        new { Id = Guid.Parse("4C17ADE5-2349-43FE-A9D1-D10AED6DDEBD"), Name = "Цифровое ТВ",      RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B")}, 
-        new { Id = Guid.Parse("6E69E113-EB98-4094-B417-83D61A9AB4EB"), Name = "Мини-холодильник", RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B")},
-        new { Id = Guid.Parse("D3FB6A18-F736-4CB5-BF64-69C36B3D489C"), Name = "Wi-Fi",            RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B")},
-        new { Id = Guid.Parse("13B17DAB-7ED0-40D9-93D5-B020EEA0AAD9"), Name = "Ванна",            RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500")},
-        new { Id = Guid.Parse("427BA46A-07E6-4DA2-AFED-C1760F02A636"), Name = "Фен",              RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500")},
-        new { Id = Guid.Parse("A774E890-3726-4E5B-8071-50E01F27B7B9"), Name = "Цифровое ТВ",      RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500")},
-        new { Id = Guid.Parse("573716D8-E318-4BA0-957C-2A1A0BE4AF30"), Name = "Wi-Fi",            RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500")}
+        new { Id = Guid.Parse("4C17ADE5-2349-43FE-A9D1-D10AED6DDEBD"), Name = "Цифровое ТВ", RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B") },
+        new { Id = Guid.Parse("6E69E113-EB98-4094-B417-83D61A9AB4EB"), Name = "Мини-холодильник", RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B") },
+        new { Id = Guid.Parse("D3FB6A18-F736-4CB5-BF64-69C36B3D489C"), Name = "Wi-Fi", RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B") },
+        new { Id = Guid.Parse("13B17DAB-7ED0-40D9-93D5-B020EEA0AAD9"), Name = "Ванна", RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500") },
+        new { Id = Guid.Parse("427BA46A-07E6-4DA2-AFED-C1760F02A636"), Name = "Фен", RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500") },
+        new { Id = Guid.Parse("A774E890-3726-4E5B-8071-50E01F27B7B9"), Name = "Цифровое ТВ", RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500") },
+        new { Id = Guid.Parse("573716D8-E318-4BA0-957C-2A1A0BE4AF30"), Name = "Wi-Fi", RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500") }
         );
-
-      modelBuilder.Entity<Room>()
-          .HasMany(r => r.RoomFacilities)
-          .WithOne(rf => rf.Room)
-          .HasForeignKey(rf => rf.RoomId)
-          .OnDelete(DeleteBehavior.Restrict); 
-
-      modelBuilder.Entity<HotelFacility>()
-          .HasOne(hf => hf.Hotel)
-          .WithMany(h => h.HotelFacilities)
-          .HasForeignKey(hf => hf.HotelId)
-          .OnDelete(DeleteBehavior.Restrict);
 
       modelBuilder.Entity<HotelFacility>().HasData(
         new { Id = Guid.Parse("839DE6A2-33F1-4737-B4F8-A3AB2A7D62C9"), Name = "Wi-Fi", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
@@ -121,18 +164,6 @@ namespace Infrastructure
         new { Id = Guid.Parse("93124016-D871-4999-B3CA-BB1D592743F3"), Name = "Оплата картой", HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") }
         );
 
-      modelBuilder.Entity<HotelPhoto>()
-          .HasOne(hp => hp.Hotel)
-          .WithMany(h => h.HotelPhotos)
-          .HasForeignKey(hp => hp.HotelId)
-          .OnDelete(DeleteBehavior.Restrict); 
-
-      modelBuilder.Entity<Location>()
-          .HasOne(l => l.Hotel)
-          .WithMany(h => h.Locations)
-          .HasForeignKey(l => l.HotelId)
-          .OnDelete(DeleteBehavior.Restrict);
-
       modelBuilder.Entity<Location>().HasData(
         new { Id = Guid.Parse("19231977-A4B6-4925-93DE-5B7674DF7C2F"), Name = "350 м до центра", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
         new { Id = Guid.Parse("D347A13C-C8CB-494A-8A1C-79400B256736"), Name = "ост. «Главная городская площадь» 106 м", HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A") },
@@ -143,12 +174,6 @@ namespace Infrastructure
         new { Id = Guid.Parse("8C0B9FDD-209A-4E07-BABB-C32F6308A25F"), Name = "2 км до футбольного стадиона", HotelId = Guid.Parse("FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340") },
         new { Id = Guid.Parse("7D2A919D-E7D5-435A-AE0A-592037D489E3"), Name = "ост. «Реликтовый лес» 960 м", HotelId = Guid.Parse("2CEDEA9F-912D-48C7-9125-3C11769F71A7") }
         );
-
-      modelBuilder.Entity<RoomType>()
-          .HasMany(rt => rt.Rooms)
-          .WithOne(r => r.RoomType)
-          .HasForeignKey(r => r.RoomTypeId)
-          .OnDelete(DeleteBehavior.Restrict);
 
       modelBuilder.Entity<RoomType>().HasData(
         new { Id = Guid.Parse("3ca90fe7-2be3-4d2b-893c-329e78f1795b"), Name = "Номер Стандарт" },
@@ -169,13 +194,6 @@ namespace Infrastructure
         new { Id = Guid.Parse("a19b9bbe-a941-4b3e-bb2d-07e75ed1850a"), Name = "Люкс Гранд Премиум" }
         );
 
-
-      modelBuilder.Entity<TypeFood>()
-          .HasMany(rt => rt.Foods)
-          .WithOne(r => r.TypeFood)
-          .HasForeignKey(r => r.TypeFoodId)
-          .OnDelete(DeleteBehavior.Restrict);
-
       modelBuilder.Entity<TypeFood>().HasData(
         new { Id = Guid.Parse("072fc618-8703-437f-9662-5ba97d0ab4f0"), Name = "Завтрак" },
         new { Id = Guid.Parse("4d53a1ed-9613-4406-8a31-a411c934e628"), Name = "Полупансион" },
@@ -192,12 +210,6 @@ namespace Infrastructure
         new { Id = Guid.Parse("7DBFC4DF-A227-4DDB-87C0-011A057B4403"), Name = "Завтрак полноценный", TypeFoodId = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), HotelId = Guid.Parse("F6A9207D-AD8B-4D5F-BEA5-1CD2F87A0308") },
         new { Id = Guid.Parse("00F7E7F9-387C-47F3-A728-CF91782F6EE3"), Name = "Без питания", TypeFoodId = Guid.Parse("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"), HotelId = Guid.Parse("FFE1C64A-AD2B-443E-B5AC-2CE60ECA6340") });
 
-      modelBuilder.Entity<Review>()
-          .HasOne(rt => rt.Hotel)
-          .WithMany(r => r.Reviews)
-          .HasForeignKey(r => r.HotelId)
-          .OnDelete(DeleteBehavior.Restrict);
-
       modelBuilder.Entity<Review>().HasData(
         new { Id = Guid.Parse("C5102EE7-5F7A-4EB3-AA88-52B0923235EF"), Name = "Ромка Тарасов",        DateTimeReview = new DateTime(2024, 11, 11), Star = 4, HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), Description = "Очень уютный отель. За свою цену более чем достаточно" },
         new { Id = Guid.Parse("29A0C156-E40A-4D7A-B6D1-3AA1CA762ACF"), Name = "KATERINA",             DateTimeReview = new DateTime(2023, 10, 06), Star = 5, HotelId = Guid.Parse("B3C83220-D255-46D7-AC76-114ECE1D925A"), Description = "Все понравилось, чисто, тихо. Брали люкс. Большой двухкомнатный номер за приемлемую цену. Вежливый приятный персонал. Брали дополнительно комплексный завтрак, тоже понравился. Молодцы" },
@@ -209,18 +221,11 @@ namespace Infrastructure
         new { Id = Guid.Parse("C6EA5EB4-FBCE-47A3-9442-C59B0530A6FF"), Name = "алыкса сочи",          DateTimeReview = new DateTime(2023, 02, 01), Star = 2, HotelId = Guid.Parse("2CEDEA9F-912D-48C7-9125-3C11769F71A7"), Description = "Жарко и душно, фанкойл не влияет на температуру, если приоткрыть окно, то из за общей вытяжки сильный свист в щели двери, по этой же причине открыть входную дверь в отель невозможно без серьёзного усилия. В №521 вода в душевой не уходит, и дело в наклоне чаши против слива. Просили при уборке убирать воду, но горничная этого не делала, пришлось ловить горничную на этаже. За 4 дня один раз убрались. " }
         );
 
-      modelBuilder.Entity<HotelUsefulInfo>()
-          .HasOne(rt => rt.Hotel)
-          .WithOne(r => r.HotelUsefulInfo)
-          .OnDelete(DeleteBehavior.Restrict);
-
-      //установка альтернативного ключа
-      modelBuilder.Entity<Currency>().HasAlternateKey(u => u.Cur_ID);
-
       modelBuilder.Entity<Currency>().HasData(
         new { Id = Guid.Parse("ABBE09FC-5E77-414C-8940-E77E934DE88F"), Name = "RUB", Cur_ID = 456, Cur_ParentID = 190, Cur_Code = "643", Cur_Abbreviation = "RUB", Cur_Name = "Российский рубль", Cur_Name_Bel = "Расійскі рубель", Cur_Name_Eng = "Russian Ruble", Cur_QuotName = "100 Российских рублей", Cur_QuotName_Bel = "100 Расійскіх рублёў", Cur_QuotName_Eng = "100 Russian Rubles", Cur_NameMulti = "Российских рублей", Cur_Name_BelMulti = "Расійскіх рублёў", Cur_Name_EngMulti = "Russian Rubles", Cur_Scale = 100, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("2021-07-09T00:00:00"), Cur_DateEnd = DateTime.Parse("2050-01-01T00:00:00") },
         new { Id = Guid.Parse("F3CA1C7B-C275-4FEB-9790-9A42EFB878EE"), Name = "USD", Cur_ID = 145, Cur_ParentID = 145, Cur_Code = "840", Cur_Abbreviation = "USD", Cur_Name = "Доллар США", Cur_Name_Bel = "Долар ЗША", Cur_Name_Eng = "US Dollar", Cur_QuotName = "1 Доллар США", Cur_QuotName_Bel = "1 Долар ЗША", Cur_QuotName_Eng = "1 US Dollar", Cur_NameMulti = "Долларов США", Cur_Name_BelMulti = "Долараў ЗША", Cur_Name_EngMulti = "US Dollars", Cur_Scale = 1, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("1991-01-01T00:00:00"), Cur_DateEnd = DateTime.Parse("2021-07-08T00:00:00") },
-        new { Id = Guid.Parse("F3524EFF-E305-4305-8AE3-2731AD415FE9"), Name = "EUR", Cur_ID = 451, Cur_ParentID = 19, Cur_Code = "978", Cur_Abbreviation = "EUR", Cur_Name = "Евро", Cur_Name_Bel = "Еўра", Cur_Name_Eng = "Euro", Cur_QuotName = "1 Евро", Cur_QuotName_Bel = "1 Еўра", Cur_QuotName_Eng = "1 Euro", Cur_NameMulti = "Евро", Cur_Name_BelMulti = "Еўра", Cur_Name_EngMulti = "Euros", Cur_Scale = 1, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("2021-07-09T00:00:00"), Cur_DateEnd = DateTime.Parse("2050-01-01T00:00:00") }
+        new { Id = Guid.Parse("F3524EFF-E305-4305-8AE3-2731AD415FE9"), Name = "EUR", Cur_ID = 451, Cur_ParentID = 19, Cur_Code = "978", Cur_Abbreviation = "EUR", Cur_Name = "Евро", Cur_Name_Bel = "Еўра", Cur_Name_Eng = "Euro", Cur_QuotName = "1 Евро", Cur_QuotName_Bel = "1 Еўра", Cur_QuotName_Eng = "1 Euro", Cur_NameMulti = "Евро", Cur_Name_BelMulti = "Еўра", Cur_Name_EngMulti = "Euros", Cur_Scale = 1, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("2021-07-09T00:00:00"), Cur_DateEnd = DateTime.Parse("2050-01-01T00:00:00") },
+        new { Id = Guid.Parse("232BA1BD-0192-4E35-B4A2-908DD61EA5CC"), Name = "BYN", Cur_ID = 9333, Cur_ParentID = 9333, Cur_Code = "933", Cur_Abbreviation = "BYN", Cur_Name = "Белорусский рубль", Cur_Name_Bel = "Берарускі рубель", Cur_Name_Eng = "BYN", Cur_QuotName = "1 Белорусский рубль", Cur_QuotName_Bel = "1 Беларускі рубель", Cur_QuotName_Eng = "1 BYN", Cur_NameMulti = "Белорусский рублей", Cur_Name_BelMulti = "Беларускіх рублёў", Cur_Name_EngMulti = "Belorussian Rubles", Cur_Scale = 1, Cur_Periodicity = 0, Cur_DateStart = DateTime.Parse("2021-07-09T00:00:00"), Cur_DateEnd = DateTime.Parse("2050-01-01T00:00:00") }
       );
 
 

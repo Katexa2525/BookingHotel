@@ -6,6 +6,7 @@ using Application.DTO.HotelFacility;
 using Application.DTO.HotelPhoto;
 using Application.DTO.Location;
 using Application.DTO.Price;
+using Application.DTO.Review;
 using Application.DTO.Room;
 using Application.DTO.RoomFacility;
 using Application.DTO.RoomPhoto;
@@ -23,14 +24,13 @@ namespace BookingHotel.Server.MappingProfile
     {
       // hotel
       CreateMap<Hotel, HotelAllDto>().ReverseMap()
-                                     .ForPath(s => s.HotelFacilities, opt => opt.Ignore())
-                                     .ForPath(s => s.HotelPhotos, opt => opt.Ignore())
-                                     .ForPath(s => s.Foods, opt => opt.Ignore())
-                                     .ForPath(s => s.Reviews, opt => opt.Ignore())
-                                     .ForPath(s => s.Rooms, opt => opt.Ignore())
-                                     .ForPath(s => s.Locations, opt => opt.Ignore())
-                                     .ForPath(s => s.HotelUsefulInfo, opt => opt.Ignore())
-                                     //.ForPath(s => s.Prices, opt => opt.Ignore())
+                                     //.ForPath(s => s.HotelFacilities, opt => opt.Ignore())
+                                     //.ForPath(s => s.HotelPhotos, opt => opt.Ignore())
+                                     //.ForPath(s => s.Foods, opt => opt.Ignore())
+                                     //.ForPath(s => s.Reviews, opt => opt.Ignore())
+                                     //.ForPath(s => s.Rooms, opt => opt.Ignore())
+                                     //.ForPath(s => s.Locations, opt => opt.Ignore())
+                                     //.ForPath(s => s.HotelUsefulInfo, opt => opt.Ignore())
                                      ;
 
       CreateMap<Hotel, HotelCreateDto>().ReverseMap();
@@ -56,9 +56,11 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Room, RoomDto>().ReverseMap();
       CreateMap<Room, RoomUpdateDto>().ReverseMap();
 
+      CreateMap<RoomDto, RoomUpdateDto>().ReverseMap()
+        .ForPath(p => p.RoomType, opt => opt.Ignore());
+
       CreateMap<RoomType, RoomTypeDto>().ReverseMap()
-                                        .ForPath(p=>p.Rooms, opt=>opt.Ignore())
-                                        .ForPath(p => p.Prices, opt => opt.Ignore());
+                                        .ForPath(p=>p.Rooms, opt=>opt.Ignore());
 
       // roomFacility
       CreateMap<RoomFacility, RoomFacilityCreateDto>().ReverseMap();
@@ -93,6 +95,7 @@ namespace BookingHotel.Server.MappingProfile
 
       CreateMap<Guest, GuestDto>().ReverseMap();
       CreateMap<Service, ServiceDto>().ReverseMap();
+      CreateMap<Review, ReviewDto>().ReverseMap();
 
     }
   }

@@ -7,34 +7,36 @@
 
 <PageTitle>Номера</PageTitle>
 
-@if (_allRooms is not null && _allRooms.Any())
+<div class="mb-4">
+  <p class="font-italic text-center">
+    Есть номер, который хотели бы опубликовать?
+    <a href="add-hotel">Добавьте это здесь</a>.
+  </p>
+</div>
+
+@* Данные по отелю *@
+<p class="h1">@_hotel.Name, @_hotel.Star*</p>
+<div class="d-flex">
+  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-star"></span> @_hotel.Rating </h6>&nbsp;&nbsp;&nbsp;
+  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @_hotel.Location</h6>
+</div>
+
+@* близжайшие локации около отеля *@
+@if (_hotel.Locations is not null && _hotel.Locations.Any())
 {
-  <div class="mb-4">
-    <p class="font-italic text-center">
-      Есть номер, который хотели бы опубликовать?
-      <a href="add-hotel">Добавьте это здесь</a>.
-    </p>
-  </div>
-
-  @* Данные по отелю *@
-  <p class="h1">@_hotel.Name, @_hotel.Star*</p>
-  <div class="d-flex">
-    <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-star"></span> @_hotel.Rating </h6>&nbsp;&nbsp;&nbsp;
-    <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @_hotel.Location</h6>
-  </div>
-
-  // близжайшие локации около отеля
   <div class="d-flex">
     @foreach (var item in @_hotel.Locations)
     {
       <h6 class="card-subtitle mb-3 text-muted">@item.Name, &nbsp;&nbsp;&nbsp;</h6>
     }
   </div>
+}
 
-  // данные передаются в параметры компонента с помощью атрибутов элемента
-  @* <SearchComponent Placeholder="Поиск номера отеля..." TextNavigateTo=@routeSearch /> *@
+@if (_allRooms is not null && _allRooms.Any())
+{
+  <SearchComponent Placeholder="Поиск номера отеля..." TextNavigateTo=@routeSearch />
+  @* данные передаются в параметры компонента с помощью атрибутов элемента *@
   <SearchDateComponent />
-
   // номера по отелю
   <div class="card-container">
     @foreach (var room in _allRooms)
@@ -46,18 +48,19 @@
       </div>
     }
   </div>
-
-  // про отель
-  <AboutHotel Caption="Про отель" Hotel="@_hotel" />
-
-  //Удобства и услуги, питание отеля
-  <AboutHotelFacilities CaptionFacilities="Удобства и услуги отеля" CaptionFoods="Питание" Hotel="@_hotel" />
-
-  //Отзывы
-  @* <HotelReview Caption="Отзывы" Hotel="@_hotel" /> *@
-
 }
-else
+
+@* про отель *@
+<AboutHotel Caption="Про отель" Hotel="@_hotel" />
+
+@* Удобства и услуги, питание отеля *@
+<AboutHotelFacilities CaptionFacilities="Удобства и услуги отеля" CaptionFoods="Питание" Hotel="@_hotel" />
+
+@* Отзывы *@
+<HotelReview Caption="@countReview" Hotel="@_hotel" />
+
+
+@* else
 {
   <div class="no-hotels">
     <svg viewBox="0 0 16 16" class="bi bi-tree" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -75,7 +78,7 @@ else
       <a href="add-room">почему бы не добавить один?</a>
     </h3>
   </div>
-}
+} *@
 
 @code {
 
@@ -86,6 +89,7 @@ else
   private string routeSearch = string.Empty;
   private HotelDto _hotel = new HotelDto();
   private string? _errorMessage;
+  private string countReview = string.Empty;
 
   /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
   [Parameter]
@@ -112,7 +116,8 @@ else
         Prices = p.Prices,
         RoomFacilities = p.RoomFacilities,
         RoomPhotos = p.RoomPhotos,
-        RoomType = p.RoomType
+        RoomType = p.RoomType, 
+        Bookings = p.Bookings
       });
 
     // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами
@@ -127,6 +132,11 @@ else
     {
       _errorMessage = AppMessage.HotelPageLoadTextErrorMessage;
     }
+
+    if (_hotel is not null)
+      countReview = $"Отзывы ({_hotel.Reviews.Count().ToString()})";
+    else
+      countReview = "Отзывы (0)";
 
     // устанавливаю маршрут для поиска в переменную
     routeSearch = $"hotels/{HotelId}/rooms/searchRoom";

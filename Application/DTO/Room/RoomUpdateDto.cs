@@ -1,4 +1,5 @@
-﻿using Application.DTO.Price;
+﻿using Application.DTO.Booking;
+using Application.DTO.Price;
 using Application.DTO.RoomFacility;
 using Application.DTO.RoomPhoto;
 
@@ -13,8 +14,9 @@ namespace Application.DTO.Room
     /// <summary> Описание номера </summary>
     public string Description { get; set; } = string.Empty;
     public Guid RoomTypeId { get; set; }
-    public ICollection<PriceDto> Prices { get; set; }
-    public ICollection<RoomPhotoDto> RoomPhotos { get; set; }
-    public ICollection<RoomFacilityDto> RoomFacilities { get; set; }
+    public IEnumerable<PriceDto>? Prices { get; set; }
+    public IEnumerable<RoomPhotoDto>? RoomPhotos { get; set; }
+    public IEnumerable<RoomFacilityDto>? RoomFacilities { get; set; }
+    public IEnumerable<BookingDto>? Bookings { get; set; }
   }
 }

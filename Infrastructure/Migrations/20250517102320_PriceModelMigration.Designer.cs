@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250517102320_PriceModelMigration")]
+    partial class PriceModelMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,28 +203,6 @@ namespace Infrastructure.Migrations
                             Cur_QuotName_Eng = "1 Euro",
                             Cur_Scale = 1,
                             Name = "EUR"
-                        },
-                        new
-                        {
-                            Id = new Guid("232ba1bd-0192-4e35-b4a2-908dd61ea5cc"),
-                            Cur_Abbreviation = "BYN",
-                            Cur_Code = "933",
-                            Cur_DateEnd = new DateTime(2050, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Cur_DateStart = new DateTime(2021, 7, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Cur_ID = 9333,
-                            Cur_Name = "Белорусский рубль",
-                            Cur_NameMulti = "Белорусский рублей",
-                            Cur_Name_Bel = "Берарускі рубель",
-                            Cur_Name_BelMulti = "Беларускіх рублёў",
-                            Cur_Name_Eng = "BYN",
-                            Cur_Name_EngMulti = "Belorussian Rubles",
-                            Cur_ParentID = 9333,
-                            Cur_Periodicity = 0,
-                            Cur_QuotName = "1 Белорусский рубль",
-                            Cur_QuotName_Bel = "1 Беларускі рубель",
-                            Cur_QuotName_Eng = "1 BYN",
-                            Cur_Scale = 1,
-                            Name = "BYN"
                         });
                 });
 
@@ -663,6 +644,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("CurrencyId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CurrencyId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("DateEnd")
                         .HasColumnType("datetime2");
 
@@ -679,11 +663,18 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("RoomTypeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CurrencyId");
 
+                    b.HasIndex("CurrencyId1");
+
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("RoomTypeId");
 
                     b.ToTable("Prices", "dbo");
                 });
@@ -1395,7 +1386,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithMany("HotelFacilities")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1406,7 +1397,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithMany("HotelPhotos")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1417,7 +1408,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithOne("HotelUsefulInfo")
                         .HasForeignKey("Domain.Models.HotelUsefulInfo", "HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1428,7 +1419,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithMany("Locations")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1437,16 +1428,24 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Models.Price", b =>
                 {
                     b.HasOne("Domain.Models.Currency", "Currency")
-                        .WithMany("Prices")
+                        .WithMany()
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Models.Currency", null)
+                        .WithMany("Prices")
+                        .HasForeignKey("CurrencyId1");
+
                     b.HasOne("Domain.Models.Room", "Room")
                         .WithMany("Prices")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Domain.Models.RoomType", null)
+                        .WithMany("Prices")
+                        .HasForeignKey("RoomTypeId");
 
                     b.Navigation("Currency");
 
@@ -1458,7 +1457,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithMany("Reviews")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1488,7 +1487,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Room", "Room")
                         .WithMany("RoomFacilities")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Room");
@@ -1499,7 +1498,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Room", "Room")
                         .WithMany("RoomPhotos")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Room");
@@ -1609,6 +1608,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.RoomType", b =>
                 {
+                    b.Navigation("Prices");
+
                     b.Navigation("Rooms");
                 });
 
