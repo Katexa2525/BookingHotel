@@ -38,13 +38,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 
 //builder.Services.AddControllers();
 builder.Services.AddControllers()
-    .AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")))
-    //.AddJsonOptions(options =>
-    //{
-    //  options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    //  //options.JsonSerializerOptions.WriteIndented = true; // Optional: for better readability
-    //})
-    ;
+    .AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
  
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
