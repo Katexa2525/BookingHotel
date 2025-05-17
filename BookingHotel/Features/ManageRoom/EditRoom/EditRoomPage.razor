@@ -1,30 +1,79 @@
-﻿@page "/edit-room"
+﻿@page "/hotels/{HotelId:guid}/rooms/{RoomId:guid}"
+
 @inject IMediator Mediator
 
-<PageTitle>Редактирование записи номера отеля</PageTitle>
+<PageTitle>Редактирование номера</PageTitle>
 
 <NavigationСhain LastChainName="Edit Room" />
 
-<h3 class="mt-5 mb-4">Форма редактирования номера отеля</h3>
-
-@if (_submitSuccessful)
+@if (_isLoading)
 {
-  <SuccessAlert Message="Номер отеля был успешно отредактирован!" />
+  <p>Загрузка номера отеля...</p>
 }
-else if (_errorMessage is not null)
+else
 {
-  <ErrorAlert Message="@_errorMessage" />
-}
+  <h3 class="mt-5 mb-1">@_room.RoomType?.Name</h3>
 
-<RoomForm Room="_room" OnSubmit="SubmitEditRoom" />
+  @if (_submitSuccessful)
+  {
+    <SuccessAlert Message="Номер отеля был успешно отредактирован!" />
+  }
+  else if (_errorMessage is not null)
+  {
+    <ErrorAlert Message="@_errorMessage" />
+  }
+
+  <RoomForm Room="_room" TextButtonCancel="Отмена" OnSubmit="SubmitEditRoom" />
+}
 
 @code {
+  private bool _isLoading;
   private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private RoomDto _room = new RoomDto();
 
+  [Parameter]
+  public Guid HotelId { get; set; }
+
+  [Parameter]
+  public Guid RoomId { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    _isLoading = true;
+
+    var response = await Mediator.Send(new GetRoomRequest(RoomId));
+
+    if (response is not null)
+    {
+      _room = response.Room;
+    }
+    else
+    {
+      _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
+    }
+    // после загрузки отеля устанавливаю в false
+    _isLoading = false;
+  }
+
   private async Task SubmitEditRoom(RoomDto roomDto)
   {
+    var response = await Mediator.Send(new EditRoomRequest(roomDto));
 
+    if (!response.IsSuccess)
+    {
+      _submitSuccessful = false;
+      _errorMessage = AppMessage.RoomPageSaveTextErrorMessage;
+    }
+    else
+    {
+      _room = roomDto;
+    }
+
+    _submitSuccessful = true;
+
+   
+    // Метод StateHasChanged вызывается для отрисовки любых обновлений пользовательского интерфейса
+    StateHasChanged();
   }
 }

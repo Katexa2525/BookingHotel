@@ -25,7 +25,7 @@ else
   {
     <ErrorAlert Message="@_errorMessage" />
   }
-  <HotelForm Hotel="_hotel" OnSubmit="SubmitEditHotel" TextButtonAccept = "Сохранить"/>
+  <HotelForm Hotel="_hotel" OnSubmit="SubmitEditHotel" TextButtonCancel="Отмена"/>
 }
 
 @code {
@@ -61,7 +61,7 @@ else
   {
     var response = await Mediator.Send(new EditHotelRequest(hotelDto));
 
-    //Если при сохранении тропы произошла ошибка, отображается сообщение об ошибке
+    //Если при сохранении отеля произошла ошибка, отображается сообщение об ошибке
     if (!response.IsSuccess)
     {
       _submitSuccessful = false;
@@ -69,7 +69,7 @@ else
     }
     else
     {
-      // любые обновления, сделанные в экземпляре hotelDto из формы, применяются к тропе
+      // любые обновления, сделанные в экземпляре hotelDto из формы, применяются к отелю
       _hotel = hotelDto;
     }
 

@@ -82,6 +82,10 @@ namespace Application.BussinessLogic.Room
 
       _mapper.Map(dto, entity);
 
+      _repositoryManager.RoomRepository.UpdateEntity(entity);
+      await _repositoryManager.SaveAsync();
+
+      /*
       await _generalBussinessLogic.UpdateCollectionAsync(
             entity.Prices,
             dto.Prices,
@@ -111,8 +115,8 @@ namespace Application.BussinessLogic.Room
             roomFacility => roomFacility.Id,
             dto => dto.Id
             );
-
-      await _repositoryManager.SaveAsync();
+      */
+      
     }
     
   }

@@ -49,9 +49,8 @@
 
           <div class="row mt-5 mb-5">
             <div class="col text-right">
-              <button class="btn btn-primary" type="submit">
-                @TextButtonAccept
-              </button>
+              <SaveButton TextButtonAccept="Сохранить" />
+
               <button class="btn btn-outline-secondary" type="button"
                       onclick="@(() => _hotel=new HotelDto())">
                 @TextButtonCancel
@@ -125,9 +124,6 @@
   {
     _hotel.Star = star;
   }
-
-  [Parameter, EditorRequired]
-  public string TextButtonAccept { get; set; } = string.Empty;
 
   [Parameter, EditorRequired]
   public string TextButtonCancel { get; set; } = "Отмена";

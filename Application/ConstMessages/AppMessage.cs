@@ -16,5 +16,7 @@
     public static readonly string GetHotelAllTextErrorMessage = "Отели не могут быть найдены.";
     public static readonly string GetHotelAllLoadTextErrorMessage = "Были проблемы с загрузкой данных по отелям.";
     public static readonly string GetHotelImageTextErrorMessage = "Фото отеля не найдено.";
+    public static readonly string RoomPageLoadTextErrorMessage = "Возникла проблема при загрузке номера отеля!";
+    public static readonly string RoomPageSaveTextErrorMessage = "Возникла проблема с сохранением номера отеля!";
   }
 }
