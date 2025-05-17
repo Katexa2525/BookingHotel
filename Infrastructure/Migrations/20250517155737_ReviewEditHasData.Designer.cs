@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250517155737_ReviewEditHasData")]
+    partial class ReviewEditHasData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,14 +255,14 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f7683dd2-73c0-4b87-b4f4-258c96632b95"),
+                            Id = new Guid("3e67a939-ef3d-4b29-ac4e-856d9db456be"),
                             HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
                             Name = "Завтрак",
                             TypeFoodId = new Guid("072fc618-8703-437f-9662-5ba97d0ab4f0")
                         },
                         new
                         {
-                            Id = new Guid("00c01554-ddcb-4e68-a830-338742c458cc"),
+                            Id = new Guid("d95e677e-9e2e-4534-bfe4-0c26d2602973"),
                             HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
                             Name = "Полупансион",
                             TypeFoodId = new Guid("4d53a1ed-9613-4406-8a31-a411c934e628")
@@ -491,19 +494,19 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3ace774a-94b2-4892-9071-3cf1bb24482b"),
+                            Id = new Guid("839de6a2-33f1-4737-b4f8-a3ab2a7d62c9"),
                             HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
                             Name = "Wi-Fi"
                         },
                         new
                         {
-                            Id = new Guid("faef5433-37dd-4d7f-9a88-4b77fc3ef63c"),
+                            Id = new Guid("3c546736-f3cb-4502-80f9-75543bebf5fb"),
                             HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
                             Name = "Парковка"
                         },
                         new
                         {
-                            Id = new Guid("5373222b-4390-4307-adec-3dae329a8617"),
+                            Id = new Guid("828e84e6-ba0c-4e50-8be6-7c58c33be64b"),
                             HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
                             Name = "Оплата картой"
                         },
@@ -606,19 +609,19 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("80e707d6-f4b4-46fa-a5ea-5a82b7a17749"),
+                            Id = new Guid("19231977-a4b6-4925-93de-5b7674df7c2f"),
                             HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
                             Name = "350 м до центра"
                         },
                         new
                         {
-                            Id = new Guid("f4014f30-c06b-480e-b8cd-13b77320d07c"),
+                            Id = new Guid("d347a13c-c8cb-494a-8a1c-79400b256736"),
                             HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
                             Name = "ост. «Главная городская площадь» 106 м"
                         },
                         new
                         {
-                            Id = new Guid("b1c79ebc-d7c5-474f-84e1-8f824bbffdc6"),
+                            Id = new Guid("a1cad93e-020d-4ad0-b924-ec40782c7c45"),
                             HotelId = new Guid("b3c83220-d255-46d7-ac76-114ece1d925a"),
                             Name = "ост. «ЦКР» 350 м"
                         },
