@@ -56,6 +56,9 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Room, RoomDto>().ReverseMap();
       CreateMap<Room, RoomUpdateDto>().ReverseMap();
 
+      CreateMap<RoomDto, RoomUpdateDto>().ReverseMap()
+        .ForPath(p => p.RoomType, opt => opt.Ignore());
+
       CreateMap<RoomType, RoomTypeDto>().ReverseMap()
                                         .ForPath(p=>p.Rooms, opt=>opt.Ignore());
 

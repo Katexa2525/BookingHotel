@@ -22,12 +22,15 @@
 </div>
 
 @* близжайшие локации около отеля *@
-<div class="d-flex">
-  @foreach (var item in @_hotel.Locations)
-  {
-    <h6 class="card-subtitle mb-3 text-muted">@item.Name, &nbsp;&nbsp;&nbsp;</h6>
-  }
-</div>
+@if (_hotel.Locations is not null && _hotel.Locations.Any())
+{
+  <div class="d-flex">
+    @foreach (var item in @_hotel.Locations)
+    {
+      <h6 class="card-subtitle mb-3 text-muted">@item.Name, &nbsp;&nbsp;&nbsp;</h6>
+    }
+  </div>
+}
 
 @if (_allRooms is not null && _allRooms.Any())
 {
@@ -113,7 +116,8 @@
         Prices = p.Prices,
         RoomFacilities = p.RoomFacilities,
         RoomPhotos = p.RoomPhotos,
-        RoomType = p.RoomType
+        RoomType = p.RoomType, 
+        Bookings = p.Bookings
       });
 
     // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами

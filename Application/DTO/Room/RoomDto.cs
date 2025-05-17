@@ -15,10 +15,10 @@ namespace Application.DTO.Room
     /// <summary> Описание номера </summary>
     public string Description { get; set; } = string.Empty;
     public Guid RoomTypeId { get; set; }
-    public IEnumerable<PriceDto> Prices { get; set; }
-    public IEnumerable<RoomPhotoDto> RoomPhotos { get; set; }
-    public IEnumerable<RoomFacilityDto> RoomFacilities { get; set; }
-    public RoomTypeDto RoomType { get; set; }
-    public IEnumerable<BookingDto> Bookings { get; set; }
+    public IEnumerable<PriceDto>? Prices { get; set; }
+    public IEnumerable<RoomPhotoDto>? RoomPhotos { get; set; }
+    public IEnumerable<RoomFacilityDto>? RoomFacilities { get; set; }
+    public RoomTypeDto? RoomType { get; set; }
+    public IEnumerable<BookingDto>? Bookings { get; set; }
   }
 }
