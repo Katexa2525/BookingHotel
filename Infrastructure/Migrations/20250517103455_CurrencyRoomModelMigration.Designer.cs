@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250517103455_CurrencyRoomModelMigration")]
+    partial class CurrencyRoomModelMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -657,11 +660,16 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("RoomTypeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CurrencyId");
 
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("RoomTypeId");
 
                     b.ToTable("Prices", "dbo");
                 });
@@ -1373,7 +1381,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithMany("HotelFacilities")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1384,7 +1392,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithMany("HotelPhotos")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1395,7 +1403,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithOne("HotelUsefulInfo")
                         .HasForeignKey("Domain.Models.HotelUsefulInfo", "HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1406,7 +1414,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithMany("Locations")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1426,6 +1434,10 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Models.RoomType", null)
+                        .WithMany("Prices")
+                        .HasForeignKey("RoomTypeId");
+
                     b.Navigation("Currency");
 
                     b.Navigation("Room");
@@ -1436,7 +1448,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithMany("Reviews")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Hotel");
@@ -1587,6 +1599,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.RoomType", b =>
                 {
+                    b.Navigation("Prices");
+
                     b.Navigation("Rooms");
                 });
 
