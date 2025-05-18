@@ -1,9 +1,6 @@
 ﻿@inject NavigationManager NavManager
 
-@using Application.Enums
-@using BookingHotel.Validation
-
-<EditForm EditContext="_editContext" OnValidSubmit="SubmitRoomForm">
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
   <FluentValidationValidator />
 
   <div class="card card-brand mb-4 shadow">
@@ -171,7 +168,7 @@
   /// Обработчик события OnValidSubmit из EditForm вызовет событие OnSubmit.
   /// Это позволит обработчику решить, как сохранить данные формы
   /// </summary>
-  private async Task SubmitRoomForm() => await OnSubmit(_room, _roomImage);
+  private async Task SubmitForm() => await OnSubmit(_room, _roomImage);
 
   private List<string> optionsType = new() { "Студия", "Люкс Гранд Премиум", "Стандарт Бизнес (четырехместный)", "Номер стандарт", "Стандарт Бизнес" };
   private string selectedOptionType = "Студия";
