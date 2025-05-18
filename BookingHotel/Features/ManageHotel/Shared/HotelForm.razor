@@ -224,11 +224,11 @@
 
   private void ShowPhoto(MouseEventArgs args)
   {
-    NavManager.NavigateTo("/show-photo");
+    NavManager.NavigateTo($"/hotels/{Hotel.Id}/photo");
   }
 
   private void ShowFacilities(MouseEventArgs args)
   {
-    NavManager.NavigateTo("/show-facilities");
+    NavManager.NavigateTo($"/hotels/{Hotel.Id}/facilities");
   }
 }

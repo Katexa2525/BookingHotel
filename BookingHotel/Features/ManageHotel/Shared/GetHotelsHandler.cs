@@ -18,21 +18,11 @@ namespace BookingHotel.Features.ManageHotel.Shared
     {
       try
       {
-       HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
+        HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
 
         // Выполняется запрос к API. В случае успеха ответ десериализуется и возвращается вызывающей стороне
         var allHotels = await httpClient.GetFromJsonAsync<List<HotelAllDto>>(GetHotelsRequest.RouteTemplate, cancellationToken);
         return new GetHotelsRequest.Response(allHotels);
-
-        //var allHotels = await httpClient.GetFromJsonAsync<GetHotelsRequest.Response>(route, cancellationToken);
-
-        //return new GetHotelsRequest.Response(
-        //  allHotels.Select(hotel => new GetHotelsRequest.AllHotel
-        //  (
-        //    hotel.Id, hotel.Name, hotel.Description, hotel.Location, hotel.Rating, hotel.Star, hotel.MainPhoto
-        //  ))
-        //);
-
       }
       catch (HttpRequestException)
       {

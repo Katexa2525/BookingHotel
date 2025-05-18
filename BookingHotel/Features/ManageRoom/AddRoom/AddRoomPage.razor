@@ -1,5 +1,8 @@
 ﻿@page "/add-room"
 @inject IMediator Mediator
+@inject IMapper Mapper
+
+@using AutoMapper
 
 <PageTitle>Создание новой записи номера отеля</PageTitle>
 
@@ -17,9 +20,10 @@ else if (_errorMessage is not null)
 }
 
 <!--
-Исходный компонент EditForm заменен новым компонентом HotelForm. 
-Директива Blazor @ref используется для захвата ссылки на компонент. Она будет применяться для вызова метода ResetForm. 
-Также предоставлен обработчик OnSubmit компонента HotelForm
+Исходный компонент EditForm заменен новым компонентом RoomForm.
+Директива Blazor @ref используется для захвата ссылки на компонент. 
+Она будет применяться для вызова метода ResetForm. 
+Также предоставлен обработчик OnSubmit компонента RoomForm
 -->
 <RoomForm @ref="_roomForm" OnSubmit="SubmitNewRoom"/>
 
@@ -28,8 +32,50 @@ else if (_errorMessage is not null)
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private RoomForm _roomForm = default!;
 
-  private async Task SubmitNewRoom(RoomDto roomDto)
+  private async Task SubmitNewRoom(RoomDto roomDto, IBrowserFile? image)
   {
-    
+    var response = await Mediator.Send(new AddRoomRequest(Mapper.Map<RoomCreateDto>(roomDto)));
+    if (response.roomId == Guid.Empty)
+    {
+      _submitSuccessful = false;
+      _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
+      // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить
+      // пользовательский интерфейс сообщением об ошибке
+      StateHasChanged();
+      return;
+    }
+
+    if (image is null)
+    {
+      _submitSuccessful = true;
+      // Если номер отеля был успешно сохранён и для нее не было изображения,сбрасываем RoomForm через ссылку, захваченную в поле _roomForm
+      _roomForm.ResetForm();
+      // Показывает ручной вызов StateHasChanged для запуска обновления пользовательского интерфейса
+      StateHasChanged();
+      return;
+    }
+
+    _submitSuccessful = await ProcessImage(response.roomId, image);
+    if (_submitSuccessful)
+    {
+      _roomForm.ResetForm();
+    }
+
+    // Если мы здесь, значит, есть попытка загрузить изображение отеля.
+    // Запускаю обновление пользовательского интерфейса, чтобы показать результат этой операции
+    StateHasChanged();
   }
+
+  private async Task<bool> ProcessImage(Guid roomId, IBrowserFile roomImage)
+  {
+    var imageUploadResponse = await Mediator.Send(new UploadRoomImageRequest(roomId, roomImage));
+
+    if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
+    {
+      _errorMessage = AppMessage.AddRoomPageSaveImageTextErrorMessage;
+      return false;
+    }
+    return true;
+  }
+
 }

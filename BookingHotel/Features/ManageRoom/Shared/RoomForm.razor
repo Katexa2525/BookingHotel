@@ -1,6 +1,9 @@
-﻿@using BookingHotel.Validation
+﻿@inject NavigationManager NavManager
 
-<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+@using Application.Enums
+@using BookingHotel.Validation
+
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitRoomForm">
   <FluentValidationValidator />
 
   <div class="card card-brand mb-4 shadow">
@@ -9,8 +12,23 @@
         <div class="col-4">
           <div>
             <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
-            <img src="images/NoImage.png" class="card-img-top" />
-            @* <InputFile class="form-control-file mt-1" id="roomImage" accept=".png,.jpg,.jpeg" /> *@
+            @if (string.IsNullOrWhiteSpace(_room.MainPhoto))
+            {
+              <img src="images/NoImage.png" class="card-img-top" />
+              <InputFile OnChange="LoadRoomImage" class="form-control-file mt-1"
+                         id="roomImage" accept=".png,.jpg,.jpeg" />
+            }
+            else
+            {
+              <div class="card bg-dark text-white">
+                <img src="images/room/@_room.MainPhoto" class="card-img-top" />
+                <div class="card-img-overlay">
+                  <button class="btn btn-primary btn-sm" @onclick="RemoveRoomImage">
+                    Удалить
+                  </button>
+                </div>
+              </div>
+            }
           </div>
 
           <div class="mt-5 mb-5">
@@ -103,7 +121,7 @@
 @code {
   private EditContext _editContext = default!;
   private RoomDto _room = new RoomDto();
-  private IBrowserFile? _hotelImage;
+  private IBrowserFile? _roomImage;
 
   private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
   private List<string> selectedOptionsFacilities = new();
@@ -126,7 +144,7 @@
     _editContext = new EditContext(_room);
     // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
     _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-    _hotelImage = null;
+    _roomImage = null;
   }
 
   // Метод OnInitialized заменяется методом OnParametersSet. Он будет вызываться всякий раз
@@ -147,14 +165,13 @@
 
   /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
   [Parameter, EditorRequired]
-  public Func<RoomDto, Task> OnSubmit { get; set; } = default!;
+  public Func<RoomDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
 
   /// <summary>
   /// Обработчик события OnValidSubmit из EditForm вызовет событие OnSubmit.
   /// Это позволит обработчику решить, как сохранить данные формы
   /// </summary>
-  /// <returns></returns>
-  private async Task SubmitForm() => await OnSubmit(_room);
+  private async Task SubmitRoomForm() => await OnSubmit(_room, _roomImage);
 
   private List<string> optionsType = new() { "Студия", "Люкс Гранд Премиум", "Стандарт Бизнес (четырехместный)", "Номер стандарт", "Стандарт Бизнес" };
   private string selectedOptionType = "Студия";
@@ -164,18 +181,34 @@
     selectedOptionType = value;
   }
 
+  private void LoadRoomImage(InputFileChangeEventArgs e)
+  {
+    _roomImage = e.File;
+    _room.ImageAction = ImageAction.Add; //Задаю ImageAction для добавления при выборе изображения
+  }
+
+  /// <summary>
+  /// Этот метод вызывается при нажатии кнопки «Удалить изображение». Так сбрасываеncz свойство Image, инициируя отображение компонента InputFile,
+  /// а также помечаем изображение, которое нужно удалить на сервере
+  /// </summary>
+  private void RemoveRoomImage()
+  {
+    _room.MainPhoto = null;
+    _room.ImageAction = ImageAction.Remove;
+  }
+
   private void ShowFacilities(MouseEventArgs args)
   {
-    throw new NotImplementedException();
+    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/facilities");
   }
 
   private void ShowPhoto(MouseEventArgs args)
   {
-    throw new NotImplementedException();
+    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/photo");
   }
 
   private void ShowPrices(MouseEventArgs args)
   {
-    throw new NotImplementedException();
+    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/prices");
   }
 }
