@@ -9,8 +9,8 @@ namespace Application.BussinessLogic.RoomFacility
 {
   public interface IRoomFacilityBussinessLogic
   {
-    Task<List<RoomFacilityDto>> GetAllAsync();
-    Task<RoomFacilityDto> GetByIdAsync(Guid id);
+    Task<List<RoomFacilityDto>> GetAllAsync(bool trackChanges);
+    Task<RoomFacilityDto> GetByIdAsync(Guid id, bool trackChanges);
     Task<Guid> CreateAsync(RoomFacilityCreateWithIdDto dto);
     Task DeleteAsync(Guid roomFacilityId);
     Task UpdateAsync(RoomFacilityDto dto);

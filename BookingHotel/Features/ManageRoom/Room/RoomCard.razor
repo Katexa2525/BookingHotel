@@ -40,7 +40,7 @@
           <div class="d-flex justify-content-between">
             <div class="mt-4 align-bottom">
               <button class="btn btn-outline-secondary float-right" title="Редактирование"
-                      @onclick="@(() => NavManager.NavigateTo($"/edit-room/{Room.Id}"))">
+                      @onclick="@(() => NavManager.NavigateTo($"/hotels/{HotelId}/rooms/{Room.Id}"))">
                 <i class="bi bi-pencil"></i>
               </button>
             </div>
@@ -67,6 +67,9 @@
 
   [Parameter, EditorRequired]
   public RoomDto Room { get; set; } = default!; // определяет обязательный параметр компонента
+
+  [Parameter, EditorRequired]
+  public Guid HotelId { get; set; } = default!;
 
   /// <summary>События определяются с использованием типов делегатов Action или Func, или через тип EventCallback </summary>
   [Parameter, EditorRequired]

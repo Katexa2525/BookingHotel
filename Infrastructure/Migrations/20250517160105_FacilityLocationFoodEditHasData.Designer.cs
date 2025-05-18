@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250517160105_FacilityLocationFoodEditHasData")]
+    partial class FacilityLocationFoodEditHasData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -922,45 +925,45 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("572b5bb5-6254-4611-b57a-93f546fb62af"),
+                            Id = new Guid("4c17ade5-2349-43fe-a9d1-d10aed6ddebd"),
                             Name = "Цифровое ТВ",
-                            RoomId = new Guid("bef53e26-c490-4fb6-89ca-d920efc982f6")
+                            RoomId = new Guid("6b09f078-169f-4ae8-aaa1-5b8a2e1c896b")
                         },
                         new
                         {
-                            Id = new Guid("fe5c4f20-89f9-4e2a-ba51-dccfa75ebe5b"),
+                            Id = new Guid("6e69e113-eb98-4094-b417-83d61a9ab4eb"),
                             Name = "Мини-холодильник",
-                            RoomId = new Guid("bef53e26-c490-4fb6-89ca-d920efc982f6")
+                            RoomId = new Guid("6b09f078-169f-4ae8-aaa1-5b8a2e1c896b")
                         },
                         new
                         {
-                            Id = new Guid("a5d60b40-0270-4b9d-b559-161efd8b6f86"),
+                            Id = new Guid("d3fb6a18-f736-4cb5-bf64-69c36b3d489c"),
                             Name = "Wi-Fi",
-                            RoomId = new Guid("bef53e26-c490-4fb6-89ca-d920efc982f6")
+                            RoomId = new Guid("6b09f078-169f-4ae8-aaa1-5b8a2e1c896b")
                         },
                         new
                         {
                             Id = new Guid("13b17dab-7ed0-40d9-93d5-b020eea0aad9"),
                             Name = "Ванна",
-                            RoomId = new Guid("c9153fe4-cb5d-4a77-9f63-7b1dd34c7bf7")
+                            RoomId = new Guid("e12d0ba1-7ac8-4a19-b241-31705c2a3500")
                         },
                         new
                         {
                             Id = new Guid("427ba46a-07e6-4da2-afed-c1760f02a636"),
                             Name = "Фен",
-                            RoomId = new Guid("c9153fe4-cb5d-4a77-9f63-7b1dd34c7bf7")
+                            RoomId = new Guid("e12d0ba1-7ac8-4a19-b241-31705c2a3500")
                         },
                         new
                         {
                             Id = new Guid("a774e890-3726-4e5b-8071-50e01f27b7b9"),
                             Name = "Цифровое ТВ",
-                            RoomId = new Guid("6fd8b06f-ddbb-463f-8362-29cfbf272751")
+                            RoomId = new Guid("e12d0ba1-7ac8-4a19-b241-31705c2a3500")
                         },
                         new
                         {
                             Id = new Guid("573716d8-e318-4ba0-957c-2a1a0be4af30"),
                             Name = "Wi-Fi",
-                            RoomId = new Guid("6fd8b06f-ddbb-463f-8362-29cfbf272751")
+                            RoomId = new Guid("e12d0ba1-7ac8-4a19-b241-31705c2a3500")
                         });
                 });
 
