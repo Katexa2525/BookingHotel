@@ -1,7 +1,5 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms"
 
-@using Application.DTO.Room.ClientRequest
-
 @inject IMediator Mediator
 @inject NavigationManager NavManager
 
@@ -10,7 +8,7 @@
 <div class="mb-4">
   <p class="font-italic text-center">
     Есть номер, который хотели бы опубликовать?
-    <a href="add-hotel">Добавьте это здесь</a>.
+    <a href="add-room">Добавьте это здесь</a>.
   </p>
 </div>
 
@@ -102,7 +100,7 @@
 
   protected override async Task OnInitializedAsync()
   {
-    // запрос на получения всех номеров отеля HotelId через GetRoomsRequest и Mediator
+    // запрос на получения всех номеров отеля RoomId через GetRoomsRequest и Mediator
     var response = await Mediator.Send(new GetRoomsRequest(HotelId));
 
     _allRooms = response.Rooms.Select(p => new RoomDto

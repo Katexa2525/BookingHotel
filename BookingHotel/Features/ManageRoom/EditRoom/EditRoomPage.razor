@@ -24,7 +24,7 @@ else
     <ErrorAlert Message="@_errorMessage" />
   }
 
-  <RoomForm Room="_room" TextButtonCancel="Отмена" OnSubmit="SubmitEditRoom" />
+  <RoomForm Room="_room" RoomTypes="_allRoomTypes" TextButtonCancel="Отмена" OnSubmit="SubmitEditRoom" />
 }
 
 @code {
@@ -33,6 +33,7 @@ else
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private RoomDto _room = new RoomDto();
   private List<RoomFacilityDto> _roomFacility = new List<RoomFacilityDto>();
+  private List<RoomTypeDto>? _allRoomTypes = new List<RoomTypeDto>();
 
   [Parameter]
   public Guid HotelId { get; set; }
@@ -54,6 +55,11 @@ else
     {
       _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
     }
+
+    // запрос на получения всех типов номеров
+    var responseRoomTypes = await Mediator.Send(new GetRoomTypesRequest());
+    if (responseRoomTypes is not null)
+      _allRoomTypes = responseRoomTypes.RoomTypes.Select(p => new RoomTypeDto { Id = p.Id, Name = p.Name }).ToList();
 
     // // получаю данные справочника RoomFacility
     // var responseFacility = await Mediator.Send(new GetRoomFacilitiesRequest());
