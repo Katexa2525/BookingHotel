@@ -8,12 +8,38 @@
     <div class="col">
       <input @bind="SelectedEndtDate" type="date" class="form-control">
     </div>
-    <div class="col">
-      <InputNumber @bind-Value="CountAdult" class="form-control" id="adult" />
-    </div>
     @* <div class="col">
-      <InputNumber @bind-Value="CountChildren" class="form-control" id="adult"/>
+      <InputNumber @bind-Value="CountAdult" class="form-control" id="adult" />
     </div> *@
+
+    <div class="col">
+      <select class="form-select" aria-label="Один" @bind="CountAdult">
+        <option selected>Количество взрослых</option>
+        <option value="1">1 взрослый</option>
+        <option value="2">2 взрослых</option>
+        <option value="3">3 взрослых</option>
+        <option value="4">4 взрослых</option>
+        <option value="5">5 взрослых</option>
+        <option value="6">6 взрослых</option>
+        <option value="7">7 взрослых</option>
+        <option value="8">8 взрослых</option>
+        <option value="9">9 взрослых</option>
+        <option value="10">10 взрослых</option>
+      </select>
+    </div>
+
+    <div class="col">
+      <select class="form-select" aria-label="Один" @bind="CountChild">
+        <option selected>Количество детей</option>
+        <option value="0">Без детей</option>
+        <option value="1">1 ребёнок</option>
+        <option value="2">2 ребёнка</option>
+        <option value="3">3 ребёнка</option>
+        <option value="4">4 ребёнка</option>
+        <option value="5">5 ребёнка</option>
+      </select>
+    </div>
+
     <div class="col">
       <button class="btn btn-primary" title="Поиск..." @onclick="@(() => DoClick() )">
         <i class="bi bi-binoculars"></i>
@@ -32,7 +58,10 @@
   public DateTime SelectedEndtDate { get; set; } = DateTime.Now.AddDays(1);
 
   [Parameter]
-  public int CountAdult { get; set; }
+  public int CountAdult { get; set; } = 1;
+
+  [Parameter]
+  public int CountChild { get; set; } = 0;
 
   // [Parameter]
   // public int CountChildren { get; set; }
