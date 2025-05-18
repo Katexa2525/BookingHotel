@@ -39,44 +39,21 @@
           </div>
         </div>
 
-
-
-
         <div class="col-8">
 
-        
-
           @* <FormFieldSet Width="col"> *@
-            @* <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label> *@
-            @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
-            @* <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
-            @* <DropdownList Options="@_room.RoomFacilities.Select(p=>p.Name).ToList()" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
-            @* <p>Выбрано: @selectedOption</p> *@
-            @* <ValidationMessage For="@(() => _room.RoomTypeId )" />
+          @* <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label> *@
+          @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
+          @* <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
+          @* <DropdownList Options="@_room.RoomFacilities.Select(p=>p.Name).ToList()" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
+          @* <p>Выбрано: @selectedOption</p> *@
+          @* <ValidationMessage For="@(() => _room.RoomTypeId )" />
           </FormFieldSet> *@
 
           <FormFieldSet Width="col">
             <label for="roomDescription" class="font-weight-bold text-secondary">Описание номера</label>
             <InputTextArea @bind-Value="_room.Description" rows="6" class="form-control" id="roomDescription" />
             <ValidationMessage For="@(() => _room.Description )" />
-          </FormFieldSet>
-
-          <FormFieldSet Width="col">
-            <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства</label>
-            @* <MultiSelectList T="string" Options="@optionsFacilities" SelectedOptions="@selectedOptionsFacilities" OnSelectionChanged="@HandleSelection" />
-            <p>Выбрано: @string.Join(", ", selectedOptionsFacilities)</p> *@
-
-            <div class="row align-items-start">
-              <div class="col-sm-8">
-                <div class="d-flex">
-                  @foreach (var item in @_room.RoomFacilities)
-                  {
-                    <h6 class="m-3">@item.Name</h6>
-                  }
-                </div>
-              </div>
-            </div>
-
           </FormFieldSet>
 
           <div class="row">
@@ -91,6 +68,27 @@
               <FormFieldSet Width="col">
                 <label for="roomSquare" class="font-weight-bold text-secondary">Площадь, м2</label>
                 <InputNumber @bind-Value="_room.Square" class="form-control" id="roomSquare" />
+              </FormFieldSet>
+            </div>
+          </div>
+
+          <div class="card card-brand mb-4 mt-4">
+            <div class="card-body">
+              <FormFieldSet Width="col">
+                <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства в номере</label>
+                      @* <MultiSelectList T="string" Options="@optionsFacilities" SelectedOptions="@selectedOptionsFacilities" OnSelectionChanged="@HandleSelection" />
+                        <p>Выбрано: @string.Join(", ", selectedOptionsFacilities)</p> *@
+
+                <div class="row align-items-start">
+                  <div class="col-sm-8">
+                    <div class="d-flex">
+                      @foreach (var item in @_room.RoomFacilities)
+                      {
+                        <h6 class="m-3">@item.Name</h6>
+                      }
+                    </div>
+                  </div>
+                </div>
               </FormFieldSet>
             </div>
           </div>
