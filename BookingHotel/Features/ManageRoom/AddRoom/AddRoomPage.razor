@@ -25,12 +25,21 @@ else if (_errorMessage is not null)
 Она будет применяться для вызова метода ResetForm. 
 Также предоставлен обработчик OnSubmit компонента RoomForm
 -->
-<RoomForm @ref="_roomForm" OnSubmit="SubmitNewRoom"/>
+<RoomForm @ref="_roomForm" RoomTypes="_allRoomTypes" OnSubmit="SubmitNewRoom"/>
 
 @code {
   private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private RoomForm _roomForm = default!;
+  private List<RoomTypeDto>? _allRoomTypes = new List<RoomTypeDto>();
+
+  protected override async Task OnInitializedAsync()
+  {
+    // запрос на получения всех типов номеров
+    var responseRoomTypes = await Mediator.Send(new GetRoomTypesRequest());
+    if (responseRoomTypes is not null)
+      _allRoomTypes = responseRoomTypes.RoomTypes.Select(p => new RoomTypeDto { Id = p.Id, Name = p.Name }).ToList();
+  }
 
   private async Task SubmitNewRoom(RoomDto roomDto, IBrowserFile? image)
   {

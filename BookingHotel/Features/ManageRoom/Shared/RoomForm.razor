@@ -123,9 +123,13 @@
   private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
   private List<string> selectedOptionsFacilities = new();
 
-  /// <summary> Параметр позволит передать существующий отель в форму </summary>
+  /// <summary> Параметр передает существующий номер на форму </summary>
   [Parameter]
   public RoomDto? Room { get; set; }
+
+  /// <summary> Параметр передает коллекцию типов номеров на форму </summary>
+  [Parameter]
+  public List<RoomTypeDto>? RoomTypes { get; set; }
 
   [Parameter, EditorRequired]
   public string TextButtonCancel { get; set; } = "Отмена";
