@@ -144,13 +144,13 @@ namespace Infrastructure
 
 
       modelBuilder.Entity<RoomFacility>().HasData(
-        new { Id = Guid.Parse("4C17ADE5-2349-43FE-A9D1-D10AED6DDEBD"), Name = "Цифровое ТВ", RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B") },
-        new { Id = Guid.Parse("6E69E113-EB98-4094-B417-83D61A9AB4EB"), Name = "Мини-холодильник", RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B") },
-        new { Id = Guid.Parse("D3FB6A18-F736-4CB5-BF64-69C36B3D489C"), Name = "Wi-Fi", RoomId = Guid.Parse("6B09F078-169F-4AE8-AAA1-5B8A2E1C896B") },
-        new { Id = Guid.Parse("13B17DAB-7ED0-40D9-93D5-B020EEA0AAD9"), Name = "Ванна", RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500") },
-        new { Id = Guid.Parse("427BA46A-07E6-4DA2-AFED-C1760F02A636"), Name = "Фен", RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500") },
-        new { Id = Guid.Parse("A774E890-3726-4E5B-8071-50E01F27B7B9"), Name = "Цифровое ТВ", RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500") },
-        new { Id = Guid.Parse("573716D8-E318-4BA0-957C-2A1A0BE4AF30"), Name = "Wi-Fi", RoomId = Guid.Parse("E12D0BA1-7AC8-4A19-B241-31705C2A3500") }
+        new { Id = Guid.Parse("572B5BB5-6254-4611-B57A-93F546FB62AF"), Name = "Цифровое ТВ", RoomId = Guid.Parse("BEF53E26-C490-4FB6-89CA-D920EFC982F6") },
+        new { Id = Guid.Parse("FE5C4F20-89F9-4E2A-BA51-DCCFA75EBE5B"), Name = "Мини-холодильник", RoomId = Guid.Parse("BEF53E26-C490-4FB6-89CA-D920EFC982F6") },
+        new { Id = Guid.Parse("A5D60B40-0270-4B9D-B559-161EFD8B6F86"), Name = "Wi-Fi", RoomId = Guid.Parse("BEF53E26-C490-4FB6-89CA-D920EFC982F6") },
+        new { Id = Guid.Parse("13B17DAB-7ED0-40D9-93D5-B020EEA0AAD9"), Name = "Ванна", RoomId = Guid.Parse("C9153FE4-CB5D-4A77-9F63-7B1DD34C7BF7") },
+        new { Id = Guid.Parse("427BA46A-07E6-4DA2-AFED-C1760F02A636"), Name = "Фен", RoomId = Guid.Parse("C9153FE4-CB5D-4A77-9F63-7B1DD34C7BF7") },
+        new { Id = Guid.Parse("A774E890-3726-4E5B-8071-50E01F27B7B9"), Name = "Цифровое ТВ", RoomId = Guid.Parse("6FD8B06F-DDBB-463F-8362-29CFBF272751") },
+        new { Id = Guid.Parse("573716D8-E318-4BA0-957C-2A1A0BE4AF30"), Name = "Wi-Fi", RoomId = Guid.Parse("6FD8B06F-DDBB-463F-8362-29CFBF272751") }
         );
 
       modelBuilder.Entity<HotelFacility>().HasData(

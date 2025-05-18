@@ -31,6 +31,7 @@ else
   private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private RoomDto _room = new RoomDto();
+  private List<RoomFacilityDto> _roomFacility = new List<RoomFacilityDto>();
 
   [Parameter]
   public Guid HotelId { get; set; }
@@ -52,6 +53,19 @@ else
     {
       _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
     }
+
+    // // получаю данные справочника RoomFacility
+    // var responseFacility = await Mediator.Send(new GetRoomFacilitiesRequest());
+
+    // if (responseFacility is not null)
+    // {
+    //   _roomFacility = responseFacility.Facilities;
+    // }
+    // else
+    // {
+    //   _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
+    // }
+
     // после загрузки отеля устанавливаю в false
     _isLoading = false;
   }

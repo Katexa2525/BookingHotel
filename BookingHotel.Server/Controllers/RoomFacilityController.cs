@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingHotel.Server.Controllers
 {
   [ApiController]
-  [Route("roomFacility")]
+  [Route("api/roomFacility")]
   public class RoomFacilityController : ControllerBase
   {
     private readonly IMediator _mediator;
@@ -17,7 +17,7 @@ namespace BookingHotel.Server.Controllers
 
     [HttpGet]
     [ProducesResponseType(typeof(List<RoomFacilityDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<List<RoomFacilityDto>>> GetAll()
     {
       var result = await _mediator.Send(new GetAllRoomFacilityQuery() { });
       return Ok(result);
