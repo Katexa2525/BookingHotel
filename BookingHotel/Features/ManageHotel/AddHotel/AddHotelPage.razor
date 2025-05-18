@@ -30,7 +30,7 @@ else if (_errorMessage is not null)
 Директива Blazor @ref используется для захвата ссылки на компонент. Она будет применяться для вызова метода ResetForm. 
 Также предоставлен обработчик OnSubmit компонента HotelForm
 -->
-<HotelForm @ref="_hotelForm" OnSubmit="SubmitNewHotel" TextButtonAccept = "Добавить"/>
+<HotelForm @ref="_hotelForm" OnSubmit="SubmitNewHotel"/>
 
 
 @code {
@@ -54,7 +54,7 @@ else if (_errorMessage is not null)
     if (image is null)
     {
       _submitSuccessful = true;
-      // Если отель был успешно сохранён и для нее не было изображения,сбрасываем HotelForm через ссылку, захваченную в поле _hotelForm
+      // Если отель был успешно сохранён и не было изображения,сбрасываем HotelForm через ссылку, захваченную в поле _hotelForm
       _hotelForm.ResetForm();
       // Показывает ручной вызов StateHasChanged для запуска обновления пользовательского интерфейса
       StateHasChanged();

@@ -78,9 +78,6 @@ else
 
 
 @code {
-  // это объявление свойства альтернатива выше указанной директиве @inject, представляющий синтаксический сахар свойства ниже
-  // [Inject]
-  // public HttpClient Http { get; set; }
 
   private HotelDto? _selectedHotel;
   // закрытое поле, содержащее данные об отелях
@@ -104,12 +101,6 @@ else
           MainPhoto = p.MainPhoto
         });
 
-
-      // Http вызов загружает тестовые данные из json
-      //_hotels = await Http.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
-
-      // var client = ClientFactory.CreateClient("NoAuthenticationClient");
-      // _hotels = await client.GetFromJsonAsync<IEnumerable<Hotel>>("hotels/hotel-data.json");
     }
     catch (HttpRequestException ex)
     {
