@@ -57,8 +57,9 @@ namespace Application.BussinessLogic.Room
         roomPhotos.RoomId = entity.Id;
       foreach (var roomFacility in entity.RoomFacilities)
         roomFacility.RoomId = entity.Id;
-      //await _repositoryRoom.CreateAsync(entity);
+
       await _repositoryManager.RoomRepository.CreateEntityAsync(entity);
+      await _repositoryManager.SaveAsync();
       return entity.Id;
     }
 

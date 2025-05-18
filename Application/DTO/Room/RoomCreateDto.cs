@@ -7,6 +7,7 @@ namespace Application.DTO.Room
 {
   public class RoomCreateDto
   {
+    public Guid HotelId { get; set; }
     public int PeopleNumber { get; set; }
     public double Square { get; set; }
     /// <summary> Описание номера </summary>

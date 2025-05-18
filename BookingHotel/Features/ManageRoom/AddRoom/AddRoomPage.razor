@@ -1,8 +1,11 @@
-﻿@page "/add-room"
+﻿@page "/hotels/{HotelId:guid}/rooms/add-room"
+
 @inject IMediator Mediator
 @inject IMapper Mapper
 
 @using AutoMapper
+
+@attribute [Authorize(Roles = "Administrator, Hotel_owner")]
 
 <PageTitle>Создание новой записи номера отеля</PageTitle>
 
@@ -25,7 +28,7 @@ else if (_errorMessage is not null)
 Она будет применяться для вызова метода ResetForm. 
 Также предоставлен обработчик OnSubmit компонента RoomForm
 -->
-<RoomForm @ref="_roomForm" RoomTypes="_allRoomTypes" OnSubmit="SubmitNewRoom"/>
+<RoomForm @ref="_roomForm" HotelId="HotelId" RoomTypes="_allRoomTypes" OnSubmit="SubmitNewRoom"/>
 
 @code {
   private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
@@ -33,18 +36,25 @@ else if (_errorMessage is not null)
   private RoomForm _roomForm = default!;
   private List<RoomTypeDto>? _allRoomTypes = new List<RoomTypeDto>();
 
+  [Parameter]
+  public Guid HotelId { get; set; }
+
   protected override async Task OnInitializedAsync()
   {
     // запрос на получения всех типов номеров
     var responseRoomTypes = await Mediator.Send(new GetRoomTypesRequest());
     if (responseRoomTypes is not null)
-      _allRoomTypes = responseRoomTypes.RoomTypes.Select(p => new RoomTypeDto { Id = p.Id, Name = p.Name }).ToList();
+    {
+      _allRoomTypes = responseRoomTypes.RoomTypes.Select(p => new RoomTypeDto { Id = p.Id, Name = p.Name })
+                                                 .OrderBy(p => p.Name).ToList();
+      _allRoomTypes.Add(new RoomTypeDto { Id = Guid.Empty, Name = string.Empty });
+    }
   }
 
   private async Task SubmitNewRoom(RoomDto roomDto, IBrowserFile? image)
   {
     var response = await Mediator.Send(new AddRoomRequest(Mapper.Map<RoomCreateDto>(roomDto)));
-    if (response.roomId == Guid.Empty)
+    if (response is not null && response.roomId == Guid.Empty)
     {
       _submitSuccessful = false;
       _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;

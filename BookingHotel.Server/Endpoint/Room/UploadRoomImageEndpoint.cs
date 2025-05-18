@@ -1,6 +1,4 @@
 ﻿using Application.ConstMessages;
-using Application.DTO.Hotel;
-using Application.DTO.Hotel.CQRS;
 using Application.DTO.Room;
 using Application.DTO.Room.ClientRequest;
 using Application.DTO.Room.CQRS;
@@ -44,7 +42,7 @@ namespace BookingHotel.Server.Endpoint.Room
       //Создаю новое имя файла для загруженного изображения, безопасное для использования в приложении
       string? filename = $"{Guid.NewGuid()}.jpg";
       //Определяю место сохранения файла
-      string? saveLocation = Path.Combine(Directory.GetCurrentDirectory(), "Images/Room", filename);
+      string? saveLocation = Path.Combine(Directory.GetCurrentDirectory(), "Images", filename);
 
       //Используя ImageSharp,изменяю размер загруженного изображения, чтобы получить нужные размеры, и сохраняем его в файловой системе
       var resizeOptions = new ResizeOptions
@@ -59,7 +57,7 @@ namespace BookingHotel.Server.Endpoint.Room
       if (!string.IsNullOrWhiteSpace(room.MainPhoto))
       {
         // Если изображение есть, удаляем его из файловой системы
-        System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "Images/Room", room.MainPhoto));
+        System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "Images", room.MainPhoto));
       }
 
       //Обновляю отель, указав местоположение фото отеля. Оно будет использоваться в интерфейсе для загрузки изображения

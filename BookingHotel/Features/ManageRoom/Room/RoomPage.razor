@@ -8,7 +8,7 @@
 <div class="mb-4">
   <p class="font-italic text-center">
     Есть номер, который хотели бы опубликовать?
-    <a href="add-room">Добавьте это здесь</a>.
+    <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь</a>.
   </p>
 </div>
 
@@ -115,7 +115,8 @@
         RoomFacilities = p.RoomFacilities,
         RoomPhotos = p.RoomPhotos,
         RoomType = p.RoomType, 
-        Bookings = p.Bookings
+        Bookings = p.Bookings,
+        MainPhoto = p.MainPhoto
       });
 
     // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами
