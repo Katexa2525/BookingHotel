@@ -97,12 +97,18 @@
                 <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
               </FormFieldSet>
 
-              <FormFieldSet Width="col">
-                <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label>
-                <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
-              </FormFieldSet>
-
-              <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
+              <div class="row">
+                <div class="col-8">
+                  <FormFieldSet Width="col">
+                    <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label>
+                    <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
+                  </FormFieldSet>
+                </div>
+                <div class="col-4">
+                  <label for="hotelStar" class="font-weight-bold text-secondary"></label>
+                  <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -218,11 +224,11 @@
 
   private void ShowPhoto(MouseEventArgs args)
   {
-    NavManager.NavigateTo("/show-photo");
+    NavManager.NavigateTo($"/hotels/{Hotel.Id}/photo");
   }
 
   private void ShowFacilities(MouseEventArgs args)
   {
-    NavManager.NavigateTo("/show-facilities");
+    NavManager.NavigateTo($"/hotels/{Hotel.Id}/facilities");
   }
 }

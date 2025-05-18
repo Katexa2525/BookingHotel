@@ -12,6 +12,9 @@ namespace BookingHotel.MappingProfile
       // hotel
       CreateMap<HotelDto, HotelCreateDto>();
       CreateMap<HotelDto, HotelUpdateDto>();
+      // room
+      CreateMap<RoomDto, RoomCreateDto>();
+      CreateMap<RoomDto, RoomUpdateDto>();
     }
   }
 }

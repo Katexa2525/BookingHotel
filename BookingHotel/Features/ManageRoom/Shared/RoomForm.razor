@@ -1,6 +1,9 @@
-﻿@using BookingHotel.Validation
+﻿@inject NavigationManager NavManager
 
-<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+@using Application.Enums
+@using BookingHotel.Validation
+
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitRoomForm">
   <FluentValidationValidator />
 
   <div class="card card-brand mb-4 shadow">
@@ -9,8 +12,23 @@
         <div class="col-4">
           <div>
             <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
-            <img src="images/NoImage.png" class="card-img-top" />
-            @* <InputFile class="form-control-file mt-1" id="roomImage" accept=".png,.jpg,.jpeg" /> *@
+            @if (string.IsNullOrWhiteSpace(_room.MainPhoto))
+            {
+              <img src="images/NoImage.png" class="card-img-top" />
+              <InputFile OnChange="LoadRoomImage" class="form-control-file mt-1"
+                         id="roomImage" accept=".png,.jpg,.jpeg" />
+            }
+            else
+            {
+              <div class="card bg-dark text-white">
+                <img src="images/room/@_room.MainPhoto" class="card-img-top" />
+                <div class="card-img-overlay">
+                  <button class="btn btn-primary btn-sm" @onclick="RemoveRoomImage">
+                    Удалить
+                  </button>
+                </div>
+              </div>
+            }
           </div>
 
           <div class="mt-5 mb-5">
@@ -39,44 +57,21 @@
           </div>
         </div>
 
-
-
-
         <div class="col-8">
 
-        
-
           @* <FormFieldSet Width="col"> *@
-            @* <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label> *@
-            @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
-            @* <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
-            @* <DropdownList Options="@_room.RoomFacilities.Select(p=>p.Name).ToList()" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
-            @* <p>Выбрано: @selectedOption</p> *@
-            @* <ValidationMessage For="@(() => _room.RoomTypeId )" />
+          @* <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label> *@
+          @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
+          @* <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
+          @* <DropdownList Options="@_room.RoomFacilities.Select(p=>p.Name).ToList()" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
+          @* <p>Выбрано: @selectedOption</p> *@
+          @* <ValidationMessage For="@(() => _room.RoomTypeId )" />
           </FormFieldSet> *@
 
           <FormFieldSet Width="col">
             <label for="roomDescription" class="font-weight-bold text-secondary">Описание номера</label>
             <InputTextArea @bind-Value="_room.Description" rows="6" class="form-control" id="roomDescription" />
             <ValidationMessage For="@(() => _room.Description )" />
-          </FormFieldSet>
-
-          <FormFieldSet Width="col">
-            <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства</label>
-            @* <MultiSelectList T="string" Options="@optionsFacilities" SelectedOptions="@selectedOptionsFacilities" OnSelectionChanged="@HandleSelection" />
-            <p>Выбрано: @string.Join(", ", selectedOptionsFacilities)</p> *@
-
-            <div class="row align-items-start">
-              <div class="col-sm-8">
-                <div class="d-flex">
-                  @foreach (var item in @_room.RoomFacilities)
-                  {
-                    <h6 class="m-3">@item.Name</h6>
-                  }
-                </div>
-              </div>
-            </div>
-
           </FormFieldSet>
 
           <div class="row">
@@ -95,6 +90,27 @@
             </div>
           </div>
 
+          <div class="card card-brand mb-4 mt-4">
+            <div class="card-body">
+              <FormFieldSet Width="col">
+                <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства в номере</label>
+                      @* <MultiSelectList T="string" Options="@optionsFacilities" SelectedOptions="@selectedOptionsFacilities" OnSelectionChanged="@HandleSelection" />
+                        <p>Выбрано: @string.Join(", ", selectedOptionsFacilities)</p> *@
+
+                <div class="row align-items-start">
+                  <div class="col-sm-8">
+                    <div class="d-flex">
+                      @foreach (var item in @_room.RoomFacilities)
+                      {
+                        <h6 class="m-3">@item.Name</h6>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </FormFieldSet>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -105,7 +121,7 @@
 @code {
   private EditContext _editContext = default!;
   private RoomDto _room = new RoomDto();
-  private IBrowserFile? _hotelImage;
+  private IBrowserFile? _roomImage;
 
   private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
   private List<string> selectedOptionsFacilities = new();
@@ -128,7 +144,7 @@
     _editContext = new EditContext(_room);
     // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
     _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-    _hotelImage = null;
+    _roomImage = null;
   }
 
   // Метод OnInitialized заменяется методом OnParametersSet. Он будет вызываться всякий раз
@@ -149,14 +165,13 @@
 
   /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
   [Parameter, EditorRequired]
-  public Func<RoomDto, Task> OnSubmit { get; set; } = default!;
+  public Func<RoomDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
 
   /// <summary>
   /// Обработчик события OnValidSubmit из EditForm вызовет событие OnSubmit.
   /// Это позволит обработчику решить, как сохранить данные формы
   /// </summary>
-  /// <returns></returns>
-  private async Task SubmitForm() => await OnSubmit(_room);
+  private async Task SubmitRoomForm() => await OnSubmit(_room, _roomImage);
 
   private List<string> optionsType = new() { "Студия", "Люкс Гранд Премиум", "Стандарт Бизнес (четырехместный)", "Номер стандарт", "Стандарт Бизнес" };
   private string selectedOptionType = "Студия";
@@ -166,18 +181,34 @@
     selectedOptionType = value;
   }
 
+  private void LoadRoomImage(InputFileChangeEventArgs e)
+  {
+    _roomImage = e.File;
+    _room.ImageAction = ImageAction.Add; //Задаю ImageAction для добавления при выборе изображения
+  }
+
+  /// <summary>
+  /// Этот метод вызывается при нажатии кнопки «Удалить изображение». Так сбрасываеncz свойство Image, инициируя отображение компонента InputFile,
+  /// а также помечаем изображение, которое нужно удалить на сервере
+  /// </summary>
+  private void RemoveRoomImage()
+  {
+    _room.MainPhoto = null;
+    _room.ImageAction = ImageAction.Remove;
+  }
+
   private void ShowFacilities(MouseEventArgs args)
   {
-    throw new NotImplementedException();
+    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/facilities");
   }
 
   private void ShowPhoto(MouseEventArgs args)
   {
-    throw new NotImplementedException();
+    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/photo");
   }
 
   private void ShowPrices(MouseEventArgs args)
   {
-    throw new NotImplementedException();
+    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/prices");
   }
 }
