@@ -1,0 +1,12 @@
+﻿<div class="d-flex justify-content-between">
+  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-people"></span> @PeopleNumber</h6>
+  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-loop-square"></span> @Square </h6>
+</div>
+
+@code {
+
+  [Parameter, EditorRequired]
+  public int PeopleNumber { get; set; }
+  [Parameter, EditorRequired]
+  public double Square { get; set; }
+}

@@ -32,22 +32,11 @@
           {
             <h5 class="card-title">@Room.Id</h5>
           }
-          <div class="d-flex justify-content-between">
-            <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-people"></span> @Room.PeopleNumber</h6>
-            <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-loop-square"></span> @Room.Square </h6>
-          </div>
+
+          <RoomPeopleSquareComponent PeopleNumber="@Room.PeopleNumber" Square="@Room.Square" />
 
           @* Удобства в номере *@
-          <div class="row align-items-start">
-            <div class="col-sm-8">
-              <div class="d-flex">
-                @foreach (var item in Room.RoomFacilities)
-                {
-                  <h6 class="m-3">@item.Name</h6>
-                }
-              </div>
-            </div>
-          </div>
+          <RoomFacilitiesComponent RoomFacilities="@Room.RoomFacilities" />
 
           <div class="d-flex justify-content-between">
             <div class="mt-4 align-bottom">

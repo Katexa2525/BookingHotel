@@ -39,10 +39,9 @@
           <div class="card-body">
             <div class="row">
               <h3>@_room.RoomType.Name</h3>
-              <div class="d-flex justify-content-between">
-                <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-people"></span> @_room.PeopleNumber</h6>
-                <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-loop-square"></span> @_room.Square </h6>
-              </div>
+
+              <RoomPeopleSquareComponent PeopleNumber="@_room.PeopleNumber" Square="@_room.Square" />
+
               <InputTextArea @bind-Value="_room.Description" class="form-control" id="roomDescription" />
             </div>
 
@@ -53,16 +52,7 @@
                   <div class="card-body">
                     <FormFieldSet Width="col">
                       <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства в номере</label>
-                      <div class="row align-items-start">
-                        <div class="col-sm-8">
-                          <div class="d-flex">
-                            @foreach (var item in @_room.RoomFacilities)
-                            {
-                              <h6 class="m-3">@item.Name</h6>
-                            }
-                          </div>
-                        </div>
-                      </div>
+                      <RoomFacilitiesComponent RoomFacilities="@_room.RoomFacilities" />
                     </FormFieldSet>
                   </div>
                 </div>
@@ -111,7 +101,7 @@
                       <div class="col">
                         <FormFieldSet Width="col">
                           <label class="font-weight-bold text-secondary">Электронная почта</label>
-                          <InputText @bind-Value="item.Email" class="form-control" />
+                          <InputText @bind-Value="item.Email" class="form-control" type="email" />
                         </FormFieldSet>
                       </div>
                     </div>
@@ -123,41 +113,45 @@
           </div>
         </div>
 
-      </div>
-
-      <div class="col-5 text-end">
-        <img src="@("images/B3C83220-D255-46D7-AC76-114ECE1D925A.jpg")" class="card-img-top">
-
-        <div class="d-flex justify-content-between mt-5">
-          <h4 class="mb-3 me-5">Итого</h4>
-          <h4 class="mb-3 me-5">@price руб</h4>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="card card-brand mb-4 shadow">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-7">
-            <h5>Особые пожелания</h5>
-            <div class="card card-brand mb-4">
-              <div class="card-body">
-                <div class="row">
-                  <InputTextArea @bind-Value="_description" class="form-control" id="description" />
+        @* <div class="card card-brand mb-4 shadow">
+          <div class="card-body"> *@
+            <div class="row">
+              <h5>Особые пожелания</h5>
+              <div class="card card-brand mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <InputTextArea @bind-Value="_description" class="form-control" id="description" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          @* </div>
+        </div> *@
 
-          <div class="col-5 text-end">
-            <a href="#" class="btn btn-primary">Забронировать</a>
+      </div>
 
+      <div class="col-5 text-end">
+        <div class="card card-brand mb-4 shadow">
+          <div class="card-body">
+            @* <div class="d-flex justify-content-between"> *@
+              <div class="row">
+                <img src="@("images/B3C83220-D255-46D7-AC76-114ECE1D925A.jpg")" class="card-img-top">
+              </div>
+              <div class ="row">
+                <div class="d-flex justify-content-between mt-5">
+                  <h4 class="mb-3 me-5">Итого</h4>
+                  <h4 class="mb-3 me-5">@price руб</h4>
+                </div>
+              </div>
+              <div class="row">
+                <a href="#" class="btn btn-primary">Забронировать</a>
+              </div>
+           @*  </div> *@
           </div>
         </div>
       </div>
-    </div>
 
+    </div>
 
   </div>
 </div>
