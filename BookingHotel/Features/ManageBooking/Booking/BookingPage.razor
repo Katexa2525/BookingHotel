@@ -1,0 +1,256 @@
+﻿@page "/hotels/{HotelId:guid}/rooms/{RoomId:guid}/booking/{ArrivalDate}/{DepartureDate}/{NumberOfAdults:int}/{NumberOfChilds:int}"
+
+@inject IMediator Mediator
+
+@using System.ComponentModel.DataAnnotations
+@using Application.DTO.Guest
+@using Application.DTO.Hotel
+@using Application.DTO.Hotel.ClientRequest
+@using Application.DTO.Room
+@using Application.DTO.Room.ClientRequest
+
+<div class="card card-brand mb-4 shadow">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-7">
+        <h2>@_hotel.Name</h2>
+        <div class="d-flex">
+          <h6 class="card-subtitle mb-3 text-muted me-5"><span class="oi oi-star"></span> @_hotel.Rating </h6>
+          <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @_hotel.Location</h6>
+        </div>
+
+        <div class="card card-brand mb-4 shadow">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-4">
+                <h5> Заезд </h5>
+                <h5> @_arrivalDate </h5>
+              </div>
+              <div class="col-4">
+                <h5> Выезд </h5>
+                <h5> @_departureDate </h5>
+              </div>
+              <div class="col-4">
+                <h5> Гости </h5>
+                <h5> @NumberOfAdults взрослых </h5>
+                <h6> @NumberOfChilds детей </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="card card-brand mb-4 shadow">
+          <div class="card-body">
+            <div class="row">
+              <h3>@_room.RoomType.Name</h3>
+              <div class="d-flex justify-content-between">
+                <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-people"></span> @_room.PeopleNumber</h6>
+                <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-loop-square"></span> @_room.Square </h6>
+              </div>
+              <InputTextArea @bind-Value="_room.Description" class="form-control" id="roomDescription" />
+            </div>
+
+            @if (_room is not null && _room.RoomFacilities is not null && _room.RoomFacilities.Any())
+            {
+              <div class="row">
+                <div class="card card-brand mb-4 ">
+                  <div class="card-body">
+                    <FormFieldSet Width="col">
+                      <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства в номере</label>
+                      <div class="row align-items-start">
+                        <div class="col-sm-8">
+                          <div class="d-flex">
+                            @foreach (var item in @_room.RoomFacilities)
+                            {
+                              <h6 class="m-3">@item.Name</h6>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </FormFieldSet>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-5 text-end">
+        <img src="@("images/B3C83220-D255-46D7-AC76-114ECE1D925A.jpg")" class="card-img-top">
+
+        <div class="d-flex justify-content-between">
+          <h4 class="mb-3 me-5">Итого</h4>
+          <h4 class="mb-3 me-5">5690 руб</h4>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-7">
+        <h5>Данные гостей</h5>
+        <h6>Гость 1. Взрослый, на которого оформляется номер</h6>
+        <div class="d-flex">
+          <div class="me-3">
+            <label>Фамилия</label>
+            <InputText @bind-Value="@booking.Famil" required />
+          </div>
+          <div>
+            <label>Имя</label>
+            <InputText @bind-Value="@booking.Name" required />
+          </div>
+        </div>
+        <h6>Гость 2.</h6>
+        <div class="d-flex">
+          <div class="me-3">
+            <label>Фамилия</label>
+            <InputText @bind-Value="@booking.Famil" required />
+          </div>
+          <div>
+            <label>Имя</label>
+            <InputText @bind-Value="@booking.Name" required />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-7">
+        <h5>Контактная информация покупателя</h5>
+        <div class="d-flex">
+          <div class="me-3">
+            <label>Электронная почта</label>
+            <InputText @bind-Value="@booking.Email" required />
+          </div>
+          <div>
+            <label>Телефон</label>
+            <InputText @bind-Value="@booking.Phone" required />
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-5 text-end">
+        <a href="#" class="btn btn-primary">Забронировать</a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  h2 {
+  margin-top: 20px;
+  color: #333;
+  }
+
+  ul li {
+  font-size: 16px;
+  margin-bottom: 5px;
+  }
+
+  .btn {
+  margin-top: 10px;
+  }
+</style>
+
+
+@code {
+  private BookingModel booking = new BookingModel();
+  private bool bookingConfirmed = false;
+  private string? _errorMessage;
+  private string _arrivalDate = string.Empty;
+  private string _departureDate = string.Empty;
+
+  private RoomDto? _room = new RoomDto();
+  private HotelDto _hotel = new HotelDto();
+  private List<GuestDto> _guests = new List<GuestDto>();
+
+  private void BookRoom()
+  {
+    bookingConfirmed = true;
+  }
+
+  //"/hotels/{HotelId:guid}/rooms/{RoomId:guid}/booking/{ArrivalDate}/{DepartureDate}/{NumberOfAdults}/{NumberOfChilds}"
+
+  [Parameter]
+  public Guid HotelId { get; set; }
+
+  [Parameter]
+  public Guid RoomId { get; set; }
+
+  [Parameter]
+  public string ArrivalDate { get; set; } = string.Empty;
+
+  [Parameter]
+  public string DepartureDate { get; set; } = string.Empty;
+
+  [Parameter]
+  public int NumberOfAdults { get; set; }
+
+  [Parameter]
+  public int NumberOfChilds { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    _arrivalDate = ArrivalDate.Replace('_', '.');
+    _departureDate = DepartureDate.Replace('_', '.');
+    _guests = new List<GuestDto>(NumberOfAdults + NumberOfChilds);
+
+    // коллекция для заполнения гостей по брони
+    for (int i = 0; i < NumberOfAdults + NumberOfChilds; i++)
+    {
+      _guests.Add(new GuestDto());
+    }
+
+    // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами
+    var responseHotel = await Mediator.Send(new GetHotelRequest(HotelId));
+
+    if (responseHotel is not null)
+    {
+      _hotel = responseHotel.Hotel;
+    }
+    else
+    {
+      _errorMessage = AppMessage.HotelPageLoadTextErrorMessage;
+    }
+
+    // получаю данные по номеру
+    var response = await Mediator.Send(new GetRoomRequest(RoomId));
+
+    if (response is not null)
+    {
+      _room = response.Room;
+    }
+    else
+    {
+      _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
+    }
+
+  }
+
+
+  private class BookingModel
+  {
+    [Required]
+    public string Name { get; set; }
+
+    [Required]
+    public string Famil { get; set; }
+
+    [Required]
+    public string Phone { get; set; }
+
+    [Required, EmailAddress]
+    public string Email { get; set; }
+
+    [Required]
+    public DateTime CheckInDate { get; set; }
+    [Required]
+    public DateTime CheckOutDate { get; set; }
+  }
+}

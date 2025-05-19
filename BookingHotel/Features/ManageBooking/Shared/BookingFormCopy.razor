@@ -1,4 +1,4 @@
-﻿@page "/hotel-booking"
+﻿@page "/copy/hotels/{HotelId:guid}/rooms/{RoomId:guid}/booking"
 @using System.ComponentModel.DataAnnotations
 
 <div class="card card-brand mb-4 shadow">
@@ -131,6 +131,12 @@
   {
     bookingConfirmed = true;
   }
+
+  [Parameter]
+  public Guid HotelId { get; set; }
+
+  [Parameter]
+  public Guid RoomId { get; set; }
 
   private class BookingModel
   {

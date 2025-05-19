@@ -34,7 +34,7 @@
 {
   @* <SearchComponent Placeholder="Поиск номера отеля..." TextNavigateTo=@routeSearch /> *@
   @* данные передаются в параметры компонента с помощью атрибутов элемента *@
-  <SearchDateComponent />
+  <SearchDateComponent Booking="@Booking" OnSelected="HandleBookingSelected" />
   // номера по отелю
   <div class="card-container">
     @foreach (var room in _allRooms)
@@ -88,6 +88,7 @@
   private HotelDto _hotel = new HotelDto();
   private string? _errorMessage;
   private string countReview = string.Empty;
+  private BookingDto Booking = new BookingDto();
 
   /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
   [Parameter]
@@ -96,10 +97,20 @@
   private void HandleRoomSelected(RoomDto room)
   {
     _selectedRoom = room;
+    // переход на страницу бронирования
+    string arrDate = Booking.ArrivalDate.ToShortDateString().Replace('.', '_');
+    string depDate = Booking.DepartureDate.ToShortDateString().Replace('.', '_');
+    string route = $"/hotels/{room.HotelId}/rooms/{room.Id}/booking/{arrDate}/{depDate}/{Booking.NumberOfAdults}/{Booking.NumberOfChilds}";
+    NavManager.NavigateTo(route);
   }
 
   protected override async Task OnInitializedAsync()
   {
+    Booking.ArrivalDate = DateTime.Now;
+    Booking.DepartureDate = DateTime.Now.AddDays(1);
+    Booking.NumberOfAdults = 1;
+    Booking.NumberOfChilds = 0;
+
     // запрос на получения всех номеров отеля RoomId через GetRoomsRequest и Mediator
     var response = await Mediator.Send(new GetRoomsRequest(HotelId));
 
@@ -139,5 +150,15 @@
 
     // устанавливаю маршрут для поиска в переменную
     routeSearch = $"hotels/{HotelId}/rooms/searchRoom";
+  }
+
+  /// <summary> Метод обработчика, который получает обновленные данные фильтра </summary>
+  /// <param name="bookingDto">Модель, где новые данные </param>
+  private void HandleBookingSelected(BookingDto bookingDto)
+  {
+    Booking.ArrivalDate = bookingDto.ArrivalDate;
+    Booking.DepartureDate = bookingDto.DepartureDate;
+    Booking.NumberOfAdults = bookingDto.NumberOfAdults;
+    Booking.NumberOfChilds = bookingDto.NumberOfChilds;
   }
 }
