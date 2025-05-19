@@ -22,7 +22,7 @@
     @* вызывается делегат, передавая текущий отель *@
     <div class="d-flex justify-content-between">
       <div>
-        <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => OnSelected.InvokeAsync(Hotel) )">
+        <button class="btn btn-primary" title="Просмотр" @onclick="@(async () => await OnSelected.InvokeAsync(Hotel) )">
           <i class="bi bi-binoculars"></i>
         </button>
         <button class="btn btn-outline-secondary float-right" title="Редактирование"
