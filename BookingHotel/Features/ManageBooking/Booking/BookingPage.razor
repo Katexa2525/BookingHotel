@@ -113,20 +113,16 @@
           </div>
         </div>
 
-        @* <div class="card card-brand mb-4 shadow">
-          <div class="card-body"> *@
+        <div class="card card-brand mb-4 shadow">
+          <div class="card-body">
             <div class="row">
               <h5>Особые пожелания</h5>
-              <div class="card card-brand mb-4">
-                <div class="card-body">
-                  <div class="row">
-                    <InputTextArea @bind-Value="_description" class="form-control" id="description" />
-                  </div>
-                </div>
+              <div class="row">
+                <InputTextArea @bind-Value="_description" class="form-control" id="description" />
               </div>
             </div>
-          @* </div>
-        </div> *@
+          </div>
+        </div>
 
       </div>
 
@@ -134,19 +130,19 @@
         <div class="card card-brand mb-4 shadow">
           <div class="card-body">
             @* <div class="d-flex justify-content-between"> *@
-              <div class="row">
-                <img src="@("images/B3C83220-D255-46D7-AC76-114ECE1D925A.jpg")" class="card-img-top">
+            <div class="row">
+              <img src="@("images/B3C83220-D255-46D7-AC76-114ECE1D925A.jpg")" class="card-img-top">
+            </div>
+            <div class="row">
+              <div class="d-flex justify-content-between mt-5">
+                <h4 class="mb-3 me-5">Итого</h4>
+                <h4 class="mb-3 me-5">@price руб</h4>
               </div>
-              <div class ="row">
-                <div class="d-flex justify-content-between mt-5">
-                  <h4 class="mb-3 me-5">Итого</h4>
-                  <h4 class="mb-3 me-5">@price руб</h4>
-                </div>
-              </div>
-              <div class="row">
-                <a href="#" class="btn btn-primary">Забронировать</a>
-              </div>
-           @*  </div> *@
+            </div>
+            <div class="row">
+              <a href="#" class="btn btn-primary">Забронировать</a>
+            </div>
+            @*  </div> *@
           </div>
         </div>
       </div>
