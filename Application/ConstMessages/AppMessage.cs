@@ -26,5 +26,10 @@
     public static readonly string AddRoomPageSaveImageTextErrorMessage = "Ваш номер отеля был сохранен, но была проблема с загрузкой изображения!";
     public static readonly string GetRoomByIdTextErrorMessage = "Номер отеля не может быть найден.";
     public static readonly string GetRoomImageTextErrorMessage = "Фото номера отеля не найдено.";
+
+    public static readonly string ValidatorBookingNameMessage = "Введите наименование бронирования";
+    public static readonly string ValidatorBookingArrivalDateMessage = "Введите дату начала бронирования";
+    public static readonly string ValidatorBookingDepartureDateMessage = "Введите дату окончания бронирования";
+    public static readonly string GetBookingByIdTextErrorMessage = "Бронирование не может быть найдено.";
   }
 }
