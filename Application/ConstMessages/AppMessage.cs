@@ -36,5 +36,9 @@
     public static readonly string ValidatorFoodNameMessage = "Введите наименование питания";
     public static readonly string ValidatorTypeFoodNameMessage = "Введите тип питания";
     public static readonly string ValidatorHotelFoodNameMessage = "Введите отель питания";
+
+    public static readonly string ValidatorGuestNameMessage = "Введите имя гостя";
+    public static readonly string ValidatorGuestLastNameMessage = "Введите фамилию гостя";
+    public static readonly string ValidatorGuestBookingIdMessage = "Введите документ бронирования гостя";
   }
 }
