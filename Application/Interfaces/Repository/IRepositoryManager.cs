@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Application.BussinessLogic.Guest;
+using Domain.Models;
 
 namespace Application.Interfaces.Repository
 {
@@ -17,6 +18,7 @@ namespace Application.Interfaces.Repository
     IRoomTypeRepository RoomTypeRepository { get; }
     ITypeFoodRepository TypeFoodRepository { get; }
     IBookingRepository BookingRepository { get; }
+    IGuestRepository GuestRepository { get; }
 
     Task SaveAsync();
     void Save();

@@ -72,25 +72,28 @@ namespace Application.BussinessLogic.Booking
 
       _mapper.Map(dto, entity);
 
-      await _generalBussinessLogic.UpdateCollectionAsync(
-            entity.Guests,
-            dto.Guests,
-            //_repositoryRoom,
-            null,
-            (item, Id) => item.BookingId = Id,
-            guest => guest.Id,
-            dto => dto.Id
-            );
+      _repositoryManager.BookingRepository.UpdateEntity(entity);
+      await _repositoryManager.SaveAsync();
 
-      await _generalBussinessLogic.UpdateCollectionAsync(
-            entity.Services,
-            dto.Services,
-            //_repositoryFood,
-            null,
-            (item, Id) => item.BookingId = Id,
-            serv => serv.Id,
-            dto => dto.Id
-            );
+      //await _generalBussinessLogic.UpdateCollectionAsync(
+      //      entity.Guests,
+      //      dto.Guests,
+      //      //_repositoryRoom,
+      //      null,
+      //      (item, Id) => item.BookingId = Id,
+      //      guest => guest.Id,
+      //      dto => dto.Id
+      //      );
+
+      //await _generalBussinessLogic.UpdateCollectionAsync(
+      //      entity.Services,
+      //      dto.Services,
+      //      //_repositoryFood,
+      //      null,
+      //      (item, Id) => item.BookingId = Id,
+      //      serv => serv.Id,
+      //      dto => dto.Id
+      //      );
     }
   }
 }

@@ -96,11 +96,13 @@ namespace BookingHotel.Server.MappingProfile
 
       
       CreateMap<Booking, BookingCreateDto>().ReverseMap();
-      CreateMap<Booking, BookingCreateDto>().ReverseMap();
       CreateMap<Booking, BookingDto>().ReverseMap();
       CreateMap<Booking, BookingUpdateDto>().ReverseMap();
 
       CreateMap<Guest, GuestDto>().ReverseMap();
+      CreateMap<Guest, GuestCreateDto>().ReverseMap();
+      CreateMap<Guest, GuestUpdateDto>().ReverseMap();
+
       CreateMap<Service, ServiceDto>().ReverseMap();
       CreateMap<Review, ReviewDto>().ReverseMap();
 
