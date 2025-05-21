@@ -40,5 +40,12 @@
     public static readonly string ValidatorGuestNameMessage = "Введите имя гостя";
     public static readonly string ValidatorGuestLastNameMessage = "Введите фамилию гостя";
     public static readonly string ValidatorGuestBookingIdMessage = "Введите документ бронирования гостя";
+
+    public static readonly string ValidatorPriceRoomIdMessage = "Введите номера отеля для цены";
+    public static readonly string ValidatorPriceCurrencyIdMessage = "Введите валюту для цены";
+    public static readonly string ValidatorPriceDateStartMessage = "Введите дату начала";
+    public static readonly string ValidatorPriceDateEndMessage = "Введите дату окончания";
+    public static readonly string ValidatorPriceDayPriceMessage = "Введите значение цены";
+
   }
 }

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.DTO.Food.Validator
 {
-  public class FoodValidatorCreate : AbstractValidator<FoodCreateDto>
+  public class FoodValidatorCreate : AbstractValidator<FoodCreateWithIdDto>
   {
     /// <summary> Конструктор класса с правилами валидации </summary>
     public FoodValidatorCreate()
