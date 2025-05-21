@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Booking\ClientRequest\" />
+    <Folder Include="DTO\Guest\ClientRequest\" />
+    <Folder Include="DTO\Guest\CQRS\" />
+    <Folder Include="DTO\Guest\Mediatr\" />
   </ItemGroup>
 
 </Project>
