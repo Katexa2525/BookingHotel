@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.DTO.HotelFacility.Validator
 {
-  public class HotelFacilityValidatorCreate : AbstractValidator<HotelFacilityCreateDto>
+  public class HotelFacilityValidatorCreate : AbstractValidator<HotelFacilityCreateWithIdDto>
   {
     /// <summary> Конструктор класса с правилами валидации </summary>
     public HotelFacilityValidatorCreate()

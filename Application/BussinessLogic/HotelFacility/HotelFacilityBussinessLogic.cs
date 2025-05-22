@@ -37,17 +37,14 @@ namespace Application.BussinessLogic.HotelFacility
     {
       var entity = _mapper.Map<HotelFacilityEntity>(dto);
       entity.Id = Guid.NewGuid();
-      //await _repositoryHotelFacility.CreateAsync(entity);
+
       await _repositoryManager.HotelFacilityRepository.CreateEntityAsync(entity);
+      await _repositoryManager.SaveAsync();
       return entity.Id;
     }
 
     public async Task DeleteAsync(Guid hotelFacilityId)
     {
-      //var hotelFacility = await _repositoryHotelFacility.FindOneAsync(x => x.Id == hotelFacilityId);
-      //_repositoryHotelFacility.Delete(hotelFacility);
-      //await _repositoryHotelFacility.SaveAsync();
-
       var hotelFacility = await _repositoryManager.HotelFacilityRepository.GetOneAsync(x => x.Id == hotelFacilityId);
       _repositoryManager.HotelFacilityRepository.DeleteEntity(hotelFacility);
       await _repositoryManager.SaveAsync();

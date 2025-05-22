@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.DTO.HotelFacility.ClientRequest
 {
-  public record AddHotelFacilityRequest(HotelFacilityCreateDto HotelFacility) : IRequest<AddHotelFacilityRequest.Response>
+  public record AddHotelFacilityRequest(HotelFacilityCreateWithIdDto HotelFacility) : IRequest<AddHotelFacilityRequest.Response>
   {
     public const string RouteTemplate = "api/hotelfacilities/create";
 
