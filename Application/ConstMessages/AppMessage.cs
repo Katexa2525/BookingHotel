@@ -47,5 +47,7 @@
     public static readonly string ValidatorPriceDateEndMessage = "Введите дату окончания";
     public static readonly string ValidatorPriceDayPriceMessage = "Введите значение цены";
 
+    public static readonly string ValidatorHotelFacilityNameMessage = "Введите наименование удобства отеля";
+
   }
 }
