@@ -2,6 +2,8 @@
 using Application.DTO.Hotel;
 using Application.Interfaces.Repository;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using System.Linq.Expressions;
 using HotelEntity = Domain.Models.Hotel;
 
 namespace Application.BussinessLogic.Hotel
@@ -156,6 +158,13 @@ namespace Application.BussinessLogic.Hotel
       */
 
       //await _repositoryHotel.SaveAsync();
+    }
+
+    public List<HotelDto> GetByCondition(Expression<Func<HotelEntity, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.HotelRepository.GetByCondition(expression, trackChanges).AsQueryable()
+                                   .ProjectTo<HotelDto>(_mapper.ConfigurationProvider)
+                                   .ToList();
     }
   }
 }

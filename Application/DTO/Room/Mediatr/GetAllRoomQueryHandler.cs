@@ -15,7 +15,7 @@ namespace Application.DTO.Room.Mediatr
 
     public async Task<List<RoomAllDto>> Handle(GetAllRoomQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetAllAsync();
+      return await _bussinessLogic.GetAllAsync(trackChanges: true);
     }
   }
 }

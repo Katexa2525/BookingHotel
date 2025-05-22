@@ -1,6 +1,9 @@
-﻿using Application.DTO.Guest;
+﻿using Application.DTO.Booking;
+using Application.DTO.Guest;
 using Application.Interfaces.Repository;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using System.Linq.Expressions;
 using GuestEntity = Domain.Models.Guest;
 
 namespace Application.BussinessLogic.Guest
@@ -61,6 +64,13 @@ namespace Application.BussinessLogic.Guest
 
       _repositoryManager.GuestRepository.UpdateEntity(entity);
       await _repositoryManager.SaveAsync();
+    }
+
+    public List<GuestDto> GetByCondition(Expression<Func<GuestEntity, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.GuestRepository.GetByCondition(expression, trackChanges).AsQueryable()
+                                   .ProjectTo<GuestDto>(_mapper.ConfigurationProvider)
+                                   .ToList();
     }
   }
 }

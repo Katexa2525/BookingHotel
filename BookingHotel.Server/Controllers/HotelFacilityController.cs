@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingHotel.Server.Controllers
 {
   [ApiController]
-  [Route("hotelFacility")]
+  [Route("api/hotelFacilities")]
   public class HotelFacilityController : ControllerBase
   {
     private readonly IMediator _mediator;

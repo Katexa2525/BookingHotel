@@ -13,7 +13,7 @@ namespace Application.DTO.Room.Mediatr
     }
     public async Task<RoomDto> Handle(GetByIdRoomQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetByIdAsync(request.Id);
+      return await _bussinessLogic.GetByIdAsync(request.Id, trackChanges: false);
     }
   }
 }

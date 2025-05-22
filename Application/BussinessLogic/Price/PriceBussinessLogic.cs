@@ -3,6 +3,7 @@ using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using PriceEntity = Domain.Models.Price;
 
 namespace Application.BussinessLogic.Price
@@ -18,16 +19,16 @@ namespace Application.BussinessLogic.Price
       _repositoryManager = repositoryManager;
     }
 
-    public async Task<List<PriceDto>> GetAllAsync()
+    public async Task<List<PriceDto>> GetAllAsync(bool trackChanges)
     {
-      return await _repositoryManager.PriceRepository.GetAll(trackChanges: true).AsQueryable()
+      return await _repositoryManager.PriceRepository.GetAll(trackChanges).AsQueryable()
                                   .ProjectTo<PriceDto>(_mapper.ConfigurationProvider)
                                   .ToListAsync();
     }
 
-    public async Task<PriceDto> GetByIdAsync(Guid id)
+    public async Task<PriceDto> GetByIdAsync(Guid id, bool trackChanges)
     {
-      var price = await _repositoryManager.PriceRepository.GetOneAsync(x => x.Id == id);
+      var price = await _repositoryManager.PriceRepository.GetOneAsync(x => x.Id == id, trackChanges);
       return _mapper.Map<PriceDto>(price);
     }
 
@@ -53,6 +54,13 @@ namespace Application.BussinessLogic.Price
 
       _repositoryManager.PriceRepository.UpdateEntity(existingPrice);
       await _repositoryManager.SaveAsync();
+    }
+
+    public List<PriceDto> GetByCondition(Expression<Func<PriceEntity, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.PriceRepository.GetByCondition(expression, trackChanges).AsQueryable()
+                                  .ProjectTo<PriceDto>(_mapper.ConfigurationProvider)
+                                  .ToList();
     }
   }
 }

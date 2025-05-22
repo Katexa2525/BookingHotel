@@ -1,39 +1,33 @@
 ﻿using Application.DTO.Food;
-using Application.DTO.Hotel;
+using Application.DTO.Price;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using FoodEntity = Domain.Models.Food;
 
 namespace Application.BussinessLogic.Food
 {
   public class FoodBussinessLogic : IFoodBussinessLogic
   {
-    //private readonly IRepositoryBase<FoodEntity> _repositoryFood;
     private readonly IMapper _mapper;
     private readonly IRepositoryManager _repositoryManager;
 
-    public FoodBussinessLogic(/*IRepositoryBase<FoodEntity> repositoryFood,*/ IMapper mapper, IRepositoryManager repositoryManager)
+    public FoodBussinessLogic(IMapper mapper, IRepositoryManager repositoryManager)
     {
-      //_repositoryFood = repositoryFood;
       _mapper = mapper;
       _repositoryManager = repositoryManager;
     }
 
-    public async Task<List<FoodDto>> GetAllAsync()
+    public async Task<List<FoodDto>> GetAllAsync(bool trackChanges)
     {
-      //return await _repositoryFood.FindAll()
-      //                             .ProjectTo<FoodDto>(_mapper.ConfigurationProvider)
-      //                             .ToListAsync();
-
-      return await _repositoryManager.FoodRepository.GetAll(trackChanges: true).AsQueryable()
+      return await _repositoryManager.FoodRepository.GetAll(trackChanges).AsQueryable()
                                   .ProjectTo<FoodDto>(_mapper.ConfigurationProvider)
                                   .ToListAsync();
     }
 
-    public async Task<FoodDto> GetByIdAsync(Guid id)
+    public async Task<FoodDto> GetByIdAsync(Guid id, bool trackChanges)
     {
       //var food = await _repositoryFood.FindOneAsync(x => x.Id == id);
       var food = await _repositoryManager.FoodRepository.GetOneAsync(x => x.Id == id);
@@ -45,7 +39,6 @@ namespace Application.BussinessLogic.Food
     {
       var entity = _mapper.Map<FoodEntity>(dto);
       entity.Id = Guid.NewGuid();
-      //await _repositoryFood.CreateAsync(entity);
       await _repositoryManager.FoodRepository.CreateEntityAsync(entity);
       return entity.Id;
     }
@@ -54,9 +47,6 @@ namespace Application.BussinessLogic.Food
     {
       //var food = await _repositoryFood.FindOneAsync(x => x.Id == foodId);
       var food = await _repositoryManager.FoodRepository.GetOneAsync(x => x.Id == foodId);
-
-      //_repositoryFood.Delete(food);
-      //await _repositoryFood.SaveAsync();
 
       _repositoryManager.FoodRepository.DeleteEntity(food);
       await _repositoryManager.SaveAsync();
@@ -69,11 +59,15 @@ namespace Application.BussinessLogic.Food
 
       _mapper.Map(dto, existingFood);
 
-      //_repositoryFood.Update(existingFood);
-      //await _repositoryFood.SaveAsync();
-
       _repositoryManager.FoodRepository.UpdateEntity(existingFood);
       await _repositoryManager.SaveAsync();
+    }
+
+    public List<FoodDto> GetByCondition(Expression<Func<FoodEntity, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.FoodRepository.GetByCondition(expression, trackChanges).AsQueryable()
+                                  .ProjectTo<FoodDto>(_mapper.ConfigurationProvider)
+                                  .ToList();
     }
   }
 }

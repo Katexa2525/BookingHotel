@@ -13,7 +13,7 @@ namespace Application.DTO.Price.Mediatr
     }
     public async Task<List<PriceDto>> Handle(GetAllPriceQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetAllAsync();
+      return await _bussinessLogic.GetAllAsync(trackChanges: true);
     }
   }
 }

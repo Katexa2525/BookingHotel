@@ -1,42 +1,35 @@
 ﻿using Application.DTO.HotelFacility;
-using Application.DTO.RoomFacility;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using HotelFacilityEntity = Domain.Models.HotelFacility;
 
 namespace Application.BussinessLogic.HotelFacility
 {
   public class HotelFacilityBussinessLogic : IHotelFacilityBussinessLogic
   {
-    //private readonly IRepositoryBase<HotelFacilityEntity> _repositoryHotelFacility;
     private readonly IMapper _mapper;
     private readonly IRepositoryManager _repositoryManager;
 
-    public HotelFacilityBussinessLogic(/*IRepositoryBase<HotelFacilityEntity> repositoryHotelFacility, */ IMapper mapper, IRepositoryManager repositoryManager)
+    public HotelFacilityBussinessLogic(IMapper mapper, IRepositoryManager repositoryManager)
     {
-      //_repositoryHotelFacility = repositoryHotelFacility;
       _mapper = mapper;
       _repositoryManager = repositoryManager;
     }
 
-    public async Task<List<HotelFacilityDto>> GetAllAsync()
+    public async Task<List<HotelFacilityDto>> GetAllAsync(bool trackChanges)
     {
-      //return await _repositoryHotelFacility.FindAll()
-      //                             .ProjectTo<HotelFacilityDto>(_mapper.ConfigurationProvider)
-      //                             .ToListAsync();
-
-      return await _repositoryManager.HotelFacilityRepository.GetAll(trackChanges: true).AsQueryable()
+      return await _repositoryManager.HotelFacilityRepository.GetAll(trackChanges).AsQueryable()
                                   .ProjectTo<HotelFacilityDto>(_mapper.ConfigurationProvider)
                                   .ToListAsync();
     }
 
-    public async Task<HotelFacilityDto> GetByIdAsync(Guid id)
+    public async Task<HotelFacilityDto> GetByIdAsync(Guid id, bool trackChanges)
     {
       //var hotelFacility = await _repositoryHotelFacility.FindOneAsync(x => x.Id == id);
-      var hotelFacility = await _repositoryManager.HotelFacilityRepository.GetOneAsync(x => x.Id == id);
+      var hotelFacility = await _repositoryManager.HotelFacilityRepository.GetOneAsync(x => x.Id == id, trackChanges);
       return _mapper.Map<HotelFacilityDto>(hotelFacility);
     }
 
@@ -66,11 +59,15 @@ namespace Application.BussinessLogic.HotelFacility
       var existingHotelFacility = await _repositoryManager.HotelFacilityRepository.GetOneAsync(x => x.Id == dto.Id);
       _mapper.Map(dto, existingHotelFacility);
 
-      //_repositoryHotelFacility.Update(existingHotelFacility);
-      //await _repositoryHotelFacility.SaveAsync();
-
       _repositoryManager.HotelFacilityRepository.UpdateEntity(existingHotelFacility);
       await _repositoryManager.SaveAsync();
+    }
+
+    public List<HotelFacilityDto> GetByCondition(Expression<Func<HotelFacilityEntity, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.HotelFacilityRepository.GetByCondition(expression, trackChanges).AsQueryable()
+                                   .ProjectTo<HotelFacilityDto>(_mapper.ConfigurationProvider)
+                                   .ToList();
     }
   }
 }

@@ -1,10 +1,6 @@
-﻿using Application.BussinessLogic.GeneralMethods;
-using Application.DTO.Hotel;
-using Application.DTO.Room;
-using Application.DTO.RoomType;
+﻿using Application.DTO.RoomType;
 using Application.Interfaces.Repository;
 using AutoMapper;
-using Domain.Models;
 using System.Linq.Expressions;
 using RoomTypeEntity = Domain.Models.RoomType;
 

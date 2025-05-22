@@ -1,18 +1,15 @@
 ﻿using Application.DTO.Food;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Application.BussinessLogic.Food
 {
   public interface IFoodBussinessLogic
   {
-    Task<List<FoodDto>> GetAllAsync();
-    Task<FoodDto> GetByIdAsync(Guid id);
+    Task<List<FoodDto>> GetAllAsync(bool trackChanges);
+    Task<FoodDto> GetByIdAsync(Guid id, bool trackChanges);
     Task<Guid> CreateAsync(FoodCreateWithIdDto dto);
     Task DeleteAsync(Guid foodId);
     Task UpdateAsync(FoodDto dto);
+    List<FoodDto> GetByCondition(Expression<Func<Domain.Models.Food, bool>> expression, bool trackChanges);
   }
 }

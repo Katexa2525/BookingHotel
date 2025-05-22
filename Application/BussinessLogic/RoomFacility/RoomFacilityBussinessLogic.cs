@@ -1,9 +1,11 @@
-﻿using Application.DTO.Hotel;
+﻿using Application.DTO.Booking;
+using Application.DTO.Hotel;
 using Application.DTO.RoomFacility;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using RoomFacilityEntity = Domain.Models.RoomFacility;
 
 namespace Application.BussinessLogic.RoomFacility
@@ -21,9 +23,6 @@ namespace Application.BussinessLogic.RoomFacility
 
     public async Task<List<RoomFacilityDto>> GetAllAsync(bool trackChanges)
     {
-      //var listDB = await _repositoryManager.RoomFacilityRepository.GetAll(trackChanges).AsQueryable()
-      //                                      .ProjectTo<RoomFacilityDto>(_mapper.ConfigurationProvider)
-      //                                      .ToListAsync();
       var listDB = _mapper.Map<List<RoomFacilityDto>>(await _repositoryManager.RoomFacilityRepository.GetAllAsync(trackChanges));
       return listDB.ToList();
     }
@@ -58,6 +57,13 @@ namespace Application.BussinessLogic.RoomFacility
 
       _repositoryManager.RoomFacilityRepository.UpdateEntity(existingroomFacility);
       await _repositoryManager.SaveAsync();
+    }
+
+    public List<RoomFacilityDto> GetByCondition(Expression<Func<RoomFacilityEntity, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.RoomFacilityRepository.GetByCondition(expression, trackChanges).AsQueryable()
+                                   .ProjectTo<RoomFacilityDto>(_mapper.ConfigurationProvider)
+                                   .ToList();
     }
   }
 }
