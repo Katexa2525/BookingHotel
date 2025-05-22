@@ -1,5 +1,4 @@
-﻿using Application.BussinessLogic.GeneralMethods;
-using Application.DTO.Room;
+﻿using Application.DTO.Room;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -12,29 +11,26 @@ namespace Application.BussinessLogic.Room
 {
   public class RoomBussinessLogic : IRoomBussinessLogic
   {
-    private readonly IGeneralBussinessLogic _generalBussinessLogic;
     private readonly IMapper _mapper;
     private readonly IRepositoryManager _repositoryManager;
 
-    public RoomBussinessLogic(IGeneralBussinessLogic generalBussinessLogic, IMapper mapper,
-                              IRepositoryManager repositoryManager)
+    public RoomBussinessLogic(IMapper mapper, IRepositoryManager repositoryManager)
                                               
     {
-      _generalBussinessLogic = generalBussinessLogic;
       _mapper = mapper;
       _repositoryManager = repositoryManager;
     }
 
-    public async Task<List<RoomAllDto>> GetAllAsync()
+    public async Task<List<RoomAllDto>> GetAllAsync(bool trackChanges)
     {
-      return await _repositoryManager.RoomRepository.GetAll(trackChanges: true).AsQueryable()
+      return await _repositoryManager.RoomRepository.GetAll(trackChanges).AsQueryable()
                                   .ProjectTo<RoomAllDto>(_mapper.ConfigurationProvider)
                                   .ToListAsync();
     }
 
-    public async Task<RoomDto> GetByIdAsync(Guid id)
+    public async Task<RoomDto> GetByIdAsync(Guid id, bool trackChanges)
     {
-      var entityDto = await _repositoryManager.RoomRepository.GetByCondition(x => x.Id == id, trackChanges: true)
+      var entityDto = await _repositoryManager.RoomRepository.GetByCondition(x => x.Id == id, trackChanges)
                            .AsQueryable().ProjectTo<RoomDto>(_mapper.ConfigurationProvider).FirstAsync();
 
       return entityDto;
@@ -42,7 +38,7 @@ namespace Application.BussinessLogic.Room
 
     public List<RoomDto> GetByCondition(Expression<Func<Domain.Models.Room, bool>> expression, bool trackChanges)
     {
-      return _repositoryManager.RoomRepository.GetByCondition(expression, trackChanges: true).AsQueryable()
+      return _repositoryManager.RoomRepository.GetByCondition(expression, trackChanges).AsQueryable()
                                   .ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
                                   .ToList();
     }

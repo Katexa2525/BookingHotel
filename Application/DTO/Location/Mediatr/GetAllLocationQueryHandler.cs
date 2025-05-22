@@ -13,7 +13,7 @@ namespace Application.DTO.Location.Mediatr
     }
     public async Task<List<LocationDto>> Handle(GetAllLocationQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetAllAsync();
+      return await _bussinessLogic.GetAllAsync(trackChanges: true);
     }
   }
 }

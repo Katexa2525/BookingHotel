@@ -1,4 +1,5 @@
 ﻿using Application.DTO.Booking;
+using System.Linq.Expressions;
 
 namespace Application.BussinessLogic.Booking
 {
@@ -9,5 +10,6 @@ namespace Application.BussinessLogic.Booking
     Task DeleteAsync(Guid id);
     Task<BookingDto> GetByIdAsync(Guid id, bool trackChanges);
     Task UpdateAsync(BookingUpdateDto dto);
+    List<BookingDto> GetByCondition(Expression<Func<Domain.Models.Booking, bool>> expression, bool trackChanges);
   }
 }

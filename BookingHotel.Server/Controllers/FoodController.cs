@@ -18,9 +18,17 @@ namespace BookingHotel.Server.Controllers
 
     [HttpGet]
     [ProducesResponseType(typeof(List<FoodDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<List<FoodDto>>> GetAll()
     {
       var result = await _mediator.Send(new GetAllFoodQuery() { });
+      return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(FoodDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<FoodDto>> GetById([FromRoute] Guid id)
+    {
+      var result = await _mediator.Send(new GetByIdFoodQuery() { Id = id });
       return Ok(result);
     }
 
@@ -48,12 +56,5 @@ namespace BookingHotel.Server.Controllers
       return NoContent();
     }
 
-    [HttpGet("{id}")]
-    [ProducesResponseType(typeof(FoodDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
-    {
-      var result = await _mediator.Send(new GetByIdFoodQuery() { Id = id });
-      return Ok(result);
-    }
   }
 }

@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces.Repository;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repository

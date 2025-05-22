@@ -1,20 +1,19 @@
-﻿using Application.BussinessLogic.GeneralMethods;
-using Application.DTO.Booking;
+﻿using Application.DTO.Booking;
 using Application.Interfaces.Repository;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using System.Linq.Expressions;
 using BookingEntity = Domain.Models.Booking;
 
 namespace Application.BussinessLogic.Booking
 {
   public class BookingBussinessLogic : IBookingBussinessLogic
   {
-    private readonly IGeneralBussinessLogic _generalBussinessLogic;
     private readonly IRepositoryManager _repositoryManager;
     private readonly IMapper _mapper;
 
-    public BookingBussinessLogic(IGeneralBussinessLogic generalBussinessLogic, IRepositoryManager repositoryManager, IMapper mapper)
+    public BookingBussinessLogic(IRepositoryManager repositoryManager, IMapper mapper)
     {
-      _generalBussinessLogic = generalBussinessLogic;
       _repositoryManager = repositoryManager;
       _mapper = mapper;
     }
@@ -94,6 +93,13 @@ namespace Application.BussinessLogic.Booking
       //      serv => serv.Id,
       //      dto => dto.Id
       //      );
+    }
+
+    public List<BookingDto> GetByCondition(Expression<Func<BookingEntity, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.BookingRepository.GetByCondition(expression, trackChanges).AsQueryable()
+                                   .ProjectTo<BookingDto>(_mapper.ConfigurationProvider)
+                                   .ToList();
     }
   }
 }

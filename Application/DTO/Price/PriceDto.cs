@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Application.DTO.Room;
+using Domain.Models;
 
 namespace Application.DTO.Price
 {
@@ -14,5 +15,6 @@ namespace Application.DTO.Price
     /// <summary> Цена за день или ночь </summary>
     public double DayPrice { get; set; }
     public Currency? Currency { get; set; }
+    public RoomDto Room { get; set; }
   }
 }

@@ -13,7 +13,7 @@ namespace Application.DTO.Food.Mediatr
     }
     public async Task<FoodDto> Handle(GetByIdFoodQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetByIdAsync(request.Id);
+      return await _bussinessLogic.GetByIdAsync(request.Id, trackChanges: true);
     }
   }
 }

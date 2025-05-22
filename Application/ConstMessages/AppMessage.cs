@@ -31,5 +31,21 @@
     public static readonly string ValidatorBookingArrivalDateMessage = "Введите дату начала бронирования";
     public static readonly string ValidatorBookingDepartureDateMessage = "Введите дату окончания бронирования";
     public static readonly string GetBookingByIdTextErrorMessage = "Бронирование не может быть найдено.";
+
+    public static readonly string GetFoodByIdTextErrorMessage = "Питание не может быть найдено.";
+    public static readonly string ValidatorFoodNameMessage = "Введите наименование питания";
+    public static readonly string ValidatorTypeFoodNameMessage = "Введите тип питания";
+    public static readonly string ValidatorHotelFoodNameMessage = "Введите отель питания";
+
+    public static readonly string ValidatorGuestNameMessage = "Введите имя гостя";
+    public static readonly string ValidatorGuestLastNameMessage = "Введите фамилию гостя";
+    public static readonly string ValidatorGuestBookingIdMessage = "Введите документ бронирования гостя";
+
+    public static readonly string ValidatorPriceRoomIdMessage = "Введите номера отеля для цены";
+    public static readonly string ValidatorPriceCurrencyIdMessage = "Введите валюту для цены";
+    public static readonly string ValidatorPriceDateStartMessage = "Введите дату начала";
+    public static readonly string ValidatorPriceDateEndMessage = "Введите дату окончания";
+    public static readonly string ValidatorPriceDayPriceMessage = "Введите значение цены";
+
   }
 }

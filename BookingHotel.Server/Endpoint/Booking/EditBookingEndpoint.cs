@@ -23,7 +23,7 @@ namespace BookingHotel.Server.Endpoint.Booking
     [HttpPut(EditBookingRequest.RouteTemplate)]
     public override async Task<ActionResult<bool>> HandleAsync(EditBookingRequest request, CancellationToken cancellationToken = default)
     {
-      // получаю отель из БД
+      // получаю бронирование из БД
       var booking = await _mediator.Send(new GetByIdBookingQuery() { Id = request.booking.Id });
       if (booking is null)
       {
@@ -32,7 +32,7 @@ namespace BookingHotel.Server.Endpoint.Booking
 
       //booking = request.booking;
 
-      // обновляю модель отеля данными из запроса
+      // обновляю модель данными из запроса
       booking.Name = request.booking.Name;
       booking.Description = request.booking.Description;
       booking.DepartureDate = request.booking.DepartureDate;
