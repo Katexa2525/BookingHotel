@@ -1,11 +1,16 @@
 ﻿@inject NavigationManager NavManager
 
+@using Application.DTO.HotelFacility
+@using Application.DTO.HotelFacility.ClientRequest
 @using Application.Enums
+@using BookingHotel.Features.ManageHotelFacility.Facility
 @using BookingHotel.Validation
+
+@inject IMediator Mediator
 
 <!--Компонент EditForm используется для определения формы Blazor. Как минимум должны быть определены модель и действие отправки -->
 <!--<EditForm Model="_hotel" OnValidSubmit="SubmitForm">-->
-<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm" >
   <FluentValidationValidator />
 
   <div class="card card-brand mb-4 shadow">
@@ -18,14 +23,14 @@
             {
               <img src="images/NoImage.png" class="card-img-top" />
               <InputFile OnChange="LoadHotelImage" class="form-control-file mt-1"
-                         id="hotelImage" accept=".png,.jpg,.jpeg" />
+              id="hotelImage" accept=".png,.jpg,.jpeg" />
             }
             else
             {
               <div class="card bg-dark text-white">
                 <img src="images/@_hotel.MainPhoto" class="card-img-top" />
                 <div class="card-img-overlay">
-                  <button class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
+                  <button type="button" class="btn btn-primary btn-sm" @onclick="RemoveHotelImage">
                     Удалить
                   </button>
                 </div>
@@ -34,15 +39,15 @@
           </div>
 
           <div class="mt-5 mb-5">
-            <button @onclick="ShowRooms">
+            <button type="button" @onclick="ShowRooms">
               <img src="images/room.png" alt="Комнаты" width="50" height="50">
             </button>
 
-            <button @onclick="ShowFacilities">
+            <button type="button" @onclick="ShowFacilities">
               <img src="images/Facility.png" alt="Удобства" width="50" height="50">
             </button>
 
-            <button @onclick="ShowPhoto">
+            <button type="button" @onclick="ShowPhoto">
               <img src="images/camera.png" alt="Фото" width="50" height="50">
             </button>
           </div>
@@ -118,6 +123,9 @@
     </div>
   </div>
 
+  <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
+  OnCloseModal="CloseModalFacilityHandlerAsync" />
+
 </EditForm>
 
 
@@ -125,6 +133,7 @@
   private EditContext _editContext = default!;
   private HotelDto _hotel = new HotelDto();
   private IBrowserFile? _hotelImage;
+  private bool isModalHotelFacilityOpen = false;
 
   private void SetHotelStar(int star)
   {
@@ -229,6 +238,14 @@
 
   private void ShowFacilities(MouseEventArgs args)
   {
-    NavManager.NavigateTo($"/hotels/{Hotel.Id}/facilities");
+    //NavManager.NavigateTo($"/hotels/{Hotel.Id}/facilities");
+    isModalHotelFacilityOpen = true;
+
+  }
+
+  private async Task CloseModalFacilityHandlerAsync()
+  {
+    // чтобы модальное окно закрылось
+    isModalHotelFacilityOpen = false;
   }
 }

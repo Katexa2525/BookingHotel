@@ -13,7 +13,7 @@ namespace Application.DTO.HotelFacility.Mediatr
     }
     public async Task<HotelFacilityDto> Handle(GetByIdHotelFacilityQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetByIdAsync(request.Id, trackChanges: true);
+      return await _bussinessLogic.GetByIdAsync(request.Id, trackChanges: false);
     }
   }
 }
