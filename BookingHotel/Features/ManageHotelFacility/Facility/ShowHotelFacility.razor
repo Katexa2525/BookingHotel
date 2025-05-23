@@ -85,13 +85,13 @@
 
 <style>
   .custom-btn {
-    padding: 2px 4px; /* Минимальные отступы */
-    font-size: 12px; /* Уменьшенный размер текста */
-    width: 45px; /* Фиксированная ширина */
-    height: 45px; /* Фиксированная высота */
-    /* display: flex; */
-    align-items: center;
-    justify-content: center;
+  padding: 2px 4px; /* Минимальные отступы */
+  font-size: 12px; /* Уменьшенный размер текста */
+  width: 45px; /* Фиксированная ширина */
+  height: 45px; /* Фиксированная высота */
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
   }
 </style>
 
@@ -172,10 +172,27 @@
               StateHasChanged();
               return;
             }
-            //StateHasChanged();
+          }
+          // проверяю на изменение данных
+          else
+          {
+            if (HotelFacilities is not null && HotelFacilities.Any())
+            {
+              var itemEq = HotelFacilities.First(p => p.Id.Equals(item.Id));
+              // если по Id названия не совпадают, т.е. корректировка была
+              if (!item.Name.Equals(itemEq.Name))
+              {
+                // обновляю
+                var response = await Mediator.Send(new EditHotelFacilityRequest(Mapper.Map<HotelFacilityDto>(item)));
+                if (!response.IsSuccess)
+                {
+                  _submitSuccessful = false;
+                  _errorMessage = AppMessage.HotelFacilityPageSaveTextErrorMessage;
+                }
+              }
+            }
           }
         }
-        //CloseModal();
       }
       _submitSuccessful = true;
       // удаление записей

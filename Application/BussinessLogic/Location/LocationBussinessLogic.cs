@@ -28,7 +28,6 @@ namespace Application.BussinessLogic.Location
 
     public async Task<LocationDto> GetByIdAsync(Guid id, bool trackChanges)
     {
-      //var food = await _repositoryLocation.FindOneAsync(x => x.Id == id);
       var food = await _repositoryManager.LocationRepository.GetOneAsync(x => x.Id == id, trackChanges);
       return _mapper.Map<LocationDto>(food);
     }
@@ -37,8 +36,9 @@ namespace Application.BussinessLogic.Location
     {
       var entity = _mapper.Map<LocationEntity>(dto);
       entity.Id = Guid.NewGuid();
-      //await _repositoryLocation.CreateAsync(entity);
+
       await _repositoryManager.LocationRepository.CreateEntityAsync(entity);
+      await _repositoryManager.SaveAsync();
       return entity.Id;
     }
 
@@ -51,7 +51,6 @@ namespace Application.BussinessLogic.Location
 
     public async Task UpdateAsync(LocationDto dto)
     {
-      //var existingLocation = await _repositoryLocation.FindOneAsync(x => x.Id == dto.Id);
       var existingLocation = await _repositoryManager.LocationRepository.GetOneAsync(x => x.Id == dto.Id);
       _mapper.Map(dto, existingLocation);
 

@@ -50,6 +50,7 @@
     public static readonly string ValidatorHotelFacilityNameMessage = "Введите наименование удобства отеля";
     public static readonly string HotelFacilityPageLoadTextErrorMessage = "Возникла проблема при загрузке удобства отеля!";
     public static readonly string HotelFacilityPageSaveTextErrorMessage = "Возникла проблема с сохранением удобств отеля!";
+    public static readonly string GetHotelFacilityByIdTextErrorMessage = "Запись по удобству отеля не может быть найдена.";
 
   }
 }
