@@ -1,4 +1,4 @@
-﻿<div class="alert alert-danger" role="alert">
+﻿<div class="alert alert-danger fade-out" role="alert" id="alert_message">
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
     <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 
                                  0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0
@@ -7,6 +7,27 @@
   </svg>
   @Message
 </div>
+
+<style>
+  .fade-out {
+    opacity: 1;
+    transition: opacity 2s ease-out;
+  }
+
+  .hidden {
+    opacity: 0;
+  }
+</style>
+
+@* Сообщение исчезнет через 5 секунд. *@
+<script>
+  setTimeout(function () {
+      var messageElement = document.getElementById('success_message');
+        if (messageElement) {
+            messageElement.classList.add('hidden');
+        }
+  }, 5000);
+</script>
 
 @code {
   /// <summary> Параметр,позволяющий компоненту-потребителю предоставить нужное сообщение по своему выбору </summary>

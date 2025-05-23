@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Features\Home\Shared\" />
+    <Folder Include="Features\ManageHotelFacility\Shared\" />
   </ItemGroup>
 
 </Project>

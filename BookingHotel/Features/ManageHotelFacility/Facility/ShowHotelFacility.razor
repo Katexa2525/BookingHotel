@@ -6,10 +6,6 @@
 
 @using System.Collections.Generic
 
-<h3>Грид в модальном окне</h3>
-
-<button @onclick="ShowModal">Открыть модальное окно</button>
-
 @if (IsModalOpen)
 {
   <div class="modal show d-block" tabindex="-1">
@@ -19,23 +15,10 @@
           <h5 class="modal-title">Удобства и услуги отеля</h5>
           <button type="button" class="btn-close" @onclick="CloseModal"></button>
         </div>
-        <div class="modal-body">
-          @if (_submitSuccessful)
-          {
-            <SuccessAlert Message="Отель был успешно создан!" />
-          }
-          else if (_errorMessage is not null)
-          {
-            <ErrorAlert Message="@_errorMessage" />
-          }
+        <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
           <table class="table">
-            @*             <thead>
-              <tr>
-                <th>Значение</th>
-              </tr>
-            </thead> *@
             <tbody>
-              @foreach (var item in HotelFacilities)
+              @foreach (var item in _hotelFacilities)
               {
                 <tr>
                   <td>
@@ -44,36 +27,57 @@
                     </FormFieldSet>
                   </td>
                   <td>
-                    <button type="button" class="btn btn-outline-danger custom-btn" title="Удалить"
-                    @onclick="() => DeleteRow(item)">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-dash" viewBox="0 0 16 16">
-                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1" />
-                        <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
-                        <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
-                      </svg>
-                    </button>
+                    <AuthorizeView>
+                      @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
+                      {
+                        <button type="button" class="btn btn-outline-danger custom-btn" title="Удалить"
+                        @onclick="() => DeleteRow(item)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-dash" viewBox="0 0 16 16">
+                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1" />
+                            <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
+                            <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
+                          </svg>
+                        </button>
+                      }
+                    </AuthorizeView>
                   </td>
                 </tr>
               }
             </tbody>
           </table>
-          <div class="row-cols-2">
-            <button type="button" class="btn btn-outline-success custom-btn" title="Добавить" @onclick="AddRow">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-add" viewBox="0 0 16 16">
-                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0" />
-                <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
-                <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
-              </svg>
-            </button>
-
-            <button class="btn btn-outline-primary custom-btn" type="button" title="Сохранить" @onclick="SaveFacilities">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-save" viewBox="0 0 16 16">
-                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z" />
-              </svg>
-              @* Сохранить *@
-            </button>
-          </div>
         </div>
+        <AuthorizeView>
+          @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
+          {
+            <div class="modal-footer row">
+              <div class="row-cols-2">
+                <button type="button" class="btn btn-outline-success custom-btn" title="Добавить" @onclick="AddRow">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-add" viewBox="0 0 16 16">
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0" />
+                    <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
+                    <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
+                  </svg>
+                </button>
+                <button class="btn btn-outline-primary  custom-btn" type="button" title="Сохранить" @onclick="SaveFacilities">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-save" viewBox="0 0 16 16">
+                    <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1z" />
+                  </svg>
+                  @* Сохранить *@
+                </button>
+              </div>
+              <div class="row">
+                @if (_submitSuccessful)
+                {
+                  <SuccessAlert Message="Данные по удобствам отеля сохранены!" />
+                }
+                else if (_errorMessage is not null)
+                {
+                  <ErrorAlert Message="@_errorMessage" />
+                }
+              </div>
+            </div>
+          }
+        </AuthorizeView>
       </div>
     </div>
   </div>
@@ -81,18 +85,18 @@
 
 <style>
   .custom-btn {
-  padding: 2px 4px; /* Минимальные отступы */
-  font-size: 12px; /* Уменьшенный размер текста */
-  width: 45px; /* Фиксированная ширина */
-  height: 45px; /* Фиксированная высота */
-  /* display: flex; */
-  align-items: center;
-  justify-content: center;
+    padding: 2px 4px; /* Минимальные отступы */
+    font-size: 12px; /* Уменьшенный размер текста */
+    width: 45px; /* Фиксированная ширина */
+    height: 45px; /* Фиксированная высота */
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
   }
 </style>
 
 @code {
-  private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
+  private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private List<HotelFacilityDto>? _hotelFacilities = new List<HotelFacilityDto>();
   private HotelFacilityDto _facility;
@@ -105,27 +109,40 @@
   [Parameter, EditorRequired]
   public List<HotelFacilityDto>? HotelFacilities { get; set; } = default!;
 
-  protected override void OnParametersSet()
+  /// <summary>Событие, что окно формы закрыто и надо обработать это событие в родительской форме </summary>
+  [Parameter, EditorRequired]
+  public EventCallback OnCloseModal { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    _submitSuccessful = false;
+  }
+
+  protected override async Task OnParametersSetAsync()
   {
     _hotelFacilities = HotelFacilities;
+    // обновляю данные по Facility по данному отелю
+    var response = await Mediator.Send(new GetHotelFacilitiesRequest(HotelId));
+    if (response is not null && response.HotelFacilities is not null && response.HotelFacilities.Any())
+    {
+      _hotelFacilities = response.HotelFacilities;
+    }
   }
 
   [Parameter]
   public bool IsModalOpen { get; set; } = false;
 
-  private void ShowModal()
-  {
-    IsModalOpen = true;
-  }
-
   private void CloseModal()
   {
+    _submitSuccessful = false;
     IsModalOpen = false;
+    // оповещаю родительскую форму
+    OnCloseModal.InvokeAsync();
   }
 
   private void AddRow()
   {
-    HotelFacilities.Add(new HotelFacilityDto { HotelId = this.HotelId });
+    _hotelFacilities.Add(new HotelFacilityDto { HotelId = this.HotelId });
   }
 
   private void DeleteRow(HotelFacilityDto item)
@@ -158,15 +175,20 @@
             //StateHasChanged();
           }
         }
-        CloseModal();
+        //CloseModal();
       }
+      _submitSuccessful = true;
       // удаление записей
       if (_hotelFacilitiesDel is not null && _hotelFacilitiesDel.Any())
       {
-        
+        foreach (HotelFacilityDto item in _hotelFacilitiesDel)
+        {
+          var response = await Mediator.Send(new DeleteHotelFacilityRequest(item.Id));
+          _submitSuccessful = response.IsSuccess;
+        }
       }
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
       Console.WriteLine($"Ошибка: {ex.StackTrace}");
     }
