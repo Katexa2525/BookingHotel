@@ -1,5 +1,4 @@
-﻿@* @page "/hotels/{HotelId:guid}/facilities" *@
-
+﻿
 @inject NavigationManager NavManager
 @inject IMediator Mediator
 @inject IMapper Mapper
@@ -18,7 +17,7 @@
         <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
           <table class="table">
             <tbody>
-              @foreach (var item in _hotelFacilities)
+              @foreach (var item in _roomFacilities)
               {
                 <tr>
                   <td>
@@ -67,7 +66,7 @@
               <div class="row">
                 @if (_submitSuccessful)
                 {
-                  <SuccessAlert Message="Данные по удобствам отеля сохранены!" />
+                  <SuccessAlert Message="Данные по удобствам номера отеля сохранены!" />
                 }
                 else if (_errorMessage is not null)
                 {
@@ -97,16 +96,16 @@
 @code {
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private List<HotelFacilityDto>? _hotelFacilities = new List<HotelFacilityDto>();
-  private HotelFacilityDto _facility;
+  private List<RoomFacilityDto>? _roomFacilities = new List<RoomFacilityDto>();
+  private RoomFacilityDto _facility;
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
-  private List<HotelFacilityDto>? _hotelFacilitiesDel = new List<HotelFacilityDto>();
+  private List<RoomFacilityDto>? _roomFacilitiesDel = new List<RoomFacilityDto>();
 
   [Parameter, EditorRequired]
-  public Guid HotelId { get; set; } = default!;
+  public Guid RoomId { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public List<HotelFacilityDto>? HotelFacilities { get; set; } = default!;
+  public List<RoomFacilityDto>? RoomFacilities { get; set; } = default!;
 
   /// <summary>Событие, что окно формы закрыто и надо обработать это событие в родительской форме </summary>
   [Parameter, EditorRequired]
@@ -125,12 +124,12 @@
 
   protected override async Task OnParametersSetAsync()
   {
-    _hotelFacilities = HotelFacilities;
+    _roomFacilities = RoomFacilities;
     // обновляю данные по Facility по данному отелю
-    var response = await Mediator.Send(new GetHotelFacilitiesRequest(HotelId));
+    var response = await Mediator.Send(new GetRoomFacilitiesRequest(RoomId));
     if (response is not null && response.HotelFacilities is not null && response.HotelFacilities.Any())
     {
-      _hotelFacilities = response.HotelFacilities;
+      _roomFacilities = response.HotelFacilities;
     }
   }
 
@@ -144,13 +143,13 @@
 
   private void AddRow()
   {
-    _hotelFacilities.Add(new HotelFacilityDto { HotelId = this.HotelId });
+    _roomFacilities.Add(new RoomFacilityDto { RoomId = this.RoomId });
   }
 
-  private void DeleteRow(HotelFacilityDto item)
+  private void DeleteRow(RoomFacilityDto item)
   {
-    _hotelFacilitiesDel.Add(item);
-    _hotelFacilities.Remove(item);
+    _roomFacilitiesDel.Add(item);
+    _roomFacilities.Remove(item);
   }
 
   private async Task Save(MouseEventArgs args)
@@ -158,14 +157,14 @@
     try
     {
       // добавление записей
-      if (_hotelFacilities is not null && _hotelFacilities.Any())
+      if (_roomFacilities is not null && _roomFacilities.Any())
       {
-        foreach (HotelFacilityDto item in _hotelFacilities)
+        foreach (RoomFacilityDto item in _roomFacilities)
         {
           if (item.Id == Guid.Empty)
           {
-            var response = await Mediator.Send(new AddHotelFacilityRequest(Mapper.Map<HotelFacilityCreateWithIdDto>(item)));
-            if (response.hotelFacilityId == Guid.Empty)
+            var response = await Mediator.Send(new AddRoomFacilityRequest(Mapper.Map<RoomFacilityCreateWithIdDto>(item)));
+            if (response.roomFacilityId == Guid.Empty)
             {
               _submitSuccessful = false;
               _errorMessage = AppMessage.HotelFacilityPageSaveTextErrorMessage;
@@ -178,18 +177,18 @@
           // проверяю на изменение данных
           else
           {
-            if (HotelFacilities is not null && HotelFacilities.Any())
+            if (RoomFacilities is not null && RoomFacilities.Any())
             {
-              var itemEq = HotelFacilities.First(p => p.Id.Equals(item.Id));
+              var itemEq = RoomFacilities.First(p => p.Id.Equals(item.Id));
               // если по Id названия не совпадают, т.е. корректировка была
               if (!item.Name.Equals(itemEq.Name))
               {
                 // обновляю
-                var response = await Mediator.Send(new EditHotelFacilityRequest(Mapper.Map<HotelFacilityDto>(item)));
+                var response = await Mediator.Send(new EditRoomFacilityRequest(Mapper.Map<RoomFacilityDto>(item)));
                 if (!response.IsSuccess)
                 {
                   _submitSuccessful = false;
-                  _errorMessage = AppMessage.HotelFacilityPageSaveTextErrorMessage;
+                  _errorMessage = AppMessage.RoomFacilityPageSaveTextErrorMessage;
                 }
               }
             }
@@ -198,11 +197,11 @@
       }
       _submitSuccessful = true;
       // удаление записей
-      if (_hotelFacilitiesDel is not null && _hotelFacilitiesDel.Any())
+      if (_roomFacilitiesDel is not null && _roomFacilitiesDel.Any())
       {
-        foreach (HotelFacilityDto item in _hotelFacilitiesDel)
+        foreach (RoomFacilityDto item in _roomFacilitiesDel)
         {
-          var response = await Mediator.Send(new DeleteHotelFacilityRequest(item.Id));
+          var response = await Mediator.Send(new DeleteRoomFacilityRequest(item.Id));
           _submitSuccessful = response.IsSuccess;
         }
       }

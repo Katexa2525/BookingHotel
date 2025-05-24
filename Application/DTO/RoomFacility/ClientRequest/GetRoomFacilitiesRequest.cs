@@ -2,10 +2,10 @@
 
 namespace Application.DTO.RoomFacility.ClientRequest
 {
-  public record GetRoomFacilitiesRequest : IRequest<GetRoomFacilitiesRequest.Response>
+  public record GetRoomFacilitiesRequest(Guid roomId) : IRequest<GetRoomFacilitiesRequest.Response>
   {
-    public const string RouteTemplate = "api/roomFacility";
+    public const string RouteTemplate = "api/rooms/{roomId}/facilities";
 
-    public record Response(List<RoomFacilityDto>? Facilities);
+    public record Response(List<RoomFacilityDto>? HotelFacilities);
   }
 }

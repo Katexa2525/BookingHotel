@@ -38,7 +38,9 @@ namespace Application.BussinessLogic.RoomFacility
     {
       var entity = _mapper.Map<RoomFacilityEntity>(dto);
       entity.Id = Guid.NewGuid();
+
       await _repositoryManager.RoomFacilityRepository.CreateEntityAsync(entity);
+      await _repositoryManager.SaveAsync();
       return entity.Id;
     }
 

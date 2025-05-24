@@ -1,35 +1,34 @@
-﻿using Application.DTO.RoomFacility;
-using Application.DTO.RoomFacility.ClientRequest;
+﻿using Application.DTO.Location;
+using Application.DTO.Location.ClientRequest;
 using MediatR;
 using System.Net.Http.Json;
 
-namespace BookingHotel.Features.ManageRoomFacility.Facility
+namespace BookingHotel.Features.ManageLocation.Location
 {
-  public class GetRoomFacilitiesHandler : IRequestHandler<GetRoomFacilitiesRequest, GetRoomFacilitiesRequest.Response?>
+  public class GetLocationsHandler : IRequestHandler<GetLocationsRequest, GetLocationsRequest.Response?>
   {
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public GetRoomFacilitiesHandler(IHttpClientFactory httpClientFactory)
+    public GetLocationsHandler(IHttpClientFactory httpClientFactory)
     {
       _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<GetRoomFacilitiesRequest.Response?> Handle(GetRoomFacilitiesRequest request, CancellationToken cancellationToken)
+    public async Task<GetLocationsRequest.Response?> Handle(GetLocationsRequest request, CancellationToken cancellationToken)
     {
       try
       {
         HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
 
         //Заполнитель hotelId в RouteTemplate заменяется идентификатором отеля, подлежащему редактированию, перед выполнением HTTP-запроса
-        string route = GetRoomFacilitiesRequest.RouteTemplate.Replace("{roomId}", request.roomId.ToString());
+        string route = GetLocationsRequest.RouteTemplate.Replace("{hotelId}", request.hotelId.ToString());
 
         // Выполняется запрос к API. В случае успеха ответ десериализуется и возвращается вызывающей стороне
-        var allFacilities = await httpClient.GetFromJsonAsync<List<RoomFacilityDto>>(route, cancellationToken);
-        if (allFacilities == null)
-          return new GetRoomFacilitiesRequest.Response(new List<RoomFacilityDto>());
+        var allLocations = await httpClient.GetFromJsonAsync<List<LocationDto>>(route, cancellationToken);
+        if (allLocations == null)
+          return new GetLocationsRequest.Response(new List<LocationDto>());
         else
-          return new GetRoomFacilitiesRequest.Response(allFacilities);
-
+          return new GetLocationsRequest.Response(allLocations);
       }
       catch (HttpRequestException)
       {

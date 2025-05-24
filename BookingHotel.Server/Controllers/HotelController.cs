@@ -2,6 +2,8 @@
 using Application.DTO.Hotel.CQRS;
 using Application.DTO.HotelFacility;
 using Application.DTO.HotelFacility.CQRS;
+using Application.DTO.Location;
+using Application.DTO.Location.CQRS;
 using Application.DTO.Room;
 using Application.DTO.Room.CQRS;
 using MediatR;
@@ -28,15 +30,6 @@ namespace BookingHotel.Server.Controllers
       return Ok(result);
     }
 
-    [HttpPost]
-    //[Route("create")]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
-    public async Task<IActionResult> Create([FromBody] HotelCreateDto dto)
-    {
-      var result = await _mediator.Send(new CreateHotelCommand() { Dto = dto });
-      return Ok(result);
-    }
-
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(HotelDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<HotelDto>> GetById([FromRoute] Guid id)
@@ -60,6 +53,24 @@ namespace BookingHotel.Server.Controllers
     public async Task<ActionResult<List<HotelFacilityDto>>> GetFacilitiesByHotelId([FromRoute] Guid hotelid)
     {
       var result = await _mediator.Send(new GetAllHotelFacilityByHotelIdQuery() { HotelId = hotelid });
+      return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("{hotelid}/locations")]
+    [ProducesResponseType(typeof(List<LocationDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<LocationDto>>> GetLocationsByHotelId([FromRoute] Guid hotelid)
+    {
+      var result = await _mediator.Send(new GetAllLocationsByHotelIdQuery() { HotelId = hotelid });
+      return Ok(result);
+    }
+
+    [HttpPost]
+    //[Route("create")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    public async Task<IActionResult> Create([FromBody] HotelCreateDto dto)
+    {
+      var result = await _mediator.Send(new CreateHotelCommand() { Dto = dto });
       return Ok(result);
     }
 

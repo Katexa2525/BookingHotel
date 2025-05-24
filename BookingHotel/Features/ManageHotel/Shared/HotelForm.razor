@@ -1,16 +1,10 @@
 ﻿@inject NavigationManager NavManager
 
-@using Application.DTO.HotelFacility
-@using Application.DTO.HotelFacility.ClientRequest
-@using Application.Enums
-@using BookingHotel.Features.ManageHotelFacility.Facility
-@using BookingHotel.Validation
-
 @inject IMediator Mediator
 
 <!--Компонент EditForm используется для определения формы Blazor. Как минимум должны быть определены модель и действие отправки -->
 <!--<EditForm Model="_hotel" OnValidSubmit="SubmitForm">-->
-<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm" >
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
   <FluentValidationValidator />
 
   <div class="card card-brand mb-4 shadow">
@@ -23,7 +17,7 @@
             {
               <img src="images/NoImage.png" class="card-img-top" />
               <InputFile OnChange="LoadHotelImage" class="form-control-file mt-1"
-              id="hotelImage" accept=".png,.jpg,.jpeg" />
+                         id="hotelImage" accept=".png,.jpg,.jpeg" />
             }
             else
             {
@@ -131,8 +125,17 @@
     </div>
   </div>
 
-  <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
-  OnCloseModal="CloseModalFacilityHandlerAsync" />
+  @if (!isModalLocationOpen && isModalHotelFacilityOpen)
+  {
+    <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
+                       OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
+  }
+
+  @if (!isModalHotelFacilityOpen && isModalLocationOpen)
+  {
+    <ShowLocation IsModalOpen="@isModalLocationOpen" Locations="@_hotel.Locations?.ToList()" HotelId="@Hotel.Id"
+                  OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
+  }
 
 </EditForm>
 
@@ -142,6 +145,7 @@
   private HotelDto _hotel = new HotelDto();
   private IBrowserFile? _hotelImage;
   private bool isModalHotelFacilityOpen = false;
+  private bool isModalLocationOpen = false;
 
   private void SetHotelStar(int star)
   {
@@ -251,19 +255,25 @@
 
   }
 
+  private void ShowLocation(MouseEventArgs args)
+  {
+    //NavManager.NavigateTo($"/hotels/{Hotel.Id}/location");
+    isModalLocationOpen = true;
+  }
+
+  private void ShowFood(MouseEventArgs args)
+  {
+    NavManager.NavigateTo($"/hotels/{Hotel.Id}/food");
+  }
+
   private async Task CloseModalFacilityHandlerAsync()
   {
     // чтобы модальное окно закрылось
     isModalHotelFacilityOpen = false;
   }
 
-  private void ShowLocation(MouseEventArgs args)
+  private void CloseModalLocationHandlerAsync()
   {
-    NavManager.NavigateTo($"/hotels/{Hotel.Id}/location");
-  }
-
-  private void ShowFood(MouseEventArgs args)
-  {
-    NavManager.NavigateTo($"/hotels/{Hotel.Id}/food");
+    isModalLocationOpen = false;
   }
 }

@@ -6,6 +6,6 @@ namespace Application.DTO.Location.ClientRequest
   {
     public const string RouteTemplate = "api/hotels/{hotelId}/locations";
 
-    public record Response(List<LocationDto>? HotelFacilities);
+    public record Response(List<LocationDto>? Locations);
   }
 }

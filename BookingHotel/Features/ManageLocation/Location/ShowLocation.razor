@@ -1,10 +1,6 @@
-﻿@* @page "/hotels/{HotelId:guid}/facilities" *@
-
-@inject NavigationManager NavManager
+﻿@inject NavigationManager NavManager
 @inject IMediator Mediator
 @inject IMapper Mapper
-
-@using System.Collections.Generic
 
 @if (IsModalOpen)
 {
@@ -18,20 +14,19 @@
         <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
           <table class="table">
             <tbody>
-              @foreach (var item in _hotelFacilities)
+              @foreach (var item in _locations)
               {
                 <tr>
                   <td>
                     <FormFieldSet Width="col">
-                      <InputText @bind-Value="@item.Name" class="form-control" id="facilityName" />
+                      <InputText @bind-Value="@item.Name" class="form-control" id="locatiopName" />
                     </FormFieldSet>
                   </td>
                   <td>
                     <AuthorizeView>
                       @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
                       {
-                        <button type="button" class="btn btn-outline-danger custom-btn" title="Удалить"
-                        @onclick="() => DeleteRow(item)">
+                        <button type="button" class="btn btn-outline-danger custom-btn" title="Удалить" @onclick="() => DeleteRow(item)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-dash" viewBox="0 0 16 16">
                             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1" />
                             <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
@@ -67,7 +62,7 @@
               <div class="row">
                 @if (_submitSuccessful)
                 {
-                  <SuccessAlert Message="Данные по удобствам отеля сохранены!" />
+                  <SuccessAlert Message="Данные близлежащим локациям отеля сохранены!" />
                 }
                 else if (_errorMessage is not null)
                 {
@@ -97,16 +92,16 @@
 @code {
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private List<HotelFacilityDto>? _hotelFacilities = new List<HotelFacilityDto>();
-  private HotelFacilityDto _facility;
+  private List<LocationDto>? _locations = new List<LocationDto>();
+  private LocationDto _location;
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
-  private List<HotelFacilityDto>? _hotelFacilitiesDel = new List<HotelFacilityDto>();
+  private List<LocationDto>? _locationsDel = new List<LocationDto>();
 
   [Parameter, EditorRequired]
   public Guid HotelId { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public List<HotelFacilityDto>? HotelFacilities { get; set; } = default!;
+  public List<LocationDto>? Locations { get; set; } = default!;
 
   /// <summary>Событие, что окно формы закрыто и надо обработать это событие в родительской форме </summary>
   [Parameter, EditorRequired]
@@ -125,12 +120,12 @@
 
   protected override async Task OnParametersSetAsync()
   {
-    _hotelFacilities = HotelFacilities;
+    _locations = Locations;
     // обновляю данные по Facility по данному отелю
-    var response = await Mediator.Send(new GetHotelFacilitiesRequest(HotelId));
-    if (response is not null && response.HotelFacilities is not null && response.HotelFacilities.Any())
+    var response = await Mediator.Send(new GetLocationsRequest(HotelId));
+    if (response is not null && response.Locations is not null && response.Locations.Any())
     {
-      _hotelFacilities = response.HotelFacilities;
+      _locations = response.Locations;
     }
   }
 
@@ -144,13 +139,13 @@
 
   private void AddRow()
   {
-    _hotelFacilities.Add(new HotelFacilityDto { HotelId = this.HotelId });
+    _locations.Add(new LocationDto { HotelId = this.HotelId });
   }
 
-  private void DeleteRow(HotelFacilityDto item)
+  private void DeleteRow(LocationDto item)
   {
-    _hotelFacilitiesDel.Add(item);
-    _hotelFacilities.Remove(item);
+    _locationsDel.Add(item);
+    _locations.Remove(item);
   }
 
   private async Task Save(MouseEventArgs args)
@@ -158,17 +153,17 @@
     try
     {
       // добавление записей
-      if (_hotelFacilities is not null && _hotelFacilities.Any())
+      if (_locations is not null && _locations.Any())
       {
-        foreach (HotelFacilityDto item in _hotelFacilities)
+        foreach (LocationDto item in _locations)
         {
           if (item.Id == Guid.Empty)
           {
-            var response = await Mediator.Send(new AddHotelFacilityRequest(Mapper.Map<HotelFacilityCreateWithIdDto>(item)));
-            if (response.hotelFacilityId == Guid.Empty)
+            var response = await Mediator.Send(new AddLocationRequest(Mapper.Map<LocationCreateWithIdDto>(item)));
+            if (response.locationId == Guid.Empty)
             {
               _submitSuccessful = false;
-              _errorMessage = AppMessage.HotelFacilityPageSaveTextErrorMessage;
+              _errorMessage = AppMessage.LocationPageSaveTextErrorMessage;
               // Если при сохранении произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить
               // пользовательский интерфейс сообщением об ошибке
               StateHasChanged();
@@ -178,18 +173,18 @@
           // проверяю на изменение данных
           else
           {
-            if (HotelFacilities is not null && HotelFacilities.Any())
+            if (Locations is not null && Locations.Any())
             {
-              var itemEq = HotelFacilities.First(p => p.Id.Equals(item.Id));
+              var itemEq = Locations.First(p => p.Id.Equals(item.Id));
               // если по Id названия не совпадают, т.е. корректировка была
               if (!item.Name.Equals(itemEq.Name))
               {
                 // обновляю
-                var response = await Mediator.Send(new EditHotelFacilityRequest(Mapper.Map<HotelFacilityDto>(item)));
+                var response = await Mediator.Send(new EditLocationRequest(Mapper.Map<LocationDto>(item)));
                 if (!response.IsSuccess)
                 {
                   _submitSuccessful = false;
-                  _errorMessage = AppMessage.HotelFacilityPageSaveTextErrorMessage;
+                  _errorMessage = AppMessage.LocationPageSaveTextErrorMessage;
                 }
               }
             }
@@ -198,11 +193,11 @@
       }
       _submitSuccessful = true;
       // удаление записей
-      if (_hotelFacilitiesDel is not null && _hotelFacilitiesDel.Any())
+      if (_locationsDel is not null && _locationsDel.Any())
       {
-        foreach (HotelFacilityDto item in _hotelFacilitiesDel)
+        foreach (LocationDto item in _locationsDel)
         {
-          var response = await Mediator.Send(new DeleteHotelFacilityRequest(item.Id));
+          var response = await Mediator.Send(new DeleteLocationRequest(item.Id));
           _submitSuccessful = response.IsSuccess;
         }
       }
