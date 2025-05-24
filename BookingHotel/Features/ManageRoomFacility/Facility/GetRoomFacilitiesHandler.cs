@@ -20,9 +20,15 @@ namespace BookingHotel.Features.ManageRoomFacility.Facility
       {
         HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
 
+        //Заполнитель hotelId в RouteTemplate заменяется идентификатором отеля, подлежащему редактированию, перед выполнением HTTP-запроса
+        string route = GetRoomFacilitiesRequest.RouteTemplate.Replace("{roomId}", request.roomId.ToString());
+
         // Выполняется запрос к API. В случае успеха ответ десериализуется и возвращается вызывающей стороне
-        var allFacilities = await httpClient.GetFromJsonAsync<List<RoomFacilityDto>>(GetRoomFacilitiesRequest.RouteTemplate, cancellationToken);
-        return new GetRoomFacilitiesRequest.Response(allFacilities);
+        var allFacilities = await httpClient.GetFromJsonAsync<List<RoomFacilityDto>>(route, cancellationToken);
+        if (allFacilities == null)
+          return new GetRoomFacilitiesRequest.Response(new List<RoomFacilityDto>());
+        else
+          return new GetRoomFacilitiesRequest.Response(allFacilities);
 
       }
       catch (HttpRequestException)

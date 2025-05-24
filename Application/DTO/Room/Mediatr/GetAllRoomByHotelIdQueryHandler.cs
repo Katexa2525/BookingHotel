@@ -15,7 +15,7 @@ namespace Application.DTO.Room.Mediatr
 
     public async Task<List<RoomDto>> Handle(GetAllRoomByHotelIdQuery request, CancellationToken cancellationToken)
     {
-      return _bussinessLogic.GetByCondition(p=>p.HotelId == request.HotelId, trackChanges: true);
+      return _bussinessLogic.GetByCondition(p=>p.HotelId == request.HotelId, trackChanges: false);
     }
   }
 }

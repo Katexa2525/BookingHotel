@@ -128,13 +128,13 @@
   @if (!isModalLocationOpen && isModalHotelFacilityOpen)
   {
     <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
-                       OnCloseModal="CloseModalFacilityHandlerAsync" />
+                       OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
   }
 
   @if (!isModalHotelFacilityOpen && isModalLocationOpen)
   {
     <ShowLocation IsModalOpen="@isModalLocationOpen" Locations="@_hotel.Locations?.ToList()" HotelId="@Hotel.Id"
-                  OnCloseModal="CloseModalLocationHandlerAsync" />
+                  OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
   }
 
 </EditForm>

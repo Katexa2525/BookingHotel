@@ -33,6 +33,9 @@ namespace BookingHotel.MappingProfile
 
       CreateMap<LocationDto, LocationCreateDto>();
       CreateMap<LocationDto, LocationCreateWithIdDto>();
+
+      CreateMap<RoomFacilityDto, RoomFacilityCreateDto>();
+      CreateMap<RoomFacilityDto, RoomFacilityCreateWithIdDto>();
     }
   }
 }

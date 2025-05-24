@@ -13,7 +13,7 @@ namespace Application.DTO.RoomFacility.Mediatr
     }
     public async Task<List<RoomFacilityDto>> Handle(GetAllRoomFacilityQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetAllAsync(trackChanges: true); 
+      return await _bussinessLogic.GetAllAsync(trackChanges: false); 
     }
   }
 }

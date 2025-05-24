@@ -12,7 +12,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Удобства и услуги отеля</h5>
+          <h5 class="modal-title">@ModalTitle</h5>
           <button type="button" class="btn-close" @onclick="CloseModal"></button>
         </div>
         <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
@@ -114,6 +114,9 @@
 
   [Parameter]
   public bool IsModalOpen { get; set; } = false;
+
+  [Parameter, EditorRequired]
+  public string ModalTitle { get; set; } = string.Empty;
 
   protected override async Task OnInitializedAsync()
   {

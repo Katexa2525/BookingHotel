@@ -117,12 +117,19 @@
     </div>
   </div>
 
+  @if (isModalRoomFacilityOpen)
+  {
+    <ShowRoomFacility IsModalOpen="@isModalRoomFacilityOpen" RoomFacilities="@_room.RoomFacilities?.ToList()" RoomId="@Room.Id"
+                      OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
+  }
+
 </EditForm>
 
 @code {
   private EditContext _editContext = default!;
   private RoomDto _room = new RoomDto();
   private IBrowserFile? _roomImage;
+  private bool isModalRoomFacilityOpen = false;
 
   private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
   private List<string> selectedOptionsFacilities = new();
@@ -226,7 +233,8 @@
 
   private void ShowFacilities(MouseEventArgs args)
   {
-    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/facilities");
+    //NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/facilities");
+    isModalRoomFacilityOpen = true;
   }
 
   private void ShowPhoto(MouseEventArgs args)
@@ -238,4 +246,11 @@
   {
     NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/prices");
   }
+
+  private async Task CloseModalFacilityHandlerAsync()
+  {
+    // чтобы модальное окно закрылось
+    isModalRoomFacilityOpen = false;
+  }
+
 }

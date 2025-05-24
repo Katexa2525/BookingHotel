@@ -1,7 +1,11 @@
-﻿using Application.DTO.Room;
+﻿using Application.DTO.HotelFacility.CQRS;
+using Application.DTO.HotelFacility;
+using Application.DTO.Room;
 using Application.DTO.Room.CQRS;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.DTO.RoomFacility;
+using Application.DTO.RoomFacility.CQRS;
 
 namespace BookingHotel.Server.Controllers
 {
@@ -52,6 +56,15 @@ namespace BookingHotel.Server.Controllers
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
       var result = await _mediator.Send(new GetByIdRoomQuery() { Id = id });
+      return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("{roomid}/facilities")]
+    [ProducesResponseType(typeof(List<RoomFacilityDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<RoomFacilityDto>>> GetFacilitiesByHotelId([FromRoute] Guid roomid)
+    {
+      var result = await _mediator.Send(new GetAllRoomFacilityByRoomIdQuery() { RoomId = roomid });
       return Ok(result);
     }
   }
