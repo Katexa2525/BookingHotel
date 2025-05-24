@@ -59,5 +59,8 @@
     public static readonly string ValidatorRoomFacilityNameMessage = "Введите наименование удобства номера отеля";
     public static readonly string RoomFacilityPageSaveTextErrorMessage = "Возникла проблема с сохранением удобств номера отеля!";
 
+    public static readonly string PricePageSaveTextErrorMessage = "Возникла проблема с сохранением цен номера отеля!";
+    public static readonly string GetPriceByIdTextErrorMessage = "Запись по цене номера отеля не может быть найдена.";
+
   }
 }

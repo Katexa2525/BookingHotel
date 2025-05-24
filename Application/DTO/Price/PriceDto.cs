@@ -8,6 +8,7 @@ namespace Application.DTO.Price
     public Guid Id { get; set; }
     public Guid RoomId { get; set; }
     public Guid CurrencyId { get; set; }
+    public string Name { get; set; } = string.Empty;
     /// <summary>дата начала действия цены по номеру </summary>
     public DateTime DateStart { get; set; }
     /// <summary>дата окончания действия цены по номеру</summary>
