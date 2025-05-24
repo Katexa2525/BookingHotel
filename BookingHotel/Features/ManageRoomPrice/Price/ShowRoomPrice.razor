@@ -1,5 +1,4 @@
-﻿
-@inject NavigationManager NavManager
+﻿@inject NavigationManager NavManager
 @inject IMediator Mediator
 @inject IMapper Mapper
 
@@ -7,7 +6,7 @@
 
 @if (IsModalOpen)
 {
-  <div class="modal show d-block" tabindex="-1">
+  <div class="modal show d-block w-auto" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -17,12 +16,23 @@
         <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
           <table class="table">
             <tbody>
-              @foreach (var item in _roomFacilities)
+              @foreach (var item in _roomPrices)
               {
                 <tr>
                   <td>
+                    <div class="col">
+                      <input @bind="item.DateStart" type="date" class="form-control">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="col">
+                      <input @bind="item.DateEnd" type="date" class="form-control">
+                    </div>
+                  </td>
+                  <td>
                     <FormFieldSet Width="col">
-                      <InputText @bind-Value="@item.Name" class="form-control" id="facilityName" />
+                      @* <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label> *@
+                      <InputNumber @bind-Value="item.DayPrice" class="form-control" />
                     </FormFieldSet>
                   </td>
                   <td>
@@ -30,7 +40,7 @@
                       @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
                       {
                         <button type="button" class="btn btn-outline-danger custom-btn" title="Удалить"
-                        @onclick="() => DeleteRow(item)">
+                                @onclick="() => DeleteRow(item)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-dash" viewBox="0 0 16 16">
                             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1" />
                             <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
@@ -66,7 +76,7 @@
               <div class="row">
                 @if (_submitSuccessful)
                 {
-                  <SuccessAlert Message="Данные по удобствам номера отеля сохранены!" />
+                  <SuccessAlert Message="Данные по ценам номера отеля сохранены!" />
                 }
                 else if (_errorMessage is not null)
                 {
@@ -83,29 +93,29 @@
 
 <style>
   .custom-btn {
-  padding: 2px 4px; /* Минимальные отступы */
-  font-size: 12px; /* Уменьшенный размер текста */
-  width: 45px; /* Фиксированная ширина */
-  height: 45px; /* Фиксированная высота */
-  /* display: flex; */
-  align-items: center;
-  justify-content: center;
+    padding: 2px 4px; /* Минимальные отступы */
+    font-size: 12px; /* Уменьшенный размер текста */
+    width: 45px; /* Фиксированная ширина */
+    height: 45px; /* Фиксированная высота */
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
   }
 </style>
 
 @code {
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private List<RoomFacilityDto>? _roomFacilities = new List<RoomFacilityDto>();
-  private RoomFacilityDto _facility;
+  private List<PriceDto>? _roomPrices = new List<PriceDto>();
+  private PriceDto _price;
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
-  private List<RoomFacilityDto>? _roomFacilitiesDel = new List<RoomFacilityDto>();
+  private List<PriceDto>? _roomPricesDel = new List<PriceDto>();
 
   [Parameter, EditorRequired]
   public Guid RoomId { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public List<RoomFacilityDto>? RoomFacilities { get; set; } = default!;
+  public List<PriceDto>? RoomPrices { get; set; } = default!;
 
   /// <summary>Событие, что окно формы закрыто и надо обработать это событие в родительской форме </summary>
   [Parameter, EditorRequired]
@@ -124,12 +134,12 @@
 
   protected override async Task OnParametersSetAsync()
   {
-    _roomFacilities = RoomFacilities;
+    _roomPrices = RoomPrices;
     // обновляю данные по Facility по данному отелю
-    var response = await Mediator.Send(new GetRoomFacilitiesRequest(RoomId));
-    if (response is not null && response.HotelFacilities is not null && response.HotelFacilities.Any())
+    var response = await Mediator.Send(new GetPricesRequest(RoomId));
+    if (response is not null && response.Prices is not null && response.Prices.Any())
     {
-      _roomFacilities = response.HotelFacilities;
+      _roomPrices = response.Prices;
     }
   }
 
@@ -143,13 +153,19 @@
 
   private void AddRow()
   {
-    _roomFacilities.Add(new RoomFacilityDto { RoomId = this.RoomId });
+    _roomPrices.Add(new PriceDto
+      {
+        RoomId = this.RoomId,
+        DateStart = DateTime.Now,
+        DateEnd = DateTime.Now.AddDays(1),
+        CurrencyId = Guid.Parse("232BA1BD-0192-4E35-B4A2-908DD61EA5CC")
+      });
   }
 
-  private void DeleteRow(RoomFacilityDto item)
+  private void DeleteRow(PriceDto item)
   {
-    _roomFacilitiesDel.Add(item);
-    _roomFacilities.Remove(item);
+    _roomPricesDel.Add(item);
+    _roomPrices.Remove(item);
   }
 
   private async Task Save(MouseEventArgs args)
@@ -157,17 +173,17 @@
     try
     {
       // добавление записей
-      if (_roomFacilities is not null && _roomFacilities.Any())
+      if (_roomPrices is not null && _roomPrices.Any())
       {
-        foreach (RoomFacilityDto item in _roomFacilities)
+        foreach (var item in _roomPrices)
         {
           if (item.Id == Guid.Empty)
           {
-            var response = await Mediator.Send(new AddRoomFacilityRequest(Mapper.Map<RoomFacilityCreateWithIdDto>(item)));
-            if (response.roomFacilityId == Guid.Empty)
+            var response = await Mediator.Send(new AddPriceRequest(Mapper.Map<PriceCreateWithIdDto>(item)));
+            if (response.priceId == Guid.Empty)
             {
               _submitSuccessful = false;
-              _errorMessage = AppMessage.RoomFacilityPageSaveTextErrorMessage;
+              _errorMessage = AppMessage.PricePageSaveTextErrorMessage;
               // Если при сохранении произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить
               // пользовательский интерфейс сообщением об ошибке
               StateHasChanged();
@@ -177,18 +193,19 @@
           // проверяю на изменение данных
           else
           {
-            if (RoomFacilities is not null && RoomFacilities.Any())
+            if (RoomPrices is not null && RoomPrices.Any())
             {
-              var itemEq = RoomFacilities.First(p => p.Id.Equals(item.Id));
+              var itemEq = RoomPrices.First(p => p.Id.Equals(item.Id));
               // если по Id названия не совпадают, т.е. корректировка была
-              if (!item.Name.Equals(itemEq.Name))
+              if (!item.CurrencyId.Equals(itemEq.CurrencyId) || !item.DateEnd.Equals(itemEq.DateEnd) ||
+                  !item.DateStart.Equals(itemEq.DateStart) || !item.DayPrice.Equals(itemEq.DayPrice))
               {
                 // обновляю
-                var response = await Mediator.Send(new EditRoomFacilityRequest(Mapper.Map<RoomFacilityDto>(item)));
+                var response = await Mediator.Send(new EditPriceRequest(Mapper.Map<PriceDto>(item)));
                 if (!response.IsSuccess)
                 {
                   _submitSuccessful = false;
-                  _errorMessage = AppMessage.RoomFacilityPageSaveTextErrorMessage;
+                  _errorMessage = AppMessage.PricePageSaveTextErrorMessage;
                 }
               }
             }
@@ -197,11 +214,11 @@
       }
       _submitSuccessful = true;
       // удаление записей
-      if (_roomFacilitiesDel is not null && _roomFacilitiesDel.Any())
+      if (_roomPricesDel is not null && _roomPricesDel.Any())
       {
-        foreach (RoomFacilityDto item in _roomFacilitiesDel)
+        foreach (PriceDto item in _roomPricesDel)
         {
-          var response = await Mediator.Send(new DeleteRoomFacilityRequest(item.Id));
+          var response = await Mediator.Send(new DeletePriceRequest(item.Id));
           _submitSuccessful = response.IsSuccess;
         }
       }

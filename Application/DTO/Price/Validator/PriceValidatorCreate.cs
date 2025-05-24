@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.DTO.Price.Validator
 {
-  public class PriceValidatorCreate : AbstractValidator<PriceCreateDto>
+  public class PriceValidatorCreate : AbstractValidator<PriceCreateWithIdDto>
   {
     /// <summary> Конструктор класса с правилами валидации </summary>
     public PriceValidatorCreate()

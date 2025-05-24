@@ -117,10 +117,16 @@
     </div>
   </div>
 
-  @if (isModalRoomFacilityOpen)
+  @if (!isModalRoomPriceOpen && isModalRoomFacilityOpen)
   {
     <ShowRoomFacility IsModalOpen="@isModalRoomFacilityOpen" RoomFacilities="@_room.RoomFacilities?.ToList()" RoomId="@Room.Id"
-                      OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
+    OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
+  }
+
+  @if (!isModalRoomFacilityOpen && isModalRoomPriceOpen)
+  {
+    <ShowRoomPrice IsModalOpen="@isModalRoomPriceOpen" RoomPrices="@_room.Prices?.ToList()" RoomId="@Room.Id"
+                   OnCloseModal="CloseModalPriceHandlerAsync" ModalTitle="Цены номера отеля" />
   }
 
 </EditForm>
@@ -130,6 +136,7 @@
   private RoomDto _room = new RoomDto();
   private IBrowserFile? _roomImage;
   private bool isModalRoomFacilityOpen = false;
+  private bool isModalRoomPriceOpen = false;
 
   private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
   private List<string> selectedOptionsFacilities = new();
@@ -244,7 +251,8 @@
 
   private void ShowPrices(MouseEventArgs args)
   {
-    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/prices");
+    //NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/prices");
+    isModalRoomPriceOpen = true;
   }
 
   private async Task CloseModalFacilityHandlerAsync()
@@ -253,4 +261,8 @@
     isModalRoomFacilityOpen = false;
   }
 
+  private void CloseModalPriceHandlerAsync()
+  {
+    isModalRoomPriceOpen = false;
+  }
 }

@@ -37,6 +37,7 @@ namespace Application.BussinessLogic.Price
       var entity = _mapper.Map<PriceEntity>(dto);
       entity.Id = Guid.NewGuid();
       await _repositoryManager.PriceRepository.CreateEntityAsync(entity);
+      await _repositoryManager.SaveAsync();
       return entity.Id;
     }
 
