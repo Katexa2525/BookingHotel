@@ -7,14 +7,21 @@
 @if (IsModalOpen)
 {
   <div class="modal show d-block" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">@ModalTitle</h5>
           <button type="button" class="btn-close" @onclick="CloseModal"></button>
         </div>
-        <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+        <div class="modal-body" style="max-height: 500px; overflow-y: auto; width: 100%;">
           <table class="table">
+            <thead>
+              <tr>
+                <th>Дата начала</th>
+                <th>Дата окончания</th>
+                <th>Цена за день</th>
+              </tr>
+            </thead>
             <tbody>
               @foreach (var item in _roomPrices)
               {
@@ -30,10 +37,17 @@
                     </div>
                   </td>
                   <td>
-                    <FormFieldSet Width="col">
-                      @* <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label> *@
+                    @* <FormFieldSet Width="col">
                       <InputNumber @bind-Value="item.DayPrice" class="form-control" />
-                    </FormFieldSet>
+                    </FormFieldSet> *@
+
+                    <div class="input-group mb-3">
+                      <span class="input-group-text">BYN</span>
+                      <InputNumber @bind-Value="item.DayPrice" class="form-control" />
+                      <span class="input-group-text">руб</span>
+                    </div>
+
+
                   </td>
                   <td>
                     <AuthorizeView>
@@ -190,6 +204,8 @@
               StateHasChanged();
               return;
             }
+            else
+              _submitSuccessful = true;
           }
           // проверяю на изменение данных
           else
@@ -208,12 +224,13 @@
                   _submitSuccessful = false;
                   _errorMessage = AppMessage.PricePageSaveTextErrorMessage;
                 }
+                else
+                  _submitSuccessful = true;
               }
             }
           }
         }
       }
-      _submitSuccessful = true;
       // удаление записей
       if (_roomPricesDel is not null && _roomPricesDel.Any())
       {

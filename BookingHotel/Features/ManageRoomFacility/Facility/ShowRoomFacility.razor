@@ -173,6 +173,8 @@
               StateHasChanged();
               return;
             }
+            else
+              _submitSuccessful = true;
           }
           // проверяю на изменение данных
           else
@@ -190,12 +192,13 @@
                   _submitSuccessful = false;
                   _errorMessage = AppMessage.RoomFacilityPageSaveTextErrorMessage;
                 }
+                else
+                  _submitSuccessful = true;
               }
             }
           }
         }
       }
-      _submitSuccessful = true;
       // удаление записей
       if (_roomFacilitiesDel is not null && _roomFacilitiesDel.Any())
       {
