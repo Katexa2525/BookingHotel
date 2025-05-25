@@ -58,11 +58,8 @@
 
           <FormFieldSet Width="col">
             <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label>
-            @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
-            @* <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
             <DropdownList Options="@RoomTypes.Select(p=>p.Name).ToList()"
                           SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
-            @* <p>Выбрано: @selectedOption</p> *@
             <ValidationMessage For="@(() => _room.RoomTypeId )" />
           </FormFieldSet>
 

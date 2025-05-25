@@ -3,6 +3,7 @@
 @inject IMapper Mapper
 
 @using System.Collections.Generic
+@using Application.DTO.FoodType
 
 @if (IsModalOpen)
 {
@@ -17,22 +18,19 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Наименование питания</th>
                 <th>Наименование типа питания</th>
               </tr>
             </thead>
             <tbody>
               @foreach (var item in _hotelFoods)
               {
+                _food = item;
+                selectedOptionTypeFood = (_foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)) != null) ? _foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)).Name : "";
                 <tr>
                   <td>
                     <div class="col">
-                      <input @bind="item.Name" type="text" class="form-control">
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col">
-                      <input @bind="item.TypeFoodId" type="text" class="form-control">
+                      <DropdownList Options="@_foodTypes.Select(p=>p.Name).ToList()"
+                      SelectedOption="@selectedOptionTypeFood" OnSelectionChanged="@HandleSelection" />
                     </div>
                   </td>
                   <td>
@@ -40,7 +38,7 @@
                       @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
                       {
                         <button type="button" class="btn btn-outline-danger custom-btn" title="Удалить"
-                                @onclick="() => DeleteRow(item)">
+                        @onclick="() => DeleteRow(item)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-dash" viewBox="0 0 16 16">
                             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1" />
                             <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z" />
@@ -93,13 +91,13 @@
 
 <style>
   .custom-btn {
-    padding: 2px 4px; /* Минимальные отступы */
-    font-size: 12px; /* Уменьшенный размер текста */
-    width: 45px; /* Фиксированная ширина */
-    height: 45px; /* Фиксированная высота */
-    /* display: flex; */
-    align-items: center;
-    justify-content: center;
+  padding: 2px 4px; /* Минимальные отступы */
+  font-size: 12px; /* Уменьшенный размер текста */
+  width: 45px; /* Фиксированная ширина */
+  height: 45px; /* Фиксированная высота */
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
   }
 </style>
 
@@ -110,6 +108,17 @@
   private FoodDto _food;
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
   private List<FoodDto>? _hotelFoodsDel = new List<FoodDto>();
+  private List<FoodTypeDto>? _foodTypes = new List<FoodTypeDto>()
+  {
+    new FoodTypeDto { Id = Guid.Parse("072fc618-8703-437f-9662-5ba97d0ab4f0"), Name = "Завтрак" },
+    new FoodTypeDto { Id = Guid.Parse("4d53a1ed-9613-4406-8a31-a411c934e628"), Name = "Полупансион" },
+    new FoodTypeDto { Id = Guid.Parse("b2d7509e-c5b3-4936-8deb-26e51052446f"), Name = "Завтрак, обед и ужин" },
+    new FoodTypeDto { Id = Guid.Parse("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782"), Name = "Всё включено" },
+    new FoodTypeDto { Id = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), Name = "Завтрак полноценный" },
+    new FoodTypeDto { Id = Guid.Parse("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"), Name = "Без питания" }
+  };
+  // что выбрано из списка типа питания
+  private string selectedOptionTypeFood = "";
 
   [Parameter, EditorRequired]
   public Guid HotelId { get; set; } = default!;
@@ -126,6 +135,14 @@
 
   [Parameter, EditorRequired]
   public string ModalTitle { get; set; } = string.Empty;
+
+  // обработка выбора типа питания
+  private void HandleSelection(string value)
+  {
+    selectedOptionTypeFood = value;
+    _food.Name = value;
+    _food.TypeFoodId = _foodTypes.FirstOrDefault(p => p.Name.Equals(value)).Id;
+  }
 
   protected override async Task OnInitializedAsync()
   {
