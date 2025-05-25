@@ -49,7 +49,7 @@ namespace BookingHotel.Server.Controllers
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(FoodDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PriceDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
       var result = await _mediator.Send(new GetByIdPriceQuery() { Id = id });

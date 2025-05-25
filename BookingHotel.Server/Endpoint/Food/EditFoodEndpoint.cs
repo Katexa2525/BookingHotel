@@ -21,7 +21,7 @@ namespace BookingHotel.Server.Endpoint.Food
       _mapper = mapper;
     }
 
-    [HttpPut(EditBookingRequest.RouteTemplate)]
+    [HttpPut(EditFoodRequest.RouteTemplate)]
     public override async Task<ActionResult<bool>> HandleAsync(EditFoodRequest request, CancellationToken cancellationToken = default)
     {
       // получаю питание из БД

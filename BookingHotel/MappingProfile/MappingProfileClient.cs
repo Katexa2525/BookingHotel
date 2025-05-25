@@ -1,4 +1,5 @@
 ﻿using Application.DTO.Booking;
+using Application.DTO.Food;
 using Application.DTO.Hotel;
 using Application.DTO.HotelFacility;
 using Application.DTO.Location;
@@ -23,7 +24,6 @@ namespace BookingHotel.MappingProfile
       CreateMap<RoomDto, RoomCreateDto>();
       CreateMap<RoomDto, RoomUpdateDto>();
 
-      CreateMap<PriceDto, PriceCreateDto>();
       CreateMap<RoomPhotoDto, RoomPhotoCreateDto>();
       CreateMap<RoomFacilityDto, RoomFacilityCreateDto>();
       CreateMap<BookingDto, BookingCreateDto>();
@@ -39,6 +39,9 @@ namespace BookingHotel.MappingProfile
 
       CreateMap<PriceDto, PriceCreateDto>();
       CreateMap<PriceDto, PriceCreateWithIdDto>();
+
+      CreateMap<FoodDto, FoodCreateDto>();
+      CreateMap<FoodDto, FoodCreateWithIdDto>();
     }
   }
 }

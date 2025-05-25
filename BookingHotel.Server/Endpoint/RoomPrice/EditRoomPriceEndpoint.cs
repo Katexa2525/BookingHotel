@@ -6,6 +6,7 @@ using Ardalis.ApiEndpoints;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 namespace BookingHotel.Server.Endpoint.RoomPrice
 {
@@ -23,8 +24,8 @@ namespace BookingHotel.Server.Endpoint.RoomPrice
     [HttpPut(EditPriceRequest.RouteTemplate)]
     public override async Task<ActionResult<bool>> HandleAsync(EditPriceRequest request, CancellationToken cancellationToken = default)
     {
-      // получаю питание из БД
       var roomPrice = await _mediator.Send(new GetByIdPriceQuery() { Id = request.price.Id });
+
       if (roomPrice is null)
       {
         return BadRequest(AppMessage.GetPriceByIdTextErrorMessage);

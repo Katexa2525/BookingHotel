@@ -13,7 +13,7 @@ namespace Application.DTO.Food.Mediatr
     }
     public async Task<List<FoodDto>> Handle(GetAllFoodQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetAllAsync(trackChanges: true);
+      return await _bussinessLogic.GetAllAsync(trackChanges: false);
     }
   }
 }

@@ -169,6 +169,8 @@
               StateHasChanged();
               return;
             }
+            else
+              _submitSuccessful = true;
           }
           // проверяю на изменение данных
           else
@@ -186,12 +188,13 @@
                   _submitSuccessful = false;
                   _errorMessage = AppMessage.LocationPageSaveTextErrorMessage;
                 }
+                else
+                  _submitSuccessful = true;
               }
             }
           }
         }
       }
-      _submitSuccessful = true;
       // удаление записей
       if (_locationsDel is not null && _locationsDel.Any())
       {

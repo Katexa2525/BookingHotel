@@ -17,37 +17,23 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Дата начала</th>
-                <th>Дата окончания</th>
-                <th>Цена за день</th>
+                <th>Наименование питания</th>
+                <th>Наименование типа питания</th>
               </tr>
             </thead>
             <tbody>
-              @foreach (var item in _roomPrices)
+              @foreach (var item in _hotelFoods)
               {
                 <tr>
                   <td>
                     <div class="col">
-                      <input @bind="item.DateStart" type="date" class="form-control">
+                      <input @bind="item.Name" type="text" class="form-control">
                     </div>
                   </td>
                   <td>
                     <div class="col">
-                      <input @bind="item.DateEnd" type="date" class="form-control">
+                      <input @bind="item.TypeFoodId" type="text" class="form-control">
                     </div>
-                  </td>
-                  <td>
-                    @* <FormFieldSet Width="col">
-                      <InputNumber @bind-Value="item.DayPrice" class="form-control" />
-                    </FormFieldSet> *@
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">BYN</span>
-                      <InputNumber @bind-Value="item.DayPrice" class="form-control" />
-                      <span class="input-group-text">руб</span>
-                    </div>
-
-
                   </td>
                   <td>
                     <AuthorizeView>
@@ -90,7 +76,7 @@
               <div class="row">
                 @if (_submitSuccessful)
                 {
-                  <SuccessAlert Message="Данные по ценам номера отеля сохранены!" />
+                  <SuccessAlert Message="Данные по типам питания отеля сохранены!" />
                 }
                 else if (_errorMessage is not null)
                 {
@@ -120,16 +106,16 @@
 @code {
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private List<PriceDto>? _roomPrices = new List<PriceDto>();
-  private PriceDto _price;
+  private List<FoodDto>? _hotelFoods = new List<FoodDto>();
+  private FoodDto _food;
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
-  private List<PriceDto>? _roomPricesDel = new List<PriceDto>();
+  private List<FoodDto>? _hotelFoodsDel = new List<FoodDto>();
 
   [Parameter, EditorRequired]
-  public Guid RoomId { get; set; } = default!;
+  public Guid HotelId { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public List<PriceDto>? RoomPrices { get; set; } = default!;
+  public List<FoodDto>? HotelFoods { get; set; } = default!;
 
   /// <summary>Событие, что окно формы закрыто и надо обработать это событие в родительской форме </summary>
   [Parameter, EditorRequired]
@@ -148,12 +134,12 @@
 
   protected override async Task OnParametersSetAsync()
   {
-    _roomPrices = RoomPrices;
+    _hotelFoods = HotelFoods;
     // обновляю данные по Facility по данному отелю
-    var response = await Mediator.Send(new GetPricesRequest(RoomId));
-    if (response is not null && response.Prices is not null && response.Prices.Any())
+    var response = await Mediator.Send(new GetFoodsRequest(HotelId));
+    if (response is not null && response.Foods is not null && response.Foods.Any())
     {
-      _roomPrices = response.Prices;
+      _hotelFoods = response.Foods;
     }
   }
 
@@ -167,20 +153,16 @@
 
   private void AddRow()
   {
-    _roomPrices.Add(new PriceDto
+    _hotelFoods.Add(new FoodDto
       {
-        RoomId = this.RoomId,
-        DateStart = DateTime.Now,
-        DateEnd = DateTime.Now.AddDays(1),
-        CurrencyId = Guid.Parse("232BA1BD-0192-4E35-B4A2-908DD61EA5CC"),
-        Name = "BYN"
+        HotelId = this.HotelId
       });
   }
 
-  private void DeleteRow(PriceDto item)
+  private void DeleteRow(FoodDto item)
   {
-    _roomPricesDel.Add(item);
-    _roomPrices.Remove(item);
+    _hotelFoodsDel.Add(item);
+    _hotelFoods.Remove(item);
   }
 
   private async Task Save(MouseEventArgs args)
@@ -188,14 +170,14 @@
     try
     {
       // добавление записей
-      if (_roomPrices is not null && _roomPrices.Any())
+      if (_hotelFoods is not null && _hotelFoods.Any())
       {
-        foreach (var item in _roomPrices)
+        foreach (var item in _hotelFoods)
         {
           if (item.Id == Guid.Empty)
           {
-            var response = await Mediator.Send(new AddPriceRequest(Mapper.Map<PriceCreateWithIdDto>(item)));
-            if (response.priceId == Guid.Empty)
+            var response = await Mediator.Send(new AddFoodRequest(Mapper.Map<FoodCreateWithIdDto>(item)));
+            if (response.foodId == Guid.Empty)
             {
               _submitSuccessful = false;
               _errorMessage = AppMessage.PricePageSaveTextErrorMessage;
@@ -210,15 +192,14 @@
           // проверяю на изменение данных
           else
           {
-            if (RoomPrices is not null && RoomPrices.Any())
+            if (HotelFoods is not null && HotelFoods.Any())
             {
-              var itemEq = RoomPrices.First(p => p.Id.Equals(item.Id));
+              var itemEq = HotelFoods.First(p => p.Id.Equals(item.Id));
               // если по Id названия не совпадают, т.е. корректировка была
-              if (!item.CurrencyId.Equals(itemEq.CurrencyId) || !item.DateEnd.Equals(itemEq.DateEnd) ||
-                  !item.DateStart.Equals(itemEq.DateStart) || !item.DayPrice.Equals(itemEq.DayPrice))
+              if (!item.Name.Equals(itemEq.Name) || !item.TypeFoodId.Equals(itemEq.TypeFoodId))
               {
                 // обновляю
-                var response = await Mediator.Send(new EditPriceRequest(Mapper.Map<PriceDto>(item)));
+                var response = await Mediator.Send(new EditFoodRequest(Mapper.Map<FoodDto>(item)));
                 if (!response.IsSuccess)
                 {
                   _submitSuccessful = false;
@@ -232,11 +213,11 @@
         }
       }
       // удаление записей
-      if (_roomPricesDel is not null && _roomPricesDel.Any())
+      if (_hotelFoodsDel is not null && _hotelFoodsDel.Any())
       {
-        foreach (PriceDto item in _roomPricesDel)
+        foreach (FoodDto item in _hotelFoodsDel)
         {
-          var response = await Mediator.Send(new DeletePriceRequest(item.Id));
+          var response = await Mediator.Send(new DeleteFoodRequest(item.Id));
           _submitSuccessful = response.IsSuccess;
         }
       }
