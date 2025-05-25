@@ -1,0 +1,43 @@
+﻿@page "/favorite-hotels"
+
+@inject AppState AppState
+@implements IDisposable
+
+<PageTitle>Избранные отели</PageTitle>
+
+<NavigationСhain LastChainName="Favorite Hotel" />
+
+<h3 class="mt-5 mb-4">Избранные отели</h3>
+
+@if (AppState.FavoriteHotelsState.FavoriteHotels.Any())
+{
+  <HotelDetails Hotel="_selectedHotel" /> 
+  <div class="grid">
+    @foreach (var hotel in AppState.FavoriteHotelsState.FavoriteHotels)
+    {
+      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
+    }
+
+  </div>
+}
+else
+{
+  <NoHotels>                                         
+    У Вас нет избранных отелей :(          
+  </NoHotels> 
+}
+
+@code {
+  private HotelDto? _selectedHotel;
+
+  /// <summary>
+  /// Когда страница инициализируется, она подписывается на событие OnChange из FavoriteHotelsState.
+  /// Таким образом, если пользователь удалит на странице отель из числа избранных, это приведет к повторной
+  /// отрисовке, и страница обновится, а данный отель будет удалён
+  /// </summary>
+  protected override void OnInitialized() => AppState.FavoriteHotelsState.OnChange += StateHasChanged;
+
+  private void HandleHotelSelected(HotelDto hotel) => _selectedHotel = hotel;
+
+  void IDisposable.Dispose() => AppState.FavoriteHotelsState.OnChange -= StateHasChanged;
+}

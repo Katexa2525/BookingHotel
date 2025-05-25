@@ -1,8 +1,17 @@
-﻿<nav class="navbar mb-5 shadow">
+﻿@inject NavigationManager NavManager
+
+<nav class="navbar mb-5 shadow">
   <a class="navbar-brand" href="/">
     <img src="/images/logo2.png">
   </a>
+
   <div class="top-row px-4">
+
+    <button class="btn btn-outline-secondary float-right" title="Избранное"
+            @onclick="@(() => NavManager.NavigateTo ($"/favorite-hotels"))">
+      <i class="bi bi-heart"></i>
+    </button>
+
     <AuthLinks />
   </div>
 </nav>
