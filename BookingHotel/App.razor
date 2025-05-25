@@ -1,4 +1,6 @@
-﻿<CascadingAuthenticationState>
+﻿@inject AppState AppState
+
+<CascadingAuthenticationState>
   <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
       <!-- <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" /> -->
@@ -21,3 +23,14 @@
     </NotFound>
   </Router>
 </CascadingAuthenticationState>
+
+@code {
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      //При первой отрисовке компонента App инициализирую AppState
+      await AppState.Initialize();
+    }
+  }
+}

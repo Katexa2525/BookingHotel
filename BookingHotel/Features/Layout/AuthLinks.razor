@@ -1,13 +1,27 @@
-﻿<AuthorizeView>
-    <Authorized>
-        Привет, @context.User.Identity.Name!
-    <a href="authentication/logout">Выход</a>
-    </Authorized>
-    <NotAuthorized>
-      <a href="authentication/login">Вход</a>
-    </NotAuthorized>
+﻿@inject NavigationManager NavManager
+
+<AuthorizeView>
+  <Authorized>
+    Привет, @context.User.Identity.Name!
+    @* <a href="authentication/logout">Выход</a> *@
+
+    <button class="btn btn-outline-secondary float-right" title="Выход"
+            @onclick="@(() => NavManager.NavigateTo($"authentication/logout"))">
+      <img src="images/auth.png" alt="Выход" width="20" height="20" />
+    </button>
+  </Authorized>
+
+  <NotAuthorized>
+    @* <a href="authentication/login">Вход</a> *@
+
+    <button class="btn btn-outline-secondary float-right" title="Вход"
+            @onclick="@(() => NavManager.NavigateTo ($"authentication/login"))">
+      <img src="images/non-auth.png" alt="Вход" width="20" height="20" />
+      
+    </button>
+  </NotAuthorized>
 </AuthorizeView>
 
 @code {
-  
+
 }

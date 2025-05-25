@@ -2,6 +2,7 @@ using Application.BussinessLogic.RoleClaim;
 using Blazored.LocalStorage;
 using BookingHotel;
 using BookingHotel.MappingProfile;
+using BookingHotel.State;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -44,6 +45,7 @@ builder.Services.AddOidcAuthentication(options =>
 builder.Services.AddAuthorizationCore();
 // регистрирую класс в в коллекцию IService 
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<AppState>();
 
 //builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 //builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();

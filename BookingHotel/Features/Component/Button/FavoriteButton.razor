@@ -1,0 +1,21 @@
+﻿ @inject AppState AppState
+
+@if (AppState.FavoriteHotelsState.IsFavorite(Hotel))
+{
+  <button class="btn btn-outline-primary ml-1" title="Избранное"
+          @onclick="@(() => AppState.FavoriteHotelsState.RemoveFavorite(Hotel))">
+    <i class="bi bi-heart-fill"></i>
+  </button>
+}
+else
+{
+  <button class="btn btn-outline-primary ml-1" title="Избранное"
+          @onclick="@(() => AppState.FavoriteHotelsState.AddFavorite(Hotel))">
+    <i class="bi bi-heart"></i>
+  </button>
+}
+
+@code {
+  [Parameter, EditorRequired]
+  public HotelDto Hotel { get; set; } = default!;
+}

@@ -1,14 +1,24 @@
 ﻿@* Параметр типа определяется с помощью директивы @typeparam *@
 @typeparam TItem 
 
+@inject NavigationManager NavManager
+
 <div>
   <div class="mb-3 text-end">
     <div class="btn-group">
-      @* Эти две кнопки позволяют пользователю переключаться между двумя представлениями *@
+      <button class="btn btn-outline-secondary float-right" title="Избранное"
+              @onclick="@(() => NavManager.NavigateTo ($"/favorite-hotels"))">
+        <i class="bi bi-heart"></i>
+      </button>
+    </div>
+    <div class="btn-group">
       <button @onclick="@(() => _mode = ViewMode.Grid)" title="Представление сетка" type="button"
               class="btn @(_mode == ViewMode.Grid ? "btn-secondary" : "btn-outline-secondary")">
         <i class="bi bi-grid-fill"></i>
-      </button> 
+      </button>
+    </div>
+    <div class="btn-group">
+      @* Эти две кнопки позволяют пользователю переключаться между двумя представлениями *@
       <button @onclick="@(() => _mode = ViewMode.Table)" title="Табличное представление" type="button"
               class="btn @(_mode == ViewMode.Table ? "btn-secondary" : "btn-outline-secondary")">
         <i class="bi bi-table"></i>
