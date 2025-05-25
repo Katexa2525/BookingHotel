@@ -32,38 +32,38 @@
             }
           </div>
 
-          <div class="mt-5 mb-5">
-            <button type="button" @onclick="ShowRooms" title="Комнаты отеля">
-              <img src="images/room.png" alt="Комнаты" width="50" height="50">
-            </button>
+          <AuthorizeView Context = "authContext">
+            @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
+            {
+              <div class="mt-5 mb-5">
+                <button type="button" @onclick="ShowRooms" title="Комнаты отеля">
+                  <img src="images/room.png" alt="Комнаты" width="50" height="50">
+                </button>
 
-            <button type="button" @onclick="ShowFacilities" title="Удобства отеля">
-              <img src="images/Facility.png" alt="Удобства" width="50" height="50">
-            </button>
+                <button type="button" @onclick="ShowFacilities" title="Удобства отеля">
+                  <img src="images/Facility.png" alt="Удобства" width="50" height="50">
+                </button>
 
-            <button type="button" @onclick="ShowPhoto" title="Фото отеля">
-              <img src="images/camera.png" alt="Фото" width="50" height="50">
-            </button>
+                <button type="button" @onclick="ShowPhoto" title="Фото отеля">
+                  <img src="images/camera.png" alt="Фото" width="50" height="50">
+                </button>
 
-            <button type="button" @onclick="ShowLocation" title="Близлежащие локации отеля">
-              <img src="images/location.png" alt="Близлежащие локации" width="50" height="50">
-            </button>
+                <button type="button" @onclick="ShowLocation" title="Близлежащие локации отеля">
+                  <img src="images/location.png" alt="Близлежащие локации" width="50" height="50">
+                </button>
 
-            <button type="button" @onclick="ShowFood" title="Питание отеля">
-              <img src="images/food.png" alt="Питание" width="50" height="50">
-            </button>
-          </div>
+                <button type="button" @onclick="ShowFood" title="Питание отеля">
+                  <img src="images/food.png" alt="Питание" width="50" height="50">
+                </button>
+              </div>
 
-          <div class="row mt-5 mb-5">
-            <div class="col text-right">
-              <SaveButton TextButtonAccept="Сохранить" />
-
-              @* <button class="btn btn-outline-secondary" type="button"
-                      onclick="@(() => _hotel=new HotelDto())">
-                @TextButtonCancel
-              </button> *@
-            </div>
-          </div>
+              <div class="row mt-5 mb-5">
+                <div class="col text-right">
+                  <SaveButton TextButtonAccept="Сохранить" />
+                </div>
+              </div>
+            }
+          </AuthorizeView>
         </div>
 
         <div class="col-8">
@@ -128,19 +128,19 @@
   @if (!isModalLocationOpen && !isModalFoodOpen && isModalHotelFacilityOpen)
   {
     <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
-    OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
+                       OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
   }
 
   @if (!isModalHotelFacilityOpen && !isModalFoodOpen && isModalLocationOpen)
   {
     <ShowLocation IsModalOpen="@isModalLocationOpen" Locations="@_hotel.Locations?.ToList()" HotelId="@Hotel.Id"
-    OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
+                  OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
   }
 
   @if (!isModalHotelFacilityOpen && !isModalLocationOpen && isModalFoodOpen)
   {
-    <ShowHotelFood IsModalOpen="@isModalFoodOpen"  HotelFoods="@_hotel.Foods?.ToList()" HotelId="@Hotel.Id"
-    OnCloseModal="CloseModalFoodHandlerAsync" ModalTitle="Питание отеля" />
+    <ShowHotelFood IsModalOpen="@isModalFoodOpen" HotelFoods="@_hotel.Foods?.ToList()" HotelId="@Hotel.Id"
+                   OnCloseModal="CloseModalFoodHandlerAsync" ModalTitle="Питание отеля" />
   }
 
 </EditForm>
