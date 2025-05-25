@@ -17,7 +17,7 @@
             {
               <img src="images/NoImage.png" class="card-img-top" />
               <InputFile OnChange="LoadHotelImage" class="form-control-file mt-1"
-                         id="hotelImage" accept=".png,.jpg,.jpeg" />
+              id="hotelImage" accept=".png,.jpg,.jpeg" />
             }
             else
             {
@@ -125,16 +125,22 @@
     </div>
   </div>
 
-  @if (!isModalLocationOpen && isModalHotelFacilityOpen)
+  @if (!isModalLocationOpen && !isModalFoodOpen && isModalHotelFacilityOpen)
   {
     <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
-                       OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
+    OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
   }
 
-  @if (!isModalHotelFacilityOpen && isModalLocationOpen)
+  @if (!isModalHotelFacilityOpen && !isModalFoodOpen && isModalLocationOpen)
   {
     <ShowLocation IsModalOpen="@isModalLocationOpen" Locations="@_hotel.Locations?.ToList()" HotelId="@Hotel.Id"
-                  OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
+    OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
+  }
+
+  @if (!isModalHotelFacilityOpen && !isModalLocationOpen && isModalFoodOpen)
+  {
+    <ShowHotelFood IsModalOpen="@isModalFoodOpen"  HotelFoods="@_hotel.Foods?.ToList()" HotelId="@Hotel.Id"
+    OnCloseModal="CloseModalFoodHandlerAsync" ModalTitle="Питание отеля" />
   }
 
 </EditForm>
@@ -146,6 +152,7 @@
   private IBrowserFile? _hotelImage;
   private bool isModalHotelFacilityOpen = false;
   private bool isModalLocationOpen = false;
+  private bool isModalFoodOpen = false;
 
   private void SetHotelStar(int star)
   {
@@ -263,7 +270,8 @@
 
   private void ShowFood(MouseEventArgs args)
   {
-    NavManager.NavigateTo($"/hotels/{Hotel.Id}/food");
+    //NavManager.NavigateTo($"/hotels/{Hotel.Id}/food");
+    isModalFoodOpen = true;
   }
 
   private async Task CloseModalFacilityHandlerAsync()
@@ -275,5 +283,10 @@
   private void CloseModalLocationHandlerAsync()
   {
     isModalLocationOpen = false;
+  }
+
+  private void CloseModalFoodHandlerAsync()
+  {
+    isModalFoodOpen = false;
   }
 }

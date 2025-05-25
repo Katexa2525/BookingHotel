@@ -1,4 +1,6 @@
-﻿using Application.DTO.Hotel;
+﻿using Application.DTO.Food;
+using Application.DTO.Food.CQRS;
+using Application.DTO.Hotel;
 using Application.DTO.Hotel.CQRS;
 using Application.DTO.HotelFacility;
 using Application.DTO.HotelFacility.CQRS;
@@ -62,6 +64,15 @@ namespace BookingHotel.Server.Controllers
     public async Task<ActionResult<List<LocationDto>>> GetLocationsByHotelId([FromRoute] Guid hotelid)
     {
       var result = await _mediator.Send(new GetAllLocationsByHotelIdQuery() { HotelId = hotelid });
+      return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("{hotelid}/foods")]
+    [ProducesResponseType(typeof(List<FoodDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<FoodDto>>> GetFoodsByHotelId([FromRoute] Guid hotelid)
+    {
+      var result = await _mediator.Send(new GetAllFoodByHotelIdQuery() { HotelId = hotelid });
       return Ok(result);
     }
 

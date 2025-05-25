@@ -61,7 +61,7 @@
             @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
             @* <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
             <DropdownList Options="@RoomTypes.Select(p=>p.Name).ToList()" 
-            SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
+                          SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
             @* <p>Выбрано: @selectedOption</p> *@
             <ValidationMessage For="@(() => _room.RoomTypeId )" />
           </FormFieldSet>

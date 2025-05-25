@@ -40,6 +40,7 @@ namespace Application.BussinessLogic.Food
       var entity = _mapper.Map<FoodEntity>(dto);
       entity.Id = Guid.NewGuid();
       await _repositoryManager.FoodRepository.CreateEntityAsync(entity);
+      await _repositoryManager.SaveAsync();
       return entity.Id;
     }
 
