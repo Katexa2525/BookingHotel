@@ -28,41 +28,38 @@
             }
           </div>
 
-          <div class="mt-5 mb-5">
-            <button @onclick="ShowPrices">
-              <img src="images/price.png" alt="Цены" width="50" height="50">
-            </button>
+          <AuthorizeView Context="authContext">
+            @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
+            {
+              <div class="mt-5 mb-5">
+                <button @onclick="ShowPrices">
+                  <img src="images/price.png" alt="Цены" width="50" height="50">
+                </button>
 
-            <button @onclick="ShowFacilities">
-              <img src="images/Facility.png" alt="Удобства" width="50" height="50">
-            </button>
+                <button @onclick="ShowFacilities">
+                  <img src="images/Facility.png" alt="Удобства" width="50" height="50">
+                </button>
 
-            <button @onclick="ShowPhoto">
-              <img src="images/camera.png" alt="Фото" width="50" height="50">
-            </button>
-          </div>
+                <button @onclick="ShowPhoto">
+                  <img src="images/camera.png" alt="Фото" width="50" height="50">
+                </button>
+              </div>
 
-          <div class="row mt-5 mb-5">
-            <div class="col text-right">
-              <SaveButton TextButtonAccept="Сохранить" />
-
-              @* <button class="btn btn-outline-secondary" type="button"
-                      onclick="@(() => _room=new RoomDto())">
-                @TextButtonCancel
-              </button> *@
-            </div>
-          </div>
+              <div class="row mt-5 mb-5">
+                <div class="col text-right">
+                  <SaveButton TextButtonAccept="Сохранить" />
+                </div>
+              </div>
+            }
+          </AuthorizeView>
         </div>
 
         <div class="col-8">
 
           <FormFieldSet Width="col">
             <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label>
-            @* <InputText @bind-Value="_room.RoomTypeId" class="form-control" id="roomType" /> *@
-            @* <DropdownList Options="@optionsType" SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" /> *@
-            <DropdownList Options="@RoomTypes.Select(p=>p.Name).ToList()" 
+            <DropdownList Options="@RoomTypes.Select(p=>p.Name).ToList()"
                           SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
-            @* <p>Выбрано: @selectedOption</p> *@
             <ValidationMessage For="@(() => _room.RoomTypeId )" />
           </FormFieldSet>
 
@@ -120,7 +117,7 @@
   @if (!isModalRoomPriceOpen && isModalRoomFacilityOpen)
   {
     <ShowRoomFacility IsModalOpen="@isModalRoomFacilityOpen" RoomFacilities="@_room.RoomFacilities?.ToList()" RoomId="@Room.Id"
-    OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
+                      OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
   }
 
   @if (!isModalRoomFacilityOpen && isModalRoomPriceOpen)
@@ -195,7 +192,7 @@
     // выбираю тип номера, который установлен по номеру
     if (RoomTypes is not null && RoomTypes.Any() && Room is not null)
     {
-      RoomTypes.Add(new RoomTypeDto() {Id = Guid.NewGuid(), Name = string.Empty});
+      RoomTypes.Add(new RoomTypeDto() { Id = Guid.NewGuid(), Name = string.Empty });
       selectedOptionType = RoomTypes.First(p => p.Id == Room.RoomTypeId).Name;
     }
   }

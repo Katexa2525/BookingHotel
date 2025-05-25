@@ -6,7 +6,7 @@
   <a href="/hotels/{@Hotel.Id}/rooms">
     <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
                                                             : "images/NoImage.png")"
-         class="card-img-top" alt="@Hotel.Name">
+    class="card-img-top" alt="@Hotel.Name">
   </a>
 
   <div class="card-body">
@@ -25,17 +25,20 @@
         <button class="btn btn-primary" @onclick="@(async () => await OnSelected.InvokeAsync(Hotel))" title="Просмотр">
           <i class="bi bi-binoculars"></i>
         </button>
-        <button class="btn btn-outline-secondary float-right" title="Редактирование"
-                @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
-          <i class="bi bi-pencil"></i>
-        </button>
+
+        <AuthorizeView Context="authContext">
+          @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
+          {
+            <button class="btn btn-outline-secondary float-right" title="Редактирование"
+            @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
+              <i class="bi bi-pencil"></i>
+            </button>
+          }
+        </AuthorizeView>
+
       </div>
 
-      @* <button class="btn btn-outline-secondary float-right" title="Избранное">
-        <i class="bi bi-heart"></i>
-      </button> *@
-
-       <FavoriteButton Hotel="Hotel" />
+      <FavoriteButton Hotel="Hotel" />
 
     </div>
 
