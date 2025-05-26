@@ -7,6 +7,7 @@ namespace Application.BussinessLogic.RoomPhoto
   {
     Task<Guid> CreateAsync(RoomPhotoCreateWithIdDto dto);
     Task DeleteAsync(Guid roomPhotoId);
+    Task UpdateAsync(RoomPhotoDto dto);
     Task<RoomPhotoDto> GetByIdAsync(Guid id, bool trackChanges);
     List<RoomPhotoDto> GetByCondition(Expression<Func<Domain.Models.RoomPhoto, bool>> expression, bool trackChanges);
   }

@@ -1,5 +1,4 @@
-﻿using Application.DTO.Price.ClientRequest;
-using Application.DTO.RoomPhoto.ClientRequest;
+﻿using Application.DTO.RoomPhoto.ClientRequest;
 using Application.DTO.RoomPhoto.CQRS;
 using Ardalis.ApiEndpoints;
 using MediatR;
@@ -16,7 +15,7 @@ namespace BookingHotel.Server.Endpoint.RoomPhoto
       _mediator = mediator;
     }
 
-    [HttpPost(AddPriceRequest.RouteTemplate)]
+    [HttpPost(AddRoomPhotoRequest.RouteTemplate)]
     public override async Task<ActionResult<Guid>> HandleAsync(AddRoomPhotoRequest request, CancellationToken cancellationToken = default)
     {
       var result = await _mediator.Send(new CreateRoomPhotoCommand() { Dto = request.RoomPhoto });

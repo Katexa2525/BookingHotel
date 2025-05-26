@@ -1,7 +1,5 @@
 ﻿using Application.ConstMessages;
-using Application.DTO.Price;
-using Application.DTO.Price.ClientRequest;
-using Application.DTO.Price.CQRS;
+using Application.DTO.RoomPhoto;
 using Application.DTO.RoomPhoto.ClientRequest;
 using Application.DTO.RoomPhoto.CQRS;
 using Ardalis.ApiEndpoints;
@@ -22,7 +20,7 @@ namespace BookingHotel.Server.Endpoint.RoomPhoto
       _mapper = mapper;
     }
 
-    [HttpPut(EditPriceRequest.RouteTemplate)]
+    [HttpPut(EditRoomPhotoRequest.RouteTemplate)]
     public override async Task<ActionResult<bool>> HandleAsync(EditRoomPhotoRequest request, CancellationToken cancellationToken = default)
     {
       var roomPhoto = await _mediator.Send(new GetByIdRoomPhotoQuery() { Id = request.roomPhoto.Id });
@@ -37,7 +35,7 @@ namespace BookingHotel.Server.Endpoint.RoomPhoto
       roomPhoto.RoomId = request.roomPhoto.RoomId;
 
       // сохраняю изменения
-      var result = await _mediator.Send(new UpdatePriceCommand() { Dto = _mapper.Map<PriceDto>(roomPhoto) });
+      var result = await _mediator.Send(new UpdateRoomPhotoCommand() { Dto = _mapper.Map<RoomPhotoDto>(roomPhoto) });
 
       return Ok(true);
     }

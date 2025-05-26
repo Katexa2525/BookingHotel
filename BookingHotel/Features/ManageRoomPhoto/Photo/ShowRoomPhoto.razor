@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http
-@inject NavigationManager NavManager
-@inject IMediator Mediator
+﻿@inject IMediator Mediator
 @inject IMapper Mapper
 
 @if (IsModalOpen)
@@ -109,10 +107,8 @@
   private RoomPhotoDto _photo;
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
   private List<RoomPhotoDto>? _photosDel = new List<RoomPhotoDto>();
-
-  private IFormFile? uploadedFile;
-  /// <summary> Расположение файла в это поле пишется </summary>
-  private string uploadedFileName = string.Empty;
+  /// <summary>Словарь для отслеживания изменения фотки </summary>
+  private Dictionary<Guid, bool> dicChangePhoto = new();
 
   [Parameter, EditorRequired]
   public Guid RoomId { get; set; } = default!;
@@ -137,6 +133,7 @@
 
   protected override async Task OnParametersSetAsync()
   {
+    dicChangePhoto.Clear();
     _photos = Photos;
     // обновляю данные по Facility по данному отелю
     var response = await Mediator.Send(new GetRoomPhotosRequest(RoomId));
@@ -194,9 +191,7 @@
           {
             if (Photos is not null && Photos.Any())
             {
-              var itemEq = Photos.First(p => p.Id.Equals(item.Id));
-              // если по Id названия не совпадают, т.е. корректировка была
-              if (!item.Photo.Equals(itemEq.Photo))
+              if (dicChangePhoto.ContainsKey(item.Id))
               {
                 // обновляю
                 var response = await Mediator.Send(new EditRoomPhotoRequest(Mapper.Map<RoomPhotoDto>(item)));
@@ -206,7 +201,9 @@
                   _errorMessage = AppMessage.RoomPhotoPageSaveTextErrorMessage;
                 }
                 else
+                {
                   _submitSuccessful = true;
+                }
               }
             }
           }
@@ -236,6 +233,8 @@
     await stream.CopyToAsync(memoryStream);
     byte[] imageData = memoryStream.ToArray();
     _photo.Photo = imageData;
+    // добавляю в словарь id фото, которое изменено
+    dicChangePhoto.Add(_photo.Id, true);
   }
 }
 

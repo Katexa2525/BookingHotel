@@ -47,5 +47,14 @@ namespace Application.BussinessLogic.RoomPhoto
       var photo = await _repositoryManager.RoomPhotoRepository.GetOneAsync(x => x.Id == id, trackChanges);
       return _mapper.Map<RoomPhotoDto>(photo);
     }
+
+    public async Task UpdateAsync(RoomPhotoDto dto)
+    {
+      var existingPhoto = await _repositoryManager.RoomPhotoRepository.GetOneAsync(x => x.Id == dto.Id);
+      _mapper.Map(dto, existingPhoto);
+
+      _repositoryManager.RoomPhotoRepository.UpdateEntity(existingPhoto);
+      await _repositoryManager.SaveAsync();
+    }
   }
 }
