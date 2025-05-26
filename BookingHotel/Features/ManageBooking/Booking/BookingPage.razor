@@ -131,7 +131,11 @@
           <div class="card-body">
             @* <div class="d-flex justify-content-between"> *@
             <div class="row">
-              <img src="@("images/B3C83220-D255-46D7-AC76-114ECE1D925A.jpg")" class="card-img-top">
+              @* <img src="@("images/B3C83220-D255-46D7-AC76-114ECE1D925A.jpg")" class="card-img-top"> *@
+              @if (_room != null && _room.RoomPhotos != null && _room.RoomPhotos.Any())
+              {
+                <PhotoCarousel Photos="_room.RoomPhotos.Select(p=>p.Photo).ToList()" />
+              }
             </div>
             <div class="row">
               <div class="d-flex justify-content-between mt-5">
@@ -180,7 +184,7 @@
   //Random random = new Random();
   int price = Random.Shared.Next(1000, 10001);
 
-  private RoomDto? _room = new RoomDto();
+  private RoomDto _room = new RoomDto();
   private HotelDto _hotel = new HotelDto();
   private List<GuestDto> _guests = new List<GuestDto>();
 

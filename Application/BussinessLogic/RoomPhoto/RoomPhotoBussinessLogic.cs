@@ -1,22 +1,19 @@
 ﻿using Application.DTO.RoomPhoto;
 using Application.Interfaces.Repository;
 using AutoMapper;
-using Domain.Models;
+using AutoMapper.QueryableExtensions;
+using System.Linq.Expressions;
 using RoomPhotoEntity = Domain.Models.RoomPhoto;
 
 namespace Application.BussinessLogic.RoomPhoto
 {
   public class RoomPhotoBussinessLogic : IRoomPhotoBussinessLogic
   {
-    //private readonly IRepositoryBase<RoomPhotoEntity> _repositoryRoomPhoto;
     private readonly IMapper _mapper;
     private readonly IRepositoryManager _repositoryManager;
 
-    public RoomPhotoBussinessLogic(/*IRepositoryBase<RoomPhotoEntity> repositoryRoomPhoto,*/
-                                   IMapper mapper,
-                                   IRepositoryManager repositoryManager)
+    public RoomPhotoBussinessLogic(IMapper mapper, IRepositoryManager repositoryManager)
     {
-      //_repositoryRoomPhoto = repositoryRoomPhoto;
       _mapper = mapper;
       _repositoryManager = repositoryManager;
     }
@@ -25,19 +22,38 @@ namespace Application.BussinessLogic.RoomPhoto
     {
       var entity = _mapper.Map<RoomPhotoEntity>(dto);
       entity.Id = Guid.NewGuid();
-      //await _repositoryRoomPhoto.CreateAsync(entity);
+
       await _repositoryManager.RoomPhotoRepository.CreateEntityAsync(entity);
+      await _repositoryManager.SaveAsync();
       return entity.Id;
     }
 
     public async Task DeleteAsync(Guid roomPhotoId)
     {
-      //var roomPhoto = await _repositoryRoomPhoto.FindOneAsync(x => x.Id == roomPhotoId);
-      //_repositoryRoomPhoto.Delete(roomPhoto);
-      //await _repositoryRoomPhoto.SaveAsync();
-
       var roomPhoto = await _repositoryManager.RoomPhotoRepository.GetOneAsync(x => x.Id == roomPhotoId);
       _repositoryManager.RoomPhotoRepository.DeleteEntity(roomPhoto);
+      await _repositoryManager.SaveAsync();
+    }
+
+    public List<RoomPhotoDto> GetByCondition(Expression<Func<RoomPhotoEntity, bool>> expression, bool trackChanges)
+    {
+      return _repositoryManager.RoomPhotoRepository.GetByCondition(expression, trackChanges).AsQueryable()
+                                  .ProjectTo<RoomPhotoDto>(_mapper.ConfigurationProvider)
+                                  .ToList();
+    }
+
+    public async Task<RoomPhotoDto> GetByIdAsync(Guid id, bool trackChanges)
+    {
+      var photo = await _repositoryManager.RoomPhotoRepository.GetOneAsync(x => x.Id == id, trackChanges);
+      return _mapper.Map<RoomPhotoDto>(photo);
+    }
+
+    public async Task UpdateAsync(RoomPhotoDto dto)
+    {
+      var existingPhoto = await _repositoryManager.RoomPhotoRepository.GetOneAsync(x => x.Id == dto.Id);
+      _mapper.Map(dto, existingPhoto);
+
+      _repositoryManager.RoomPhotoRepository.UpdateEntity(existingPhoto);
       await _repositoryManager.SaveAsync();
     }
   }

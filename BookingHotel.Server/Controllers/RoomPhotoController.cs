@@ -6,13 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingHotel.Server.Controllers
 {
   [ApiController]
-  [Route("roomPhoto")]
+  [Route("api/roomphotos")]
   public class RoomPhotoController : ControllerBase
   {
     private readonly IMediator _mediator;
     public RoomPhotoController(IMediator mediator)
     {
       _mediator = mediator;
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(RoomPhotoDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    {
+      var result = await _mediator.Send(new GetByIdRoomPhotoQuery() { Id = id });
+      return Ok(result);
     }
 
     [HttpPost]

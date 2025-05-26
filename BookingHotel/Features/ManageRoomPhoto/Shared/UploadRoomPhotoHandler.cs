@@ -1,18 +1,18 @@
-﻿using Application.DTO.Room.ClientRequest;
+﻿using Application.DTO.RoomPhoto.ClientRequest;
 using MediatR;
 
-namespace BookingHotel.Features.ManageRoom.Shared
+namespace BookingHotel.Features.ManageRoomPhoto.Shared
 {
-  public class UploadRoomImageHandler : IRequestHandler<UploadRoomImageRequest, UploadRoomImageRequest.Response>
+  public class UploadRoomPhotoHandler : IRequestHandler<UploadRoomPhotoRequest, UploadRoomPhotoRequest.Response>
   {
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public UploadRoomImageHandler(IHttpClientFactory httpClientFactory)
+    public UploadRoomPhotoHandler(IHttpClientFactory httpClientFactory)
     {
       _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<UploadRoomImageRequest.Response> Handle(UploadRoomImageRequest request, CancellationToken cancellationToken)
+    public async Task<UploadRoomPhotoRequest.Response> Handle(UploadRoomPhotoRequest request, CancellationToken cancellationToken)
     {
       // тип IBrowserFile включает вспомогательный метод, позволяющий считывать файл как поток
       Stream? fileContent = request.File.OpenReadStream(request.File.Size, cancellationToken);
@@ -21,21 +21,21 @@ namespace BookingHotel.Features.ManageRoom.Shared
       using var content = new MultipartFormDataContent();
       content.Add(new StreamContent(fileContent), "image", request.File.Name);
 
-      HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
+      HttpClient? httpClient = _httpClientFactory.CreateClient("SecureAPIClient");
       // файл отправляется в API серверной части, заменяю поле {hotelId} в шаблоне маршрута на идентификатор тропы, передаваемый в запросе
       HttpResponseMessage? response = await httpClient.PostAsync(
-        UploadRoomImageRequest.RouteTemplate.Replace("{roomId}", request.RoomId.ToString()), content, cancellationToken);
+        UploadRoomPhotoRequest.RouteTemplate.Replace("{roomId}", request.RoomId.ToString()), content, cancellationToken);
 
       if (response.IsSuccessStatusCode)
       {
         // если загрузка прошла успешно, десериализуем и возвращаем ответ
         string? fileName = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
-        return new UploadRoomImageRequest.Response(fileName);
+        return new UploadRoomPhotoRequest.Response(fileName);
       }
       else
       {
         // если загрузка не удалась, возвращается ответ, содержащий пустую строку
-        return new UploadRoomImageRequest.Response("");
+        return new UploadRoomPhotoRequest.Response("");
       }
     }
   }
