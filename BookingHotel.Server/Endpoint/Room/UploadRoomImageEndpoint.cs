@@ -25,7 +25,7 @@ namespace BookingHotel.Server.Endpoint.Room
     [HttpPost(UploadRoomImageRequest.RouteTemplate)]
     public override async Task<ActionResult<string>> HandleAsync([FromRoute] Guid roomId, CancellationToken cancellationToken = default)
     {
-      // получаю отель по Id
+      // получаю номер отеля по Id
       RoomDto? room = await _mediator.Send(new GetByIdRoomQuery() { Id = roomId });
       if (room is null)
       {

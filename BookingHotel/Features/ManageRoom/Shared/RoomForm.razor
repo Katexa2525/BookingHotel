@@ -59,7 +59,7 @@
           <FormFieldSet Width="col">
             <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label>
             <DropdownList Options="@RoomTypes.Select(p=>p.Name).ToList()"
-                          SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
+            SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
             <ValidationMessage For="@(() => _room.RoomTypeId )" />
           </FormFieldSet>
 
@@ -114,16 +114,22 @@
     </div>
   </div>
 
-  @if (!isModalRoomPriceOpen && isModalRoomFacilityOpen)
+  @if (!isModalRoomPriceOpen && !isModalRoomPhotoOpen && isModalRoomFacilityOpen)
   {
     <ShowRoomFacility IsModalOpen="@isModalRoomFacilityOpen" RoomFacilities="@_room.RoomFacilities?.ToList()" RoomId="@Room.Id"
-                      OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
+    OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
   }
 
-  @if (!isModalRoomFacilityOpen && isModalRoomPriceOpen)
+  @if (!isModalRoomFacilityOpen && !isModalRoomPhotoOpen && isModalRoomPriceOpen)
   {
     <ShowRoomPrice IsModalOpen="@isModalRoomPriceOpen" RoomPrices="@_room.Prices?.ToList()" RoomId="@Room.Id"
-                   OnCloseModal="CloseModalPriceHandlerAsync" ModalTitle="Цены номера отеля" />
+    OnCloseModal="CloseModalPriceHandlerAsync" ModalTitle="Цены номера отеля" />
+  }
+
+  @if (!isModalRoomFacilityOpen && !isModalRoomPriceOpen && isModalRoomPhotoOpen)
+  {
+    <ShowRoomPhoto IsModalOpen="@isModalRoomPhotoOpen" Photos="@_room.RoomPhotos?.ToList()" RoomId="@Room.Id"
+    OnCloseModal="CloseModalPhotoHandlerAsync" ModalTitle="Фото номера отеля" />
   }
 
 </EditForm>
@@ -134,6 +140,7 @@
   private IBrowserFile? _roomImage;
   private bool isModalRoomFacilityOpen = false;
   private bool isModalRoomPriceOpen = false;
+  private bool isModalRoomPhotoOpen = false;
 
   private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
   private List<string> selectedOptionsFacilities = new();
@@ -243,7 +250,8 @@
 
   private void ShowPhoto(MouseEventArgs args)
   {
-    NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/photo");
+    //NavManager.NavigateTo($"/hotels/{Room.HotelId}/rooms/{Room.Id}/photo");
+    isModalRoomPhotoOpen = true;
   }
 
   private void ShowPrices(MouseEventArgs args)
@@ -261,5 +269,9 @@
   private void CloseModalPriceHandlerAsync()
   {
     isModalRoomPriceOpen = false;
+  }
+  private void CloseModalPhotoHandlerAsync()
+  {
+    isModalRoomPhotoOpen = false;
   }
 }

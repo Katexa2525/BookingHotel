@@ -62,5 +62,9 @@
     public static readonly string PricePageSaveTextErrorMessage = "Возникла проблема с сохранением цен номера отеля!";
     public static readonly string GetPriceByIdTextErrorMessage = "Запись по цене номера отеля не может быть найдена.";
 
+    public static readonly string ValidatorRoomPhotoNameMessage = "Введите номера отеля, которому принадлежит фото";
+    public static readonly string RoomPhotoPageSaveTextErrorMessage = "Возникла проблема с сохранением фото номера отеля!";
+    public static readonly string GetRoomPhotoByIdTextErrorMessage = "Запись по фото номера отеля не может быть найдена.";
+
   }
 }
