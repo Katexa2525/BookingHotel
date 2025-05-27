@@ -1,8 +1,7 @@
 ﻿namespace Application.DTO.Review
 {
-  public class ReviewDto
+  public class ReviewCreateDto
   {
-    public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     /// <summary> Дата время отзыва </summary>
     public DateTime DateTimeReview { get; set; }

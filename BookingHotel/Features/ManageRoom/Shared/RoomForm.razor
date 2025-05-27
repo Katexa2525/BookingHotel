@@ -9,7 +9,15 @@
       <div class="row">
         <div class="col-6">
 
-          <PhotoCarousel Photos="_room.RoomPhotos.Select(p => p.Photo).ToList()" />
+
+          @if (_room == null || (_room != null && _room.RoomPhotos == null) || (_room != null && _room.RoomPhotos != null && !_room.RoomPhotos.Any()))
+          {
+            <img src="images/NoImage.png" class="card-img-top" />
+          }
+          else
+          {
+            <PhotoCarousel Photos="_room.RoomPhotos.Select(p => p.Photo).ToList()" />
+          }
 
           <AuthorizeView Context="authContext">
             @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
@@ -142,8 +150,16 @@
   [Parameter]
   public List<RoomTypeDto>? RoomTypes { get; set; }
 
-  [Parameter, EditorRequired]
+  [Parameter]
   public string TextButtonCancel { get; set; } = "Отмена";
+
+  /// <summary> Свойство для возврата в родительскую форму EditRoomPage или AddRoomPage признака, что форма выбора удобств закрыта </summary>
+  [Parameter]
+  public EventCallback<bool> OnHandleCloseSubordinateForm { get; set; }
+
+  /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
+  [Parameter, EditorRequired]
+  public Func<RoomDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
 
   private void HandleSelection(string value)
   {
@@ -186,10 +202,6 @@
       selectedOptionType = RoomTypes.First(p => p.Id == Room.RoomTypeId).Name;
     }
   }
-
-  /// <summary> Параметр OnSubmit определяет событие, которое передает введенные в форму данные обработчику, определяемому компонентом-потребителем </summary>
-  [Parameter, EditorRequired]
-  public Func<RoomDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
 
   /// <summary>
   /// Обработчик события OnValidSubmit из EditForm вызовет событие OnSubmit.
@@ -247,14 +259,19 @@
   {
     // чтобы модальное окно закрылось
     isModalRoomFacilityOpen = false;
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 
-  private void CloseModalPriceHandlerAsync()
+  private async Task CloseModalPriceHandlerAsync()
   {
     isModalRoomPriceOpen = false;
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
-  private void CloseModalPhotoHandlerAsync()
+
+  private async Task CloseModalPhotoHandlerAsync()
   {
     isModalRoomPhotoOpen = false;
+    // обновляю данные на странице
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 }

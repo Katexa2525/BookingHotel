@@ -31,7 +31,8 @@
                     }
                   </td>
                   <td>
-                    <InputFile OnChange="HandleFileSelection" multiple accept=".png,.jpg,.jpeg" />
+                    @* <InputFile OnChange="HandleFileSelection" multiple accept=".png,.jpg,.jpeg" /> *@
+                    <InputFile OnChange="HandleFileSelection" accept=".png,.jpg,.jpeg" />
                   </td>
                   <td>
                     <AuthorizeView>
@@ -73,7 +74,7 @@
               <div class="row">
                 @if (_submitSuccessful)
                 {
-                  <SuccessAlert Message="Данные близлежащим локациям отеля сохранены!" />
+                  <SuccessAlert Message="Фото номеров отеля сохранены!" />
                 }
                 else if (_errorMessage is not null)
                 {

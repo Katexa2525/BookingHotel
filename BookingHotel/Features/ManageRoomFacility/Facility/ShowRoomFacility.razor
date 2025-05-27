@@ -127,9 +127,9 @@
     _roomFacilities = RoomFacilities;
     // обновляю данные по Facility по данному отелю
     var response = await Mediator.Send(new GetRoomFacilitiesRequest(RoomId));
-    if (response is not null && response.HotelFacilities is not null && response.HotelFacilities.Any())
+    if (response is not null && response.RoomFacilities is not null && response.RoomFacilities.Any())
     {
-      _roomFacilities = response.HotelFacilities;
+      _roomFacilities = response.RoomFacilities;
     }
   }
 

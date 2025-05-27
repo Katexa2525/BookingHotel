@@ -66,5 +66,11 @@
     public static readonly string RoomPhotoPageSaveTextErrorMessage = "Возникла проблема с сохранением фото номера отеля!";
     public static readonly string GetRoomPhotoByIdTextErrorMessage = "Запись по фото номера отеля не может быть найдена.";
 
+    public static readonly string ValidatorReviewHotelIdMessage = "Введите номер отеля для отзыва";
+    public static readonly string ValidatorReviewNameMessage = "Введите заголовок отзыва";
+    public static readonly string ValidatorReviewDescriptionMessage = "Введите описание отзыва";
+    public static readonly string ValidatorReviewStarMessage = "Введите оценку отзыва";
+    public static readonly string GetReviewByIdTextErrorMessage = "Запись отзыву отеля не может быть найдена.";
+
   }
 }

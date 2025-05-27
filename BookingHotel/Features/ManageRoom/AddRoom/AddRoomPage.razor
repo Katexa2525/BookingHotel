@@ -3,8 +3,6 @@
 @inject IMediator Mediator
 @inject IMapper Mapper
 
-@using AutoMapper
-
 @attribute [Authorize(Roles = "Administrator, Hotel_owner")]
 
 <PageTitle>Создание новой записи номера отеля</PageTitle>
@@ -28,7 +26,7 @@ else if (_errorMessage is not null)
 Она будет применяться для вызова метода ResetForm. 
 Также предоставлен обработчик OnSubmit компонента RoomForm
 -->
-<RoomForm @ref="_roomForm" HotelId="HotelId" RoomTypes="_allRoomTypes" OnSubmit="SubmitNewRoom"/>
+<RoomForm @ref="_roomForm" HotelId="HotelId" RoomTypes="_allRoomTypes" OnSubmit="SubmitNewRoom" TextButtonCancel="Отмена"/>
 
 @code {
   private bool _submitSuccessful; // поле для отслеживания успешности отправки содержимого формы
@@ -96,5 +94,6 @@ else if (_errorMessage is not null)
     }
     return true;
   }
+
 
 }

@@ -9,7 +9,7 @@
         <div class="col-3">
           @* <img src="images/NoImage.png" class="card-img-top"> *@
 
-          @if (string.IsNullOrWhiteSpace(Room.MainPhoto))
+          @* @if (string.IsNullOrWhiteSpace(Room.MainPhoto))
           {
             <img src="images/NoImage.png" class="card-img-top" />
           }
@@ -18,7 +18,14 @@
             <div class="card bg-dark text-white">
               <img src="images/@Room.MainPhoto" class="card-img-top" />
             </div>
-          }
+          } *@
+
+          <div class="card-img-top">
+            @if (Room != null && Room.RoomPhotos != null && Room.RoomPhotos.Any())
+            {
+              <PhotoCarousel Photos="Room.RoomPhotos.Select(p=>p.Photo).ToList()" />
+            }
+          </div>
 
         </div>
 

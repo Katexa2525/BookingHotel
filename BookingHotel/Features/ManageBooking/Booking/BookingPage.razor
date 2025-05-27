@@ -131,7 +131,6 @@
           <div class="card-body">
             @* <div class="d-flex justify-content-between"> *@
             <div class="row">
-              @* <img src="@("images/B3C83220-D255-46D7-AC76-114ECE1D925A.jpg")" class="card-img-top"> *@
               @if (_room != null && _room.RoomPhotos != null && _room.RoomPhotos.Any())
               {
                 <PhotoCarousel Photos="_room.RoomPhotos.Select(p=>p.Photo).ToList()" />
@@ -174,7 +173,6 @@
 
 
 @code {
-  private BookingModel booking = new BookingModel();
   private bool bookingConfirmed = false;
   private string? _errorMessage;
   private string _arrivalDate = string.Empty;
@@ -187,11 +185,6 @@
   private RoomDto _room = new RoomDto();
   private HotelDto _hotel = new HotelDto();
   private List<GuestDto> _guests = new List<GuestDto>();
-
-  private void BookRoom()
-  {
-    bookingConfirmed = true;
-  }
 
   [Parameter]
   public Guid HotelId { get; set; }
@@ -247,26 +240,5 @@
       _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
     }
 
-  }
-
-
-  private class BookingModel
-  {
-    [Required]
-    public string Name { get; set; }
-
-    [Required]
-    public string Famil { get; set; }
-
-    [Required]
-    public string Phone { get; set; }
-
-    [Required, EmailAddress]
-    public string Email { get; set; }
-
-    [Required]
-    public DateTime CheckInDate { get; set; }
-    [Required]
-    public DateTime CheckOutDate { get; set; }
   }
 }
