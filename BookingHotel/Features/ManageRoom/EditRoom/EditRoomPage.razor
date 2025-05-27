@@ -24,7 +24,8 @@ else
     <ErrorAlert Message="@_errorMessage" />
   }
 
-  <RoomForm Room="_room" RoomTypes="_allRoomTypes" TextButtonCancel="Отмена" OnSubmit="SubmitEditRoom" />
+  <RoomForm Room="_room" HotelId="HotelId" RoomTypes="_allRoomTypes" TextButtonCancel="Отмена"
+            OnSubmit="SubmitEditRoom" OnHandleCloseSubordinateForm="HandleCloseSubordinateForm" />
 }
 
 @code {
@@ -63,18 +64,6 @@ else
       _allRoomTypes = responseRoomTypes.RoomTypes.Select(p => new RoomTypeDto { Id = p.Id, Name = p.Name })
                                                  .OrderBy(p=>p.Name).ToList();
     }
-
-    // // получаю данные справочника RoomFacility
-    // var responseFacility = await Mediator.Send(new GetRoomFacilitiesRequest());
-
-    // if (responseFacility is not null)
-    // {
-    //   _roomFacility = responseFacility.Facilities;
-    // }
-    // else
-    // {
-    //   _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
-    // }
 
     // после загрузки отеля устанавливаю в false
     _isLoading = false;
@@ -119,6 +108,20 @@ else
     // Если было выбрано новое изображение, обновляем свойство Image, указав новое имя файла
     _room.MainPhoto = imageUploadResponse.ImageName;
     return true;
+  }
+
+  private async Task HandleCloseSubordinateForm(bool isClosed)
+  {
+    // обновляю данные на странице
+    if (isClosed)
+    {
+      var response = await Mediator.Send(new GetRoomRequest(RoomId));
+
+      if (response is not null)
+      {
+        _room = response.Room;
+      }
+    }
   }
 
 }
