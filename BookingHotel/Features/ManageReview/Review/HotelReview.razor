@@ -14,7 +14,7 @@
         </AuthorizeView>
       </div>
       <div class="row mt-1">
-        @foreach (var item in @Hotel.Reviews)
+        @foreach (var item in @Hotel.Reviews.OrderByDescending(p => p.DateTimeReview))
         {
           <div class="card shadow">
             <div class="card-body">

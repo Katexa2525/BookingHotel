@@ -41,6 +41,7 @@ namespace BookingHotel.Server.Controllers
     }
 
     [HttpPost]
+    //[Route("create")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] ReviewCreateWithIdDto dto)
     {

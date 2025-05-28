@@ -1,5 +1,5 @@
 ﻿<div class="star-rating">
-  @for (int i = 0; i < 5; i++)
+  @for (int i = 1; i <= 5; i++)
   {
     <i class="@GetStarClass(i)" @onclick="() => SetRating(i)"></i>
   }
@@ -12,10 +12,11 @@
   [Parameter]
   public EventCallback<int> StarClicked { get; set; }
 
-  private void SetRating(int index)
+  private async Task SetRating(int index)
   {
-    StarClicked.InvokeAsync(index + 1);
+    StarCount = index;
+    await StarClicked.InvokeAsync(index);
   }
 
-  private string GetStarClass(int index) => index < StarCount ? "bi bi-star-fill text-warning" : "bi bi-star";
+  private string GetStarClass(int index) => index <= StarCount ? "bi bi-star-fill text-warning" : "bi bi-star";
 }

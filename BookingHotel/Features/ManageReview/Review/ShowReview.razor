@@ -1,55 +1,60 @@
-﻿@inject NavigationManager NavManager
+﻿@using BookingHotel.Validation
+@inject NavigationManager NavManager
 @inject IMediator Mediator
 @inject IMapper Mapper
 
 @if (IsModalOpen)
 {
-  <div class="modal show d-block" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">@ModalTitle @Hotel.Name</h5>
-          <button type="button" class="btn-close" @onclick="CloseModal"></button>
-        </div>
-        <div class="modal-body">
+  <EditForm EditContext="_editContext">
+    <FluentValidationValidator />
+    <div class="modal show d-block" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">@ModalTitle @Hotel.Name</h5>
+            <button type="button" class="btn-close" @onclick="CloseModal"></button>
+          </div>
+          <div class="modal-body">
 
-          <div class="card shadow">
-            <div class="card-body">
-              <div class="row">
-                <div class="d-flex justify-content-between">
-                  <h5 class="card-subtitle mb-3 "> @_review.DateTimeReview</h5>
-                  <StarComponent StarCount="@_review.Star" StarClicked="@SetHotelStar" />
+            <div class="card shadow">
+              <div class="card-body">
+                <div class="row">
+                  <div class="d-flex justify-content-between">
+                    <h5 class="card-subtitle mb-3 "> @_review.DateTimeReview</h5>
+                    <StarComponent StarCount="@_review.Star" StarClicked="@SetHotelStar" />
+                  </div>
+
+                  <FormFieldSet Width="col">
+                    <label for="reviewName" class="font-weight-bold text-secondary">Имя</label>
+                    <InputText @bind-Value="_review.Name" class="form-control" id="reviewName" />
+                  </FormFieldSet>
+
+                  <FormFieldSet Width="col">
+                    <label for="reviewDescription" class="font-weight-bold text-secondary">Отзыв</label>
+                    <InputTextArea @bind-Value="_review.Description" rows="6" class="form-control" id="reviewDescription" />
+                  </FormFieldSet>
+
                 </div>
-
-                <FormFieldSet Width="col">
-                  <label for="reviewName" class="font-weight-bold text-secondary">Имя</label>
-                  <InputText @bind-Value="_review.Name" class="form-control" id="reviewName" />
-                </FormFieldSet>
-
-                <FormFieldSet Width="col">
-                  <label for="reviewDescription" class="font-weight-bold text-secondary">Отзыв</label>
-                  <InputTextArea @bind-Value="_review.Description" rows="6" class="form-control" id="reviewDescription" />
-                </FormFieldSet>
-
               </div>
             </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-primary mx-3" type="button" title="Сохранить" @onclick="Save">
+              <i class="bi bi-save"></i>
+              @TextButtonAccept
+            </button>
           </div>
 
         </div>
-
-        <div class="modal-footer">
-          <button class="btn btn-primary mx-3" type="button" title="Сохранить" @onclick="Save">
-            <i class="bi bi-save"></i>
-            @TextButtonAccept
-          </button>
-        </div>
-
       </div>
     </div>
-  </div>
+  </EditForm>
 }
 
 @code {
+  private EditContext _editContext = default!;
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private ReviewDto _review = new ReviewDto();
@@ -80,19 +85,17 @@
 
   protected override async Task OnParametersSetAsync()
   {
+    // создаю новый EditContext для модели отеля
+    _editContext = new EditContext(_review);
+    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
+    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+
     if (Review is not null)
     {
       _review = Review;
     }
-    _review.DateTimeReview =  DateTime.Now;
-
-    // _locations = Locations;
-    // // обновляю данные по Facility по данному отелю
-    // var response = await Mediator.Send(new GetLocationsRequest(HotelId));
-    // if (response is not null && response.Locations is not null && response.Locations.Any())
-    // {
-    //   _locations = response.Locations;
-    // }
+    _review.DateTimeReview = DateTime.Now;
+    _review.HotelId = Hotel.Id;
   }
 
   private void CloseModal()
