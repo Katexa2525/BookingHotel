@@ -37,9 +37,14 @@
         </AuthorizeView>
 
       </div>
-
-      <FavoriteButton Hotel="Hotel" />
-
+      <div class="d-flex gap-2">
+        <FavoriteButton Hotel="Hotel" />
+        <AuthorizeView Context="authContext">
+          <button class="btn btn-outline-secondary float-right" title="Добавить отзыв">
+            <i class="bi bi-chat-dots-fill"></i>
+          </button>
+        </AuthorizeView>
+      </div>
     </div>
 
   </div>
