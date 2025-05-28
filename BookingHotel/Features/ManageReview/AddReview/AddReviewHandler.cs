@@ -19,7 +19,7 @@ namespace BookingHotel.Features.ManageReview.AddReview
       {
         // Защищенный HttpClient используется для вызова API с использованием шаблона маршрута, который определили для запроса
         HttpClient? httpClient = _httpClientFactory.CreateClient("SecureAPIClient");
-        //httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
         var response = await httpClient.PostAsJsonAsync(AddReviewRequest.RouteTemplate, request, cancellationToken);
 
         if (response.IsSuccessStatusCode)

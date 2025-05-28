@@ -1,4 +1,5 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms"
+@using Application.DTO.Review.ClientRequest
 
 @inject IMediator Mediator
 @inject NavigationManager NavManager
@@ -60,8 +61,7 @@
 <AboutHotelFacilities CaptionFacilities="Удобства и услуги отеля" CaptionFoods="Питание" Hotel="@_hotel" />
 
 @* Отзывы *@
-<HotelReview Caption="@countReview" Hotel="@_hotel" />
-
+<HotelReview Caption="@countReview" Hotel="@_hotel" OnHandleCloseSubordinateForm="HandleCloseSubordinateForm" />
 
 @code {
 
@@ -145,5 +145,19 @@
     Booking.DepartureDate = bookingDto.DepartureDate;
     Booking.NumberOfAdults = bookingDto.NumberOfAdults;
     Booking.NumberOfChilds = bookingDto.NumberOfChilds;
+  }
+
+  private async Task HandleCloseSubordinateForm(bool isClosed)
+  {
+    // обновляю данные на странице
+    if (isClosed)
+    {
+      var response = await Mediator.Send(new GetReviewsRequest(HotelId));
+
+      if (response is not null)
+      {
+        _hotel.Reviews = response.Reviews;
+      }
+    }
   }
 }

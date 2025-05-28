@@ -1,0 +1,169 @@
+﻿@inject NavigationManager NavManager
+@inject IMediator Mediator
+@inject IMapper Mapper
+
+@if (IsModalOpen)
+{
+  <div class="modal show d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">@ModalTitle @Hotel.Name</h5>
+          <button type="button" class="btn-close" @onclick="CloseModal"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="card shadow">
+            <div class="card-body">
+              <div class="row">
+                <div class="d-flex justify-content-between">
+                  <h5 class="card-subtitle mb-3 "> @_review.DateTimeReview</h5>
+                  <StarComponent StarCount="@_review.Star" StarClicked="@SetHotelStar" />
+                </div>
+
+                <FormFieldSet Width="col">
+                  <label for="reviewName" class="font-weight-bold text-secondary">Имя</label>
+                  <InputText @bind-Value="_review.Name" class="form-control" id="reviewName" />
+                </FormFieldSet>
+
+                <FormFieldSet Width="col">
+                  <label for="reviewDescription" class="font-weight-bold text-secondary">Отзыв</label>
+                  <InputTextArea @bind-Value="_review.Description" rows="6" class="form-control" id="reviewDescription" />
+                </FormFieldSet>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary mx-3" type="button" title="Сохранить" @onclick="Save">
+            <i class="bi bi-save"></i>
+            @TextButtonAccept
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}
+
+@code {
+  private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
+  private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
+  private ReviewDto _review = new ReviewDto();
+
+  [Parameter, EditorRequired]
+  public HotelDto Hotel { get; set; } = default!;
+
+  [Parameter]
+  public ReviewDto Review { get; set; }
+
+  /// <summary>Событие, что окно формы закрыто и надо обработать это событие в родительской форме </summary>
+  [Parameter, EditorRequired]
+  public EventCallback OnCloseModal { get; set; }
+
+  [Parameter]
+  public bool IsModalOpen { get; set; } = false;
+
+  [Parameter, EditorRequired]
+  public string ModalTitle { get; set; } = string.Empty;
+
+  [Parameter]
+  public string TextButtonAccept { get; set; } = string.Empty;
+
+  protected override async Task OnInitializedAsync()
+  {
+    _submitSuccessful = false;
+  }
+
+  protected override async Task OnParametersSetAsync()
+  {
+    if (Review is not null)
+    {
+      _review = Review;
+    }
+    _review.DateTimeReview =  DateTime.Now;
+
+    // _locations = Locations;
+    // // обновляю данные по Facility по данному отелю
+    // var response = await Mediator.Send(new GetLocationsRequest(HotelId));
+    // if (response is not null && response.Locations is not null && response.Locations.Any())
+    // {
+    //   _locations = response.Locations;
+    // }
+  }
+
+  private void CloseModal()
+  {
+    _submitSuccessful = false;
+    IsModalOpen = false;
+    // оповещаю родительскую форму
+    OnCloseModal.InvokeAsync();
+  }
+
+  private void SetHotelStar(int star)
+  {
+    _review.Star = star;
+  }
+
+  private async Task Save(MouseEventArgs args)
+  {
+    try
+    {
+      _review.DateTimeReview = DateTime.Now; // устанавливаю дату время обновления
+      // добавление записи
+      if (_review.Id == Guid.Empty)
+      {
+        var response = await Mediator.Send(new AddReviewRequest(Mapper.Map<ReviewCreateWithIdDto>(_review)));
+        if (response.reviewId == Guid.Empty)
+        {
+          _submitSuccessful = false;
+          _errorMessage = AppMessage.ReviewPageSaveTextErrorMessage;
+          // Если при сохранении произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить
+          // пользовательский интерфейс сообщением об ошибке
+          StateHasChanged();
+          return;
+        }
+        else
+          _submitSuccessful = true;
+        CloseModal();
+      }
+      else // изменение данных
+      {
+        ReviewDto _reviewEq = new ReviewDto();
+        var responseEq = await Mediator.Send(new GetReviewRequest(_review.Id));
+        if (responseEq is not null && responseEq.Review is not null)
+        {
+          _reviewEq = responseEq.Review;
+
+          // если по Id названия не совпадают, т.е. корректировка была
+          if (!_review.Name.Equals(_reviewEq.Name) || !_review.Description.Equals(_reviewEq.Description) ||
+              !_review.Star.Equals(_reviewEq.Star) || !_review.HotelId.Equals(_reviewEq.HotelId))
+          {
+            // обновляю
+            var response = await Mediator.Send(new EditReviewRequest(Mapper.Map<ReviewDto>(_review)));
+            if (!response.IsSuccess)
+            {
+              _submitSuccessful = false;
+              _errorMessage = AppMessage.ReviewPageSaveTextErrorMessage;
+            }
+            else
+              _submitSuccessful = true;
+            CloseModal();
+          }
+        }
+        else
+        {
+          _errorMessage = AppMessage.ReviewPageLoadTextErrorMessage;
+        }
+      }
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Ошибка: {ex.StackTrace}");
+    }
+  }
+}
+

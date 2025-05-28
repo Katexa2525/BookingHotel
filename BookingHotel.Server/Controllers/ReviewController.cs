@@ -39,5 +39,21 @@ namespace BookingHotel.Server.Controllers
       var result = await _mediator.Send(new DeleteReviewCommand { ReviewId = id });
       return NoContent();
     }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    public async Task<IActionResult> Create([FromBody] ReviewCreateWithIdDto dto)
+    {
+      var result = await _mediator.Send(new CreateReviewCommand() { Dto = dto });
+      return Ok(result);
+    }
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update([FromBody] ReviewDto dto)
+    {
+      await _mediator.Send(new UpdateReviewCommand { Dto = dto });
+      return NoContent();
+    }
   }
 }

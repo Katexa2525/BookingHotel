@@ -7,7 +7,8 @@
       <div class="d-flex justify-content-between">
         <p class="h3">@Caption</p>
         <AuthorizeView Context="authContext">
-          <button class="btn btn-outline-secondary float-right " title="Добавить отзыв">
+          <button type="button" class="btn btn-outline-secondary float-right " title="Добавить отзыв"
+                  @onclick="ShowFormReview">
             <i class="bi bi-chat-dots-fill"></i>
           </button>
         </AuthorizeView>
@@ -35,12 +36,33 @@
       </div>
     </div>
   </div>
+
+  @* Форма Отзывы *@
+  <ShowReview Hotel="@Hotel" IsModalOpen="@isModalHotelReviewOpen" ModalTitle="Отзыв об отеле" OnCloseModal="CloseModalReviewHandlerAsync"
+              TextButtonAccept="Опубликовать"/>
 }
 
 @code {
+  private bool isModalHotelReviewOpen = false;
+
   [Parameter, EditorRequired]
-  public HotelDto Hotel { get; set; }
+  public HotelDto Hotel { get; set; } 
 
   [Parameter, EditorRequired]
   public string Caption { get; set; }
+
+  /// <summary> Свойство для возврата в родительскую форму признака, что форма закрыта </summary>
+  [Parameter]
+  public EventCallback<bool> OnHandleCloseSubordinateForm { get; set; }
+
+  private async Task CloseModalReviewHandlerAsync()
+  {
+    isModalHotelReviewOpen = false;
+    // обновляю данные на странице
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
+  }
+  private void ShowFormReview(MouseEventArgs args)
+  {
+    isModalHotelReviewOpen = true;
+  }
 }
