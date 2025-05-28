@@ -12,12 +12,17 @@
 
 @if (_allHotels is not null && _allHotels.Any())
 {
-  <div class="mb-4">
-    <p class="font-italic text-center">
-      Есть отель, который хотели бы опубликовать?
-      <a href="add-hotel">Добавьте это здесь</a>.
-    </p>
-  </div>
+  <AuthorizeView Context="authContext">
+    @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
+    {
+      <div class="mb-4">
+        <p class="font-italic text-center">
+          Есть отель, который хотели бы опубликовать?
+          <a href="add-hotel">Добавьте это здесь</a>.
+        </p>
+      </div>
+    }
+  </AuthorizeView>
 
   // данные передаются в параметры компонента с помощью атрибутов элемента
   <HotelDetails Hotel="_selectedHotel" />
@@ -58,9 +63,9 @@ else
 {
 
   <NoHotels>
-    В настоящее время нет отелей, 
+    В настоящее время нет отелей,
     <a href="add-hotel">почему бы не добавить один?</a>
- </NoHotels>
+  </NoHotels>
 
 }
 

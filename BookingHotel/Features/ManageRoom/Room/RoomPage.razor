@@ -5,12 +5,17 @@
 
 <PageTitle>Номера</PageTitle>
 
-<div class="mb-4">
-  <p class="font-italic text-center">
-    Есть номер, который хотели бы опубликовать?
-    <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь</a>.
-  </p>
-</div>
+<AuthorizeView Context="authContext">
+  @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
+  {
+    <div class="mb-4">
+      <p class="font-italic text-center">
+        Есть номер, который хотели бы опубликовать?
+        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь</a>.
+      </p>
+    </div>
+  }
+</AuthorizeView>
 
 @* Данные по отелю *@
 <p class="h1">@_hotel.Name, @_hotel.Star*</p>
@@ -105,7 +110,7 @@
         Prices = p.Prices,
         RoomFacilities = p.RoomFacilities,
         RoomPhotos = p.RoomPhotos,
-        RoomType = p.RoomType, 
+        RoomType = p.RoomType,
         Bookings = p.Bookings,
         MainPhoto = p.MainPhoto
       });
