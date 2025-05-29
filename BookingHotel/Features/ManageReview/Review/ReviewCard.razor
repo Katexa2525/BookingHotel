@@ -10,13 +10,13 @@
       <h5 class="card-subtitle mb-3 "> @Review.DateTimeReview</h5>
     </div>
     <div class="row">
-      <div class="col-10">
+      <div class="col-11">
         <h5 class="card-subtitle mb-3 "> @Review.Description</h5>
       </div>
-      <div class="col-2">
-        <AuthorizeView>
+      <div class="col-1">
+        @* <AuthorizeView>
           @if (context.User.IsInRole("Administrator"))
-          {
+          { *@
             <button type="button" class="btn btn-outline-danger custom-btn" title="Удалить" @onclick="DeleteReview">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-dash" viewBox="0 0 16 16">
                 <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1" />
@@ -24,12 +24,24 @@
                 <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
               </svg>
             </button>
-          }
-        </AuthorizeView>
+          @* }
+        </AuthorizeView> *@
       </div>
     </div>
   </div>
 </div>
+
+<style>
+  .custom-btn {
+    padding: 2px 4px; /* Минимальные отступы */
+    font-size: 12px; /* Уменьшенный размер текста */
+    width: 45px; /* Фиксированная ширина */
+    height: 45px; /* Фиксированная высота */
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+  }
+</style>
 
 @code {
   [Parameter, EditorRequired]
