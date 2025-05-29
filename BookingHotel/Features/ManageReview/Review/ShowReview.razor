@@ -19,9 +19,17 @@
             <div class="card shadow">
               <div class="card-body">
                 <div class="row">
-                  <div class="d-flex justify-content-between">
-                    <h5 class="card-subtitle mb-3 "> @_review.DateTimeReview</h5>
-                    <StarComponent StarCount="@_review.Star" StarClicked="@SetHotelStar" />
+                  <h5 class="card-subtitle mb-3 "> @_review.DateTimeReview</h5>
+
+                  <div class="d-flex justify-content-between mt-2">
+                    <FormFieldSet Width="col">
+                      <label for="reviewStar" class="font-weight-bold text-secondary">Звёзд</label>
+                      <InputNumber @bind-Value="_review.Star" class="form-control" id="reviewStar" min="0" max="5" />
+                    </FormFieldSet>
+                    <FormFieldSet Width="col">
+                      <label for="Star" class="font-weight-bold text-secondary"></label>
+                      <StarComponent StarCount="@_review.Star" StarClicked="@SetHotelStar" />
+                    </FormFieldSet>
                   </div>
 
                   <FormFieldSet Width="col">

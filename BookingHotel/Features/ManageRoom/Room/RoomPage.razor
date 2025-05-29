@@ -154,9 +154,17 @@
     {
       var response = await Mediator.Send(new GetReviewsRequest(HotelId));
 
-      if (response is not null)
+      if (response is not null && response.Reviews is not null)
       {
         _hotel.Reviews = response.Reviews;
+        // вычисляю рейтинг для отеля, после добавления отзыва
+        double ratingHotel = Math.Round((double)response.Reviews.Sum(p => p.Star) / (double)response.Reviews.Count(), 1);
+        // запрос на обновление данных отеля по значению рейтинга
+        if (ratingHotel != _hotel.Rating)
+        {
+          _hotel.Rating = ratingHotel;
+          var responseEditHotel = await Mediator.Send(new EditHotelRequest(_hotel));
+        }
       }
     }
   }

@@ -7,6 +7,9 @@
 @inject NavigationManager NavManager
 
 @using System.Security.Claims
+@using Application.DTO.Hotel.CQRS
+@using Application.DTO.Hotel.Mediatr
+@using Application.DTO.Review.ClientRequest
 
 <PageTitle>Отели</PageTitle>
 
@@ -31,7 +34,7 @@
 
   <ViewSwitcher Items="_allHotels" Context="hotel">
     <GridTemplate>
-      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
+      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" OnHandleCloseReviewForm="HandleCloseReviewForm" />
     </GridTemplate>
 
     <HeaderTemplate>
@@ -51,10 +54,15 @@
         <button @onclick="@(() =>HandleHotelSelected (hotel))" title="Просмотр" class="btn btn-primary">
           <i class="bi bi-binoculars"></i>
         </button>
-        <button @onclick="@(() => NavManager.NavigateTo ($"/edit-hotel/{hotel.Id}"))" title="Редактирование"
-                class="btn btn-outline-secondary">
-          <i class="bi bi-pencil"></i>
-        </button>
+        <AuthorizeView Context="authContext">
+          @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
+          {
+            <button @onclick="@(() => NavManager.NavigateTo ($"/edit-hotel/{hotel.Id}"))" title="Редактирование"
+            class="btn btn-outline-secondary">
+              <i class="bi bi-pencil"></i>
+            </button>
+          }
+        </AuthorizeView>
       </td>
     </RowTemplate>
   </ViewSwitcher>
@@ -113,5 +121,31 @@ else
   {
     _selectedHotel = hotel;
     //StateHasChanged(); //- не нужен, т.к. тип EventCallback вызывает этот метод для обрабатывающего события компонента
+  }
+
+  private async Task HandleCloseReviewForm(Tuple<bool, HotelDto> tuple)
+  {
+    bool isCloseReviewForm = tuple.Item1;
+    HotelDto hotel = tuple.Item2;
+    if (isCloseReviewForm )
+    {
+      // получаю данные по отелю
+      var responseHotel = await Mediator.Send(new GetHotelRequest(hotel.Id));
+
+      if (responseHotel is not null && responseHotel.Hotel is not null && responseHotel.Hotel.Reviews is not null)
+      {
+        var reviews = responseHotel.Hotel.Reviews;
+        // вычисляю рейтинг для отеля, после добавления отзыва
+        double ratingHotel = Math.Round((double)reviews.Sum(p => p.Star) / (double)reviews.Count(), 1);
+        // запрос на обновление данных отеля по значению рейтинга
+        if (ratingHotel != responseHotel.Hotel.Rating)
+        {
+          hotel = responseHotel.Hotel;
+          hotel.Rating = ratingHotel;
+          var responseEditHotel = await Mediator.Send(new EditHotelRequest(hotel));
+          StateHasChanged();
+        }
+      }
+    }
   }
 }
