@@ -16,22 +16,7 @@
       <div class="row mt-1">
         @foreach (var item in @Hotel.Reviews.OrderByDescending(p => p.DateTimeReview))
         {
-          <div class="card shadow">
-            <div class="card-body">
-              <div class="row">
-                <div class="d-flex justify-content-between">
-                  <h5 class="card-subtitle mb-3 "> @item.Name</h5>
-                  <StarComponent StarCount="@item.Star" />
-                </div>
-              </div>
-              <div class="row">
-                <h5 class="card-subtitle mb-3 "> @item.DateTimeReview</h5>
-              </div>
-              <div class="row">
-                <h5 class="card-subtitle mb-3 "> @item.Description</h5>
-              </div>
-            </div>
-          </div>
+          <ReviewCard Review="item" />
         }
       </div>
     </div>
