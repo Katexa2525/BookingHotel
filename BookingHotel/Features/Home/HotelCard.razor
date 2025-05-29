@@ -1,4 +1,5 @@
-﻿@inject NavigationManager NavManager
+﻿@using BookingHotel.Features.ManageReview.Review
+@inject NavigationManager NavManager
 
 <div class="card shadow" style="width: 18rem;">
   @* <img src="@Hotel.MainPhoto" class="card-img-top" alt="@Hotel.Name"> *@
@@ -37,15 +38,25 @@
         </AuthorizeView>
 
       </div>
-
-      <FavoriteButton Hotel="Hotel" />
-
+      <div class="d-flex gap-2">
+        <FavoriteButton Hotel="Hotel" />
+        <AuthorizeView Context="authContext">
+          <button class="btn btn-outline-secondary float-right" title="Добавить отзыв" @onclick="ShowFormReview">
+            <i class="bi bi-chat-dots-fill"></i>
+          </button>
+        </AuthorizeView>
+      </div>
     </div>
 
   </div>
+
+  @* Форма Отзывы *@
+  <ShowReview Hotel="@Hotel" IsModalOpen="@isModalHotelReviewOpen" ModalTitle="Отзыв об отеле" OnCloseModal="CloseModalReviewHandlerAsync"
+  TextButtonAccept="Опубликовать"/>
 </div>
 
 @code {
+  private bool isModalHotelReviewOpen = false;
 
   [Parameter, EditorRequired]
   public HotelDto Hotel { get; set; } = default!; // определяет обязательный параметр компонента
@@ -53,5 +64,21 @@
   /// <summary>События определяются с использованием типов делегатов Action или Func, или через тип EventCallback </summary>
   [Parameter, EditorRequired]
   public EventCallback<HotelDto> OnSelected { get; set; }
+
+  [Parameter, EditorRequired]
+  public EventCallback<Tuple<bool, HotelDto>> OnHandleCloseReviewForm { get; set; }
+
+  private void ShowFormReview(MouseEventArgs args)
+  {
+    isModalHotelReviewOpen = true;
+  }
+
+  private async Task CloseModalReviewHandlerAsync()
+  {
+    isModalHotelReviewOpen = false;
+    // обновляю данные на странице
+    Tuple<bool, HotelDto> dataHotel = new Tuple<bool, HotelDto>(true, Hotel);
+    await OnHandleCloseReviewForm.InvokeAsync(dataHotel);
+  }
 
 }

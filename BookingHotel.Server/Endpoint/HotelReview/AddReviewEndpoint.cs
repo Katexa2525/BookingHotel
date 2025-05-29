@@ -16,6 +16,7 @@ namespace BookingHotel.Server.Endpoint.HotelReview
     }
 
     [HttpPost(AddReviewRequest.RouteTemplate)]
+    //[HttpPost("api/reviews/create/v1")]
     public async override Task<ActionResult<Guid>> HandleAsync(AddReviewRequest request, CancellationToken cancellationToken = default)
     {
       var result = await _mediator.Send(new CreateReviewCommand() { Dto = request.Review });

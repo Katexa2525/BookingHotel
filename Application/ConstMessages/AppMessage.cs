@@ -71,6 +71,8 @@
     public static readonly string ValidatorReviewDescriptionMessage = "Введите описание отзыва";
     public static readonly string ValidatorReviewStarMessage = "Введите оценку отзыва";
     public static readonly string GetReviewByIdTextErrorMessage = "Запись отзыву отеля не может быть найдена.";
+    public static readonly string ReviewPageSaveTextErrorMessage = "Возникла проблема с сохранением отзыва!";
+    public static readonly string ReviewPageLoadTextErrorMessage = "Возникла проблема при загрузке отеля!";
 
   }
 }

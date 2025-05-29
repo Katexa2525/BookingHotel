@@ -7,6 +7,7 @@ using Application.BussinessLogic.HotelFacility;
 using Application.BussinessLogic.HotelPhoto;
 using Application.BussinessLogic.Location;
 using Application.BussinessLogic.Price;
+using Application.BussinessLogic.Review;
 using Application.BussinessLogic.Room;
 using Application.BussinessLogic.RoomFacility;
 using Application.BussinessLogic.RoomPhoto;
@@ -97,6 +98,8 @@ namespace BookingHotel.Server.Extensions
       services.AddScoped<IBookingBussinessLogic, BookingBussinessLogic>();
       services.AddScoped<IRoomTypeBussinessLogic, RoomTypeBussinessLogic>();
       services.AddScoped<IGuestBussinessLogic, GuestBussinessLogic>();
+      services.AddScoped<IReviewBussinessLogic, ReviewBussinessLogic>();
+      
     }
 
     public static void ConfigureAuthenticationJWTKeycloak(this IServiceCollection services)

@@ -6,6 +6,8 @@ using Application.DTO.HotelFacility;
 using Application.DTO.HotelFacility.CQRS;
 using Application.DTO.Location;
 using Application.DTO.Location.CQRS;
+using Application.DTO.Review;
+using Application.DTO.Review.CQRS;
 using Application.DTO.Room;
 using Application.DTO.Room.CQRS;
 using MediatR;
@@ -73,6 +75,15 @@ namespace BookingHotel.Server.Controllers
     public async Task<ActionResult<List<FoodDto>>> GetFoodsByHotelId([FromRoute] Guid hotelid)
     {
       var result = await _mediator.Send(new GetAllFoodByHotelIdQuery() { HotelId = hotelid });
+      return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("{hotelid}/reviews")]
+    [ProducesResponseType(typeof(List<ReviewDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<ReviewDto>>> GetReviewsByHotelId([FromRoute] Guid hotelid)
+    {
+      var result = await _mediator.Send(new GetAllReviewByHotelIdQuery() { HotelId = hotelid });
       return Ok(result);
     }
 

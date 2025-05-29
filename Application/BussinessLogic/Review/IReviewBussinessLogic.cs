@@ -1,5 +1,4 @@
-﻿using Application.DTO.Price;
-using Application.DTO.Review;
+﻿using Application.DTO.Review;
 using System.Linq.Expressions;
 
 namespace Application.BussinessLogic.Review

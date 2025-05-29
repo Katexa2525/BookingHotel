@@ -1,16 +1,22 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms"
+@using Application.DTO.Review.ClientRequest
 
 @inject IMediator Mediator
 @inject NavigationManager NavManager
 
 <PageTitle>Номера</PageTitle>
 
-<div class="mb-4">
-  <p class="font-italic text-center">
-    Есть номер, который хотели бы опубликовать?
-    <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь</a>.
-  </p>
-</div>
+<AuthorizeView Context="authContext">
+  @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
+  {
+    <div class="mb-4">
+      <p class="font-italic text-center">
+        Есть номер, который хотели бы опубликовать?
+        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь</a>.
+      </p>
+    </div>
+  }
+</AuthorizeView>
 
 @* Данные по отелю *@
 <p class="h1">@_hotel.Name, @_hotel.Star*</p>
@@ -55,8 +61,7 @@
 <AboutHotelFacilities CaptionFacilities="Удобства и услуги отеля" CaptionFoods="Питание" Hotel="@_hotel" />
 
 @* Отзывы *@
-<HotelReview Caption="@countReview" Hotel="@_hotel" />
-
+<HotelReview Caption="@countReview" Hotel="@_hotel" OnHandleCloseSubordinateForm="HandleCloseSubordinateForm" />
 
 @code {
 
@@ -105,7 +110,7 @@
         Prices = p.Prices,
         RoomFacilities = p.RoomFacilities,
         RoomPhotos = p.RoomPhotos,
-        RoomType = p.RoomType, 
+        RoomType = p.RoomType,
         Bookings = p.Bookings,
         MainPhoto = p.MainPhoto
       });
@@ -140,5 +145,27 @@
     Booking.DepartureDate = bookingDto.DepartureDate;
     Booking.NumberOfAdults = bookingDto.NumberOfAdults;
     Booking.NumberOfChilds = bookingDto.NumberOfChilds;
+  }
+
+  private async Task HandleCloseSubordinateForm(bool isClosed)
+  {
+    // обновляю данные на странице
+    if (isClosed)
+    {
+      var response = await Mediator.Send(new GetReviewsRequest(HotelId));
+
+      if (response is not null && response.Reviews is not null)
+      {
+        _hotel.Reviews = response.Reviews;
+        // вычисляю рейтинг для отеля, после добавления отзыва
+        double ratingHotel = Math.Round((double)response.Reviews.Sum(p => p.Star) / (double)response.Reviews.Count(), 1);
+        // запрос на обновление данных отеля по значению рейтинга
+        if (ratingHotel != _hotel.Rating)
+        {
+          _hotel.Rating = ratingHotel;
+          var responseEditHotel = await Mediator.Send(new EditHotelRequest(_hotel));
+        }
+      }
+    }
   }
 }
