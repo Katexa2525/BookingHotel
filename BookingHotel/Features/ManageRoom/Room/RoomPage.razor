@@ -128,10 +128,7 @@
       _errorMessage = AppMessage.HotelPageLoadTextErrorMessage;
     }
 
-    if (_hotel is not null)
-      countReview = $"Отзывы ({_hotel.Reviews.Count().ToString()})";
-    else
-      countReview = "Отзывы (0)";
+    CountReviewByHotel(_hotel);
 
     // устанавливаю маршрут для поиска в переменную
     routeSearch = $"hotels/{HotelId}/rooms/searchRoom";
@@ -165,7 +162,19 @@
           _hotel.Rating = ratingHotel;
           var responseEditHotel = await Mediator.Send(new EditHotelRequest(_hotel));
         }
+        CountReviewByHotel(_hotel);
       }
     }
   }
+
+  /// <summary>Метод подсчета отзывов по отелю </summary>
+  /// <param name="_hotel"></param>
+  private void CountReviewByHotel(HotelDto _hotel)
+  {
+    if (_hotel is not null && _hotel.Reviews is not null)
+      countReview = $"Отзывы ({_hotel.Reviews.Count().ToString()})";
+    else
+      countReview = "Отзывы (0)";
+  }
+
 }
