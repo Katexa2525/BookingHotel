@@ -93,6 +93,7 @@
 
   protected override async Task OnParametersSetAsync()
   {
+    _review = new ReviewDto();
     // создаю новый EditContext для модели отеля
     _editContext = new EditContext(_review);
     // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider

@@ -8,7 +8,7 @@
         <p class="h3">@Caption</p>
         <AuthorizeView Context="authContext">
           <button type="button" class="btn btn-outline-secondary float-right " title="Добавить отзыв"
-                  @onclick="ShowFormReview">
+          @onclick="ShowFormReview">
             <i class="bi bi-chat-dots-fill"></i>
           </button>
         </AuthorizeView>
@@ -16,7 +16,7 @@
       <div class="row mt-1">
         @foreach (var item in @Hotel.Reviews.OrderByDescending(p => p.DateTimeReview))
         {
-          <ReviewCard Review="item" />
+          <ReviewCard Review="item" OnDeleteReview="HandlerAfterDeleteReview" />
         }
       </div>
     </div>
@@ -24,7 +24,7 @@
 
   @* Форма Отзывы *@
   <ShowReview Hotel="@Hotel" IsModalOpen="@isModalHotelReviewOpen" ModalTitle="Отзыв об отеле" OnCloseModal="CloseModalReviewHandlerAsync"
-              TextButtonAccept="Опубликовать"/>
+  TextButtonAccept="Опубликовать"/>
 }
 
 @code {
@@ -50,5 +50,11 @@
   private void ShowFormReview(MouseEventArgs args)
   {
     isModalHotelReviewOpen = true;
+  }
+
+  private async Task HandlerAfterDeleteReview(bool args)
+  {
+    // обновляю данные на странице после удаления отзыва
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 }
