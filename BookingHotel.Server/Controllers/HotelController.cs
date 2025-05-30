@@ -10,8 +10,12 @@ using Application.DTO.Review;
 using Application.DTO.Review.CQRS;
 using Application.DTO.Room;
 using Application.DTO.Room.CQRS;
+using Application.DTO.RoomPhoto.CQRS;
+using Application.DTO.RoomPhoto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.DTO.HotelPhoto;
+using Application.DTO.HotelPhoto.CQRS;
 
 namespace BookingHotel.Server.Controllers
 {
@@ -84,6 +88,15 @@ namespace BookingHotel.Server.Controllers
     public async Task<ActionResult<List<ReviewDto>>> GetReviewsByHotelId([FromRoute] Guid hotelid)
     {
       var result = await _mediator.Send(new GetAllReviewByHotelIdQuery() { HotelId = hotelid });
+      return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("{hotelid}/photos")]
+    [ProducesResponseType(typeof(List<HotelPhotoDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<HotelPhotoDto>>> GetPhotosByHotelId([FromRoute] Guid hotelid)
+    {
+      var result = await _mediator.Send(new GetAllHotelPhotoByHotelIdQuery() { HotelId = hotelid });
       return Ok(result);
     }
 

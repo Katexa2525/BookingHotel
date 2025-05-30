@@ -2,6 +2,7 @@
 using Application.DTO.Food;
 using Application.DTO.Hotel;
 using Application.DTO.HotelFacility;
+using Application.DTO.HotelPhoto;
 using Application.DTO.Location;
 using Application.DTO.Price;
 using Application.DTO.Review;
@@ -47,6 +48,9 @@ namespace BookingHotel.MappingProfile
 
       CreateMap<ReviewDto, ReviewCreateDto>();
       CreateMap<ReviewDto, ReviewCreateWithIdDto>();
+
+      CreateMap<HotelPhotoDto, HotelPhotoCreateDto>();
+      CreateMap<HotelPhotoDto, HotelPhotoCreateWithIdDto>();
     }
   }
 }
