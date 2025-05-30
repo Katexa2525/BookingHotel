@@ -7,7 +7,7 @@ namespace Application.DTO.HotelPhoto.ClientRequest
   {
     public EditHotelPhotoRequestValidator()
     {
-      RuleFor(x => x.roomPhoto).SetValidator(new HotelPhotoValidatorEdit());
+      RuleFor(x => x.hotelPhoto).SetValidator(new HotelPhotoValidatorEdit());
     }
   }
 }

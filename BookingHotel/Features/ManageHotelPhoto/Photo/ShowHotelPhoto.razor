@@ -138,9 +138,9 @@
     _photos = Photos;
     // обновляю данные по Facility по данному отелю
     var response = await Mediator.Send(new GetHotelPhotosRequest(HotelId));
-    if (response is not null && response.RoomPhotos is not null && response.RoomPhotos.Any())
+    if (response is not null && response.HotelPhotos is not null && response.HotelPhotos.Any())
     {
-      _photos = response.RoomPhotos;
+      _photos = response.HotelPhotos;
     }
   }
 
