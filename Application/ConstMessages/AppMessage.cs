@@ -75,6 +75,8 @@
     public static readonly string ReviewPageLoadTextErrorMessage = "Возникла проблема при загрузке отеля!";
 
     public static readonly string ValidatorHotelPhotoNameMessage = "Введите отель, которому принадлежит фото";
+    public static readonly string GetHotelPhotoByIdTextErrorMessage = "Запись по фото отеля не может быть найдена.";
+    public static readonly string HotelPhotoPageSaveTextErrorMessage = "Возникла проблема с сохранением фото отеля!";
 
   }
 }
