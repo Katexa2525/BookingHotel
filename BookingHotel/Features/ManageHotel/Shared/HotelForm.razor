@@ -1,4 +1,5 @@
-﻿@inject NavigationManager NavManager
+﻿@using MudBlazor
+@inject NavigationManager NavManager
 
 @inject IMediator Mediator
 
@@ -17,7 +18,7 @@
             {
               <img src="images/NoImage.png" class="card-img-top" />
               <InputFile OnChange="LoadHotelImage" class="form-control-file mt-1"
-              id="hotelImage" accept=".png,.jpg,.jpeg" />
+                         id="hotelImage" accept=".png,.jpg,.jpeg" />
             }
             else
             {
@@ -32,7 +33,7 @@
             }
           </div>
 
-          <AuthorizeView Context = "authContext">
+          <AuthorizeView Context="authContext">
             @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
             {
               <div class="mt-5 mb-5">
@@ -87,38 +88,27 @@
           </FormFieldSet>
 
           <div class="row">
-            <div class="col-6">
+            <div class="col-4">
               <FormFieldSet Width="col">
                 <label for="hotelArrival" class="font-weight-bold text-secondary">Заезд с</label>
                 <InputText @bind-Value="_hotel.Arrival" class="form-control" id="hotelArrival" />
               </FormFieldSet>
+            </div>
 
+            <div class="col-4">
               <FormFieldSet Width="col">
                 <label for="hotelDeparture" class="font-weight-bold text-secondary">Выезд до</label>
                 <InputText @bind-Value="_hotel.Departure" class="form-control" id="hotelDeparture" />
               </FormFieldSet>
             </div>
-            <div class="col-6">
-              <FormFieldSet Width="col">
-                <label for="hotelRating" class="font-weight-bold text-secondary">Рейтинг</label>
-                <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
-              </FormFieldSet>
 
-              <div class="row">
-                <div class="col-8">
-                  <FormFieldSet Width="col">
-                    <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label>
-                    <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
-                  </FormFieldSet>
-                </div>
-                <div class="col-4">
-                  <label for="hotelStar" class="font-weight-bold text-secondary"></label>
-                  <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
-                </div>
+            <div class="col-4">
+              <div class="row-cols-2">
+                <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label>
+                <MudRating SelectedValue="@_hotel.Star" SelectedValueChanged="HandleSelectedValueChanged" />
               </div>
             </div>
           </div>
-
 
         </div>
       </div>
@@ -169,6 +159,8 @@
   /// <summary> Параметр позволит передать существующий отель в форму </summary>
   [Parameter]
   public HotelDto? Hotel { get; set; }
+
+  private void HandleSelectedValueChanged(int val) => _hotel.Star = val;
 
   public void ResetForm()
   {
