@@ -23,7 +23,7 @@
           <div class="card-img-top">
             @if (Room != null && Room.RoomPhotos != null && Room.RoomPhotos.Any())
             {
-              <PhotoCarousel Photos="Room.RoomPhotos.Select(p=>p.Photo).ToList()" />
+              <PhotoCarousel Photos="Room.RoomPhotos.Select(p=>p.Photo).ToList()" RoomId="@Room.Id" />
             }
           </div>
 
