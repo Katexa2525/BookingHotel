@@ -1,5 +1,6 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms"
 @using Application.DTO.Review.ClientRequest
+@using MudBlazor
 
 @inject IMediator Mediator
 @inject NavigationManager NavManager
@@ -12,7 +13,9 @@
     <div class="mb-4">
       <p class="font-italic text-center">
         Есть номер, который хотели бы опубликовать?
-        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь</a>.
+        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь.
+          <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"  />
+        </a>
       </p>
     </div>
   }
