@@ -109,6 +109,69 @@
             </div>
           </div>
 
+          @if (_hotel is not null && _hotel.HotelFacilities is not null && _hotel.HotelFacilities.Any())
+          {
+            <div class="card card-brand mb-2 mt-2">
+              <div class="card-body">
+                <FormFieldSet Width="col">
+                  <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства в отеле</label>
+                  <div class="row align-items-start">
+                    <div class="col-sm-8">
+                      <div class="d-flex">
+                        @foreach (var item in @_hotel.HotelFacilities)
+                        {
+                        <h6 class="m-2">@item.Name</h6>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </FormFieldSet>
+              </div>
+            </div>
+          }
+
+          @if (_hotel is not null && _hotel.Foods is not null && _hotel.Foods.Any())
+          {
+            <div class="card card-brand mb-2 mt-2">
+              <div class="card-body">
+                <FormFieldSet Width="col">
+                  <label for="roomFacilities" class="font-weight-bold text-secondary">Питание в отеле</label>
+                  <div class="row align-items-start">
+                    <div class="col-sm-8">
+                      <div class="d-flex">
+                        @foreach (var item in @_hotel.Foods)
+                        {
+                        <h6 class="m-2">@item.Name</h6>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </FormFieldSet>
+              </div>
+            </div>
+          }
+
+          @if (_hotel is not null && _hotel.Locations is not null && _hotel.Locations.Any())
+          {
+            <div class="card card-brand mb-2 mt-2">
+              <div class="card-body">
+                <FormFieldSet Width="col">
+                  <label for="roomFacilities" class="font-weight-bold text-secondary">Близжайшие локации отеля</label>
+                  <div class="row align-items-start">
+                    <div class="col-sm-8">
+                      <div class="d-flex">
+                        @foreach (var item in @_hotel.Locations)
+                        {
+                          <h6 class="m-2">@item.Name</h6>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </FormFieldSet>
+              </div>
+            </div>
+          }
+
         </div>
       </div>
     </div>
