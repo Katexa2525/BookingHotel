@@ -9,7 +9,6 @@
       <div class="row">
         <div class="col-6">
 
-
           @if (_room == null || (_room != null && _room.RoomPhotos == null) || (_room != null && _room.RoomPhotos != null && !_room.RoomPhotos.Any()))
           {
             <img src="images/NoImage.png" class="card-img-top" />
@@ -23,15 +22,15 @@
             @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
             {
               <div class="mt-5 mb-5">
-                <button @onclick="ShowPrices">
+                <button type="button" @onclick="ShowPrices">
                   <img src="images/price.png" alt="Цены" width="50" height="50">
                 </button>
 
-                <button @onclick="ShowFacilities">
+                <button type="button" @onclick="ShowFacilities">
                   <img src="images/Facility.png" alt="Удобства" width="50" height="50">
                 </button>
 
-                <button @onclick="ShowPhoto">
+                <button type="button" @onclick="ShowPhoto">
                   <img src="images/camera.png" alt="Фото" width="50" height="50">
                 </button>
               </div>

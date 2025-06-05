@@ -15,7 +15,7 @@ namespace BookingHotel.Features.ManageRoom.EditRoom
 
     public async Task<EditRoomRequest.Response> Handle(EditRoomRequest request, CancellationToken cancellationToken)
     {
-      HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
+      HttpClient? httpClient = _httpClientFactory.CreateClient("SecureAPIClient");
 
       //Получаю обновленные сведения об отеле и отправляю их в API через HTTP - запрос методом PUT
       var response = await httpClient.PutAsJsonAsync(EditRoomRequest.RouteTemplate, request, cancellationToken);
