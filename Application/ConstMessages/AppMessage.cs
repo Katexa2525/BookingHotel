@@ -12,6 +12,9 @@
     public static readonly string ValidatorRoomSquareMessage = "Введите площадь номера отеля";
     public static readonly string ValidatorRoomDescriptionMessage = "Введите описание номера отеля";
     public static readonly string ValidatorRoomPeopleNumberMessage = "Введите кол-во человек номера отеля";
+    public static readonly string ValidatorRoomHotelIdNumberMessage = "Введите Id отеля";
+    public static readonly string ValidatorRoomTypeIdNumberMessage = "Введите тип номера отеля";
+    public static readonly string ValidatorRoomIdNumberMessage = "Введите Id номера отеля";
 
     public static readonly string HotelPageSaveTextErrorMessage = "Возникла проблема с сохранением отеля!";
     public static readonly string AddHotelPageSaveImageTextErrorMessage = "Ваш отель был сохранен, но была проблема с загрузкой изображения!";

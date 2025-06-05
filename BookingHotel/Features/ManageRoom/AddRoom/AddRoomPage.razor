@@ -41,7 +41,7 @@ else if (_errorMessage is not null)
   {
     // запрос на получения всех типов номеров
     var responseRoomTypes = await Mediator.Send(new GetRoomTypesRequest());
-    if (responseRoomTypes is not null)
+    if (responseRoomTypes is not null && responseRoomTypes.RoomTypes is not null)
     {
       _allRoomTypes = responseRoomTypes.RoomTypes.Select(p => new RoomTypeDto { Id = p.Id, Name = p.Name })
                                                  .OrderBy(p => p.Name).ToList();

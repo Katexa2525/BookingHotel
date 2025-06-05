@@ -16,7 +16,7 @@
 }
 else
 {
-  <h3 class="mt-5 mb-1">@_hotel.Name</h3>
+  <h3 class="mt-2 mb-1">@_hotel.Name</h3>
   @if (_submitSuccessful)
   {
     <SuccessAlert Message="Отель был успешно отредактирован!" />
@@ -71,9 +71,8 @@ else
     {
       // любые обновления, сделанные в экземпляре hotelDto из формы, применяются к отелю
       _hotel = hotelDto;
+      _submitSuccessful = true;
     }
-
-    _submitSuccessful = true;
 
     // Если пользователь обновил изображение тропы, вызывается ProcessImage для загрузки нового изображения
     if (hotelDto.ImageAction == ImageAction.Add)

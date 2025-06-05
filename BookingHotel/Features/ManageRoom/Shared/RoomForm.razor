@@ -15,7 +15,7 @@
           }
           else
           {
-            <PhotoCarousel Photos="_room.RoomPhotos.Select(p => p.Photo).ToList()" />
+            <PhotoCarousel Photos="_room.RoomPhotos.Select(p => p.Photo).ToList()" RoomId="Room.Id" />
           }
 
           <AuthorizeView Context="authContext">
@@ -35,11 +35,11 @@
                 </button>
               </div>
 
-              <div class="row mt-5 mb-5">
-                <div class="col text-right">
-                  <SaveButton TextButtonAccept="Сохранить" />
-                </div>
-              </div>
+              <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small" OnClick="SubmitForm">
+                Сохранить
+              </MudButton>
+
+
             }
           </AuthorizeView>
         </div>
@@ -54,7 +54,8 @@
           </FormFieldSet> *@
 
           <FormFieldSet Width="col">
-            <MudSelect @bind-Value="selectedOptionType" Label="Тип номера" FullWidth="true" FitContent="true" Variant="Variant.Outlined" ShrinkLabel>
+            <MudSelect T="string" @bind-Value="selectedOptionType" SelectedValuesChanged="OnSelectedValuesChanged" Label="Тип номера"
+                       FullWidth="true" FitContent="true" Variant="Variant.Outlined" ShrinkLabel>
               @foreach (var item in RoomTypes.Select(p => p.Name).ToList())
               {
                 <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -114,19 +115,19 @@
   @if (!isModalRoomPriceOpen && !isModalRoomPhotoOpen && isModalRoomFacilityOpen)
   {
     <ShowRoomFacility IsModalOpen="@isModalRoomFacilityOpen" RoomFacilities="@_room.RoomFacilities?.ToList()" RoomId="@Room.Id"
-                      OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
+    OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
   }
 
   @if (!isModalRoomFacilityOpen && !isModalRoomPhotoOpen && isModalRoomPriceOpen)
   {
     <ShowRoomPrice IsModalOpen="@isModalRoomPriceOpen" RoomPrices="@_room.Prices?.ToList()" RoomId="@Room.Id"
-                   OnCloseModal="CloseModalPriceHandlerAsync" ModalTitle="Цены номера отеля" />
+    OnCloseModal="CloseModalPriceHandlerAsync" ModalTitle="Цены номера отеля" />
   }
 
   @if (!isModalRoomFacilityOpen && !isModalRoomPriceOpen && isModalRoomPhotoOpen)
   {
     <ShowRoomPhoto IsModalOpen="@isModalRoomPhotoOpen" Photos="@_room.RoomPhotos?.ToList()" RoomId="@Room.Id"
-                   OnCloseModal="CloseModalPhotoHandlerAsync" ModalTitle="Фото номера отеля" />
+    OnCloseModal="CloseModalPhotoHandlerAsync" ModalTitle="Фото номера отеля" />
   }
 
 </EditForm>
@@ -139,10 +140,6 @@
   private bool isModalRoomPriceOpen = false;
   private bool isModalRoomPhotoOpen = false;
 
-  private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
-  private List<string> selectedOptionsFacilities = new();
-
-  //private List<string> optionsType = new() { "Студия", "Люкс Гранд Премиум", "Стандарт Бизнес (четырехместный)", "Номер стандарт", "Стандарт Бизнес" };
   private string selectedOptionType = "";
 
   [Parameter, EditorRequired]
@@ -167,16 +164,6 @@
   [Parameter, EditorRequired]
   public Func<RoomDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
 
-  private void HandleSelection(string value)
-  {
-    selectedOptionType = value;
-  }
-
-  private void HandleSelection(List<string> values)
-  {
-    selectedOptionsFacilities = values;
-  }
-
   public void ResetForm()
   {
     _room = new RoomDto();
@@ -191,15 +178,15 @@
   // обновить или удалить изображение после запуска обработчика SubmitEditHotel в EditHotelPage
   protected override void OnParametersSet()
   {
-    // создаю новый EditContext для модели отеля
-    _editContext = new EditContext(_room);
-    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
-    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-
     if (Room is not null)
     {
       _room = Room;
     }
+
+    // создаю новый EditContext для модели отеля
+    _editContext = new EditContext(_room);
+    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
+    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
 
     // выбираю тип номера, который установлен по номеру
     if (RoomTypes is not null && RoomTypes.Any() && Room is not null)
@@ -219,8 +206,10 @@
     if (_room.Id == Guid.Empty)
     {
       // обрабатываю выбор типа номера
-      Guid? roomTypeId = RoomTypes?.First(p => p.Name.Equals(selectedOptionType)).Id;
-      _room.RoomTypeId = roomTypeId.Value;
+      // Guid? roomTypeId = RoomTypes?.First(p => p.Name.Equals(selectedOptionType)).Id;
+      // _room.RoomTypeId = roomTypeId.Value;
+
+      _room = SetValueForRoomTypeId(_room, RoomTypes, selectedOptionType);
       _room.HotelId = HotelId;
       //_room.MainPhoto = _roomImage is null ? ""
     }
@@ -280,4 +269,23 @@
     // обновляю данные на странице
     await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
+
+  private void OnSelectedValuesChanged(IEnumerable<string> args)
+  {
+    _room = SetValueForRoomTypeId(_room, RoomTypes, selectedOptionType);
+  }
+
+  /// <summary>Метод для получения id типа номера </summary>
+  /// <param name="room">Модель номера</param>
+  /// <param name="RoomTypes">Список типов номеров</param>
+  /// <param name="selectedOptionType">Название выбранного типа номера</param>
+  /// <returns></returns>
+  private RoomDto SetValueForRoomTypeId(RoomDto room, List<RoomTypeDto> RoomTypes, string selectedOptionType)
+  {
+    Guid roomTypeId = RoomTypes.First(p => p.Name.Equals(selectedOptionType)).Id;
+    room.RoomTypeId = roomTypeId;
+
+    return room;
+  }
+
 }
