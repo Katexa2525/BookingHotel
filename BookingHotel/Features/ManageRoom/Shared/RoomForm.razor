@@ -115,19 +115,19 @@
   @if (!isModalRoomPriceOpen && !isModalRoomPhotoOpen && isModalRoomFacilityOpen)
   {
     <ShowRoomFacility IsModalOpen="@isModalRoomFacilityOpen" RoomFacilities="@_room.RoomFacilities?.ToList()" RoomId="@Room.Id"
-    OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
+                      OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
   }
 
   @if (!isModalRoomFacilityOpen && !isModalRoomPhotoOpen && isModalRoomPriceOpen)
   {
     <ShowRoomPrice IsModalOpen="@isModalRoomPriceOpen" RoomPrices="@_room.Prices?.ToList()" RoomId="@Room.Id"
-    OnCloseModal="CloseModalPriceHandlerAsync" ModalTitle="Цены номера отеля" />
+                   OnCloseModal="CloseModalPriceHandlerAsync" ModalTitle="Цены номера отеля" />
   }
 
   @if (!isModalRoomFacilityOpen && !isModalRoomPriceOpen && isModalRoomPhotoOpen)
   {
     <ShowRoomPhoto IsModalOpen="@isModalRoomPhotoOpen" Photos="@_room.RoomPhotos?.ToList()" RoomId="@Room.Id"
-    OnCloseModal="CloseModalPhotoHandlerAsync" ModalTitle="Фото номера отеля" />
+                   OnCloseModal="CloseModalPhotoHandlerAsync" ModalTitle="Фото номера отеля" />
   }
 
 </EditForm>

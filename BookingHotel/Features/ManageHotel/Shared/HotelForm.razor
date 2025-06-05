@@ -17,7 +17,7 @@
             {
               <img src="images/NoImage.png" class="card-img-top" />
               <InputFile OnChange="LoadHotelImage" class="form-control-file mt-1"
-                         id="hotelImage" accept=".png,.jpg,.jpeg" />
+              id="hotelImage" accept=".png,.jpg,.jpeg" />
             }
             else
             {
@@ -120,7 +120,7 @@
                       <div class="d-flex">
                         @foreach (var item in @_hotel.HotelFacilities)
                         {
-                        <h6 class="m-2">@item.Name</h6>
+                          <h6 class="m-2">@item.Name</h6>
                         }
                       </div>
                     </div>
@@ -141,7 +141,7 @@
                       <div class="d-flex">
                         @foreach (var item in @_hotel.Foods)
                         {
-                        <h6 class="m-2">@item.Name</h6>
+                          <h6 class="m-2">@item.Name</h6>
                         }
                       </div>
                     </div>
@@ -177,22 +177,31 @@
     </div>
   </div>
 
-  @if (!isModalLocationOpen && !isModalFoodOpen && isModalHotelFacilityOpen)
+  @if (_hotel != null && Hotel != null)
   {
-    <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
-                       OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
-  }
+    @if (!isModalLocationOpen && !isModalFoodOpen && !isModalHotelPhotoOpen && isModalHotelFacilityOpen)
+    {
+      <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
+      OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
+    }
 
-  @if (!isModalHotelFacilityOpen && !isModalFoodOpen && isModalLocationOpen)
-  {
-    <ShowLocation IsModalOpen="@isModalLocationOpen" Locations="@_hotel.Locations?.ToList()" HotelId="@Hotel.Id"
-                  OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
-  }
+    @if (!isModalHotelFacilityOpen && !isModalFoodOpen && !isModalHotelPhotoOpen && isModalLocationOpen)
+    {
+      <ShowLocation IsModalOpen="@isModalLocationOpen" Locations="@_hotel.Locations?.ToList()" HotelId="@Hotel.Id"
+      OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
+    }
 
-  @if (!isModalHotelFacilityOpen && !isModalLocationOpen && isModalFoodOpen)
-  {
-    <ShowHotelFood IsModalOpen="@isModalFoodOpen" HotelFoods="@_hotel.Foods?.ToList()" HotelId="@Hotel.Id"
-                   OnCloseModal="CloseModalFoodHandlerAsync" ModalTitle="Питание отеля" />
+    @if (!isModalHotelFacilityOpen && !isModalLocationOpen && !isModalHotelPhotoOpen && isModalFoodOpen)
+    {
+      <ShowHotelFood IsModalOpen="@isModalFoodOpen" HotelFoods="@_hotel.Foods?.ToList()" HotelId="@Hotel.Id"
+      OnCloseModal="CloseModalFoodHandlerAsync" ModalTitle="Питание отеля" />
+    }
+
+    @if (!isModalHotelFacilityOpen && !isModalLocationOpen && !isModalFoodOpen && isModalHotelPhotoOpen)
+    {
+      <ShowHotelPhoto IsModalOpen="@isModalHotelPhotoOpen" HotelId="@Hotel.Id" Photos="@_hotel.HotelPhotos?.ToList()"
+      OnCloseModal="CloseModalPhotoHandlerAsync" ModalTitle="Фото отеля" />
+    }
   }
 
 </EditForm>
@@ -205,6 +214,7 @@
   private bool isModalHotelFacilityOpen = false;
   private bool isModalLocationOpen = false;
   private bool isModalFoodOpen = false;
+  private bool isModalHotelPhotoOpen = false;
 
   private void SetHotelStar(int star)
   {
@@ -221,6 +231,10 @@
   /// <summary> Параметр позволит передать существующий отель в форму </summary>
   [Parameter]
   public HotelDto? Hotel { get; set; }
+
+  /// <summary> Свойство для возврата в родительскую форму EditHotelPage или AddHotelPage признака, что форма закрыта </summary>
+  [Parameter]
+  public EventCallback<bool> OnHandleCloseSubordinateForm { get; set; }
 
   private void HandleSelectedValueChanged(int val) => _hotel.Star = val;
 
@@ -306,7 +320,8 @@
 
   private void ShowPhoto(MouseEventArgs args)
   {
-    NavManager.NavigateTo($"/hotels/{Hotel.Id}/photo");
+    //NavManager.NavigateTo($"/hotels/{Hotel.Id}/photo");
+    isModalHotelPhotoOpen = true;
   }
 
   private void ShowFacilities(MouseEventArgs args)
@@ -342,5 +357,13 @@
   private void CloseModalFoodHandlerAsync()
   {
     isModalFoodOpen = false;
+  }
+
+  /// <summary>Метод действий при закрытии модального окна с работой по фото отеля /// </summary>
+  private async Task CloseModalPhotoHandlerAsync()
+  {
+    isModalHotelPhotoOpen = false;
+    // обновляю данные на странице
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 }

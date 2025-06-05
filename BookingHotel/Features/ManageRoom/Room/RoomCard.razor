@@ -31,7 +31,7 @@
 
         <div class="col-5">
 
-          @if (Room.RoomType is not null)
+          @if (Room is not null && Room.RoomType is not null)
           {
             <h5 class="card-title">@Room.RoomType.Name</h5>
           }

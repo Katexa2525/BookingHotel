@@ -25,7 +25,7 @@ else
   {
     <ErrorAlert Message="@_errorMessage" />
   }
-  <HotelForm Hotel="_hotel" OnSubmit="SubmitEditHotel" TextButtonCancel="Отмена"/>
+  <HotelForm Hotel="_hotel" OnSubmit="SubmitEditHotel" TextButtonCancel="Отмена" OnHandleCloseSubordinateForm="HandleCloseSubordinateForm" />
 }
 
 @code {
@@ -97,5 +97,19 @@ else
     // Если было выбрано новое изображение, обновляем свойство Image, указав новое имя файла
     _hotel.MainPhoto = imageUploadResponse.ImageName;
     return true;
+  }
+
+  private async Task HandleCloseSubordinateForm(bool isClosed)
+  {
+    // обновляю данные на странице
+    if (isClosed)
+    {
+      var response = await Mediator.Send(new GetHotelRequest(HotelId));
+
+      if (response is not null)
+      {
+        _hotel = response.Hotel;
+      }
+    }
   }
 }
