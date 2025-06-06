@@ -1,10 +1,29 @@
 ﻿@inherits LayoutComponentBase
 
-<Header />
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-<main class="container mt-5 mb-5">
+@* <Header /> *@
+
+<MudLayout>
+  <Header />
+
+  @* <MudAppBar Elevation="1" Style="background-image: url('/images/logo2.png'); background-size: cover;">
+  </MudAppBar> *@
+  <MudDrawer Open="false"  >
+
+  </MudDrawer  >
+
+  <MudMainContent Style="padding-left: 20px; padding-right: 20px">
     @Body
-</main>
+  </MudMainContent>
+</MudLayout>
+
+@* <main class="container mt-5 mb-5">
+    @Body
+</main> *@
 
 @code {
 

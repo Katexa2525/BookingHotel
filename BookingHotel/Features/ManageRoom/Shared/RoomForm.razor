@@ -9,48 +9,58 @@
       <div class="row">
         <div class="col-6">
 
-
           @if (_room == null || (_room != null && _room.RoomPhotos == null) || (_room != null && _room.RoomPhotos != null && !_room.RoomPhotos.Any()))
           {
             <img src="images/NoImage.png" class="card-img-top" />
           }
           else
           {
-            <PhotoCarousel Photos="_room.RoomPhotos.Select(p => p.Photo).ToList()" />
+            <PhotoCarousel Photos="_room.RoomPhotos.Select(p => p.Photo).ToList()" Id="Room.Id" />
           }
 
           <AuthorizeView Context="authContext">
             @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
             {
               <div class="mt-5 mb-5">
-                <button @onclick="ShowPrices">
+                <button type="button" @onclick="ShowPrices">
                   <img src="images/price.png" alt="Цены" width="50" height="50">
                 </button>
 
-                <button @onclick="ShowFacilities">
+                <button type="button" @onclick="ShowFacilities">
                   <img src="images/Facility.png" alt="Удобства" width="50" height="50">
                 </button>
 
-                <button @onclick="ShowPhoto">
+                <button type="button" @onclick="ShowPhoto">
                   <img src="images/camera.png" alt="Фото" width="50" height="50">
                 </button>
               </div>
 
-              <div class="row mt-5 mb-5">
-                <div class="col text-right">
-                  <SaveButton TextButtonAccept="Сохранить" />
-                </div>
-              </div>
+              <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small" OnClick="SubmitForm">
+                Сохранить
+              </MudButton>
+
+
             }
           </AuthorizeView>
         </div>
 
         <div class="col-6">
 
-          <FormFieldSet Width="col">
+          @* <FormFieldSet Width="col">
             <label for="roomType" class="font-weight-bold text-secondary">Тип номера</label>
             <DropdownList Options="@RoomTypes.Select(p=>p.Name).ToList()"
                           SelectedOption="@selectedOptionType" OnSelectionChanged="@HandleSelection" />
+            <ValidationMessage For="@(() => _room.RoomTypeId )" />
+          </FormFieldSet> *@
+
+          <FormFieldSet Width="col">
+            <MudSelect T="string" @bind-Value="selectedOptionType" SelectedValuesChanged="OnSelectedValuesChanged" Label="Тип номера"
+                       FullWidth="true" FitContent="true" Variant="Variant.Outlined" ShrinkLabel>
+              @foreach (var item in RoomTypes.Select(p => p.Name).ToList())
+              {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+              }
+            </MudSelect>
             <ValidationMessage For="@(() => _room.RoomTypeId )" />
           </FormFieldSet>
 
@@ -76,29 +86,26 @@
             </div>
           </div>
 
-          <div class="card card-brand mb-4 mt-4">
-            <div class="card-body">
-              <FormFieldSet Width="col">
-                <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства в номере</label>
-                @* <MultiSelectList T="string" Options="@optionsFacilities" SelectedOptions="@selectedOptionsFacilities" OnSelectionChanged="@HandleSelection" />
-                        <p>Выбрано: @string.Join(", ", selectedOptionsFacilities)</p> *@
-
-                <div class="row align-items-start">
-                  <div class="col-sm-8">
-                    <div class="d-flex">
-                      @if (_room is not null && _room.RoomFacilities is not null && _room.RoomFacilities.Any())
-                      {
-                        foreach (var item in @_room.RoomFacilities)
+          @if (_room is not null && _room.RoomFacilities is not null && _room.RoomFacilities.Any())
+          {
+            <div class="card card-brand mb-2 mt-2">
+              <div class="card-body">
+                <FormFieldSet Width="col">
+                  <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства в номере</label>
+                  <div class="row align-items-start">
+                    <div class="col-sm-8">
+                      <div class="d-flex">
+                        @foreach (var item in @_room.RoomFacilities)
                         {
-                          <h6 class="m-3">@item.Name</h6>
+                          <h6 class="m-2">@item.Name</h6>
                         }
-                      }
+                      </div>
                     </div>
                   </div>
-                </div>
-              </FormFieldSet>
+                </FormFieldSet>
+              </div>
             </div>
-          </div>
+          }
 
         </div>
       </div>
@@ -133,10 +140,6 @@
   private bool isModalRoomPriceOpen = false;
   private bool isModalRoomPhotoOpen = false;
 
-  private List<string> optionsFacilities = new() { "Wi-Fi", "Детектор дыма", "Телевизор", "Кондиционер", "Полотенца" };
-  private List<string> selectedOptionsFacilities = new();
-
-  //private List<string> optionsType = new() { "Студия", "Люкс Гранд Премиум", "Стандарт Бизнес (четырехместный)", "Номер стандарт", "Стандарт Бизнес" };
   private string selectedOptionType = "";
 
   [Parameter, EditorRequired]
@@ -161,16 +164,6 @@
   [Parameter, EditorRequired]
   public Func<RoomDto, IBrowserFile?, Task> OnSubmit { get; set; } = default!;
 
-  private void HandleSelection(string value)
-  {
-    selectedOptionType = value;
-  }
-
-  private void HandleSelection(List<string> values)
-  {
-    selectedOptionsFacilities = values;
-  }
-
   public void ResetForm()
   {
     _room = new RoomDto();
@@ -185,15 +178,15 @@
   // обновить или удалить изображение после запуска обработчика SubmitEditHotel в EditHotelPage
   protected override void OnParametersSet()
   {
-    // создаю новый EditContext для модели отеля
-    _editContext = new EditContext(_room);
-    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
-    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-
     if (Room is not null)
     {
       _room = Room;
     }
+
+    // создаю новый EditContext для модели отеля
+    _editContext = new EditContext(_room);
+    // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider
+    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
 
     // выбираю тип номера, который установлен по номеру
     if (RoomTypes is not null && RoomTypes.Any() && Room is not null)
@@ -213,8 +206,10 @@
     if (_room.Id == Guid.Empty)
     {
       // обрабатываю выбор типа номера
-      Guid? roomTypeId = RoomTypes?.First(p => p.Name.Equals(selectedOptionType)).Id;
-      _room.RoomTypeId = roomTypeId.Value;
+      // Guid? roomTypeId = RoomTypes?.First(p => p.Name.Equals(selectedOptionType)).Id;
+      // _room.RoomTypeId = roomTypeId.Value;
+
+      _room = SetValueForRoomTypeId(_room, RoomTypes, selectedOptionType);
       _room.HotelId = HotelId;
       //_room.MainPhoto = _roomImage is null ? ""
     }
@@ -274,4 +269,23 @@
     // обновляю данные на странице
     await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
+
+  private void OnSelectedValuesChanged(IEnumerable<string> args)
+  {
+    _room = SetValueForRoomTypeId(_room, RoomTypes, selectedOptionType);
+  }
+
+  /// <summary>Метод для получения id типа номера </summary>
+  /// <param name="room">Модель номера</param>
+  /// <param name="RoomTypes">Список типов номеров</param>
+  /// <param name="selectedOptionType">Название выбранного типа номера</param>
+  /// <returns></returns>
+  private RoomDto SetValueForRoomTypeId(RoomDto room, List<RoomTypeDto> RoomTypes, string selectedOptionType)
+  {
+    Guid roomTypeId = RoomTypes.First(p => p.Name.Equals(selectedOptionType)).Id;
+    room.RoomTypeId = roomTypeId;
+
+    return room;
+  }
+
 }

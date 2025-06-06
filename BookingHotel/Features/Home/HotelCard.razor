@@ -2,22 +2,34 @@
 @inject NavigationManager NavManager
 
 <div class="card shadow" style="width: 18rem;">
-  @* <img src="@Hotel.MainPhoto" class="card-img-top" alt="@Hotel.Name"> *@
 
   <a href="/hotels/{@Hotel.Id}/rooms">
-    <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
+    @* <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
                                                             : "images/NoImage.png")"
-    class="card-img-top" alt="@Hotel.Name">
+         class="card-img-top" alt="@Hotel.Name"> *@
+
+    <div class="card-img-top">
+      @if (Hotel == null || (Hotel != null && Hotel.HotelPhotos == null))
+      {
+        <img src="images/NoImage.png" class="card-img-top" />
+      }
+      else
+      {
+        <PhotoCarousel Photos="Hotel.HotelPhotos.Select(p => p.Photo).ToList()" Id="Hotel.Id" />
+      }
+    </div>
   </a>
 
   <div class="card-body">
     <a href="/hotels/{@Hotel.Id}/rooms">
-      <h5 class="card-title">@Hotel.Name</h5>
+      <h5 class="card-title">
+        @Hotel.Name, @Hotel.Star
+        <span class="oi oi-star" style="font-size: 10px; vertical-align: text-top; left: -5px;" />
+      </h5>
     </a>
-    @* <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6> *@
     <div class="d-flex justify-content-between">
       <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6>
-      <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-star"></span> @Hotel.Rating </h6>
+      <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-chat"></span> @Hotel.Rating </h6>
     </div>
 
     @* вызывается делегат, передавая текущий отель *@
@@ -31,7 +43,7 @@
           @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
           {
             <button class="btn btn-outline-secondary float-right" title="Редактирование"
-            @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
+                    @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
               <i class="bi bi-pencil"></i>
             </button>
           }
@@ -52,7 +64,7 @@
 
   @* Форма Отзывы *@
   <ShowReview Hotel="@Hotel" IsModalOpen="@isModalHotelReviewOpen" ModalTitle="Отзыв об отеле" OnCloseModal="CloseModalReviewHandlerAsync"
-  TextButtonAccept="Опубликовать"/>
+              TextButtonAccept="Опубликовать" />
 </div>
 
 @code {

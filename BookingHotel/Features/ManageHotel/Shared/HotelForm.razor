@@ -11,7 +11,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-4">
-          <div>
+          @* <div>
             <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
             @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
             {
@@ -30,9 +30,14 @@
                 </div>
               </div>
             }
-          </div>
+          </div> *@
 
-          <AuthorizeView Context = "authContext">
+          @if (_hotel != null && _hotel.HotelPhotos != null)
+          {
+            <PhotoCarousel Photos="_hotel.HotelPhotos.Select(p => p.Photo).ToList()" Id="Hotel.Id" />
+          }
+
+          <AuthorizeView Context="authContext">
             @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
             {
               <div class="mt-5 mb-5">
@@ -87,60 +92,121 @@
           </FormFieldSet>
 
           <div class="row">
-            <div class="col-6">
+            <div class="col-4">
               <FormFieldSet Width="col">
                 <label for="hotelArrival" class="font-weight-bold text-secondary">Заезд с</label>
                 <InputText @bind-Value="_hotel.Arrival" class="form-control" id="hotelArrival" />
               </FormFieldSet>
+            </div>
 
+            <div class="col-4">
               <FormFieldSet Width="col">
                 <label for="hotelDeparture" class="font-weight-bold text-secondary">Выезд до</label>
                 <InputText @bind-Value="_hotel.Departure" class="form-control" id="hotelDeparture" />
               </FormFieldSet>
             </div>
-            <div class="col-6">
-              <FormFieldSet Width="col">
-                <label for="hotelRating" class="font-weight-bold text-secondary">Рейтинг</label>
-                <InputNumber @bind-Value="_hotel.Rating" class="form-control" id="hotelRating" />
-              </FormFieldSet>
 
-              <div class="row">
-                <div class="col-8">
-                  <FormFieldSet Width="col">
-                    <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label>
-                    <InputNumber @bind-Value="_hotel.Star" class="form-control" id="hotelStar" min="0" max="5" />
-                  </FormFieldSet>
-                </div>
-                <div class="col-4">
-                  <label for="hotelStar" class="font-weight-bold text-secondary"></label>
-                  <StarComponent StarCount="@_hotel.Star" StarClicked="@SetHotelStar" />
-                </div>
+            <div class="col-4">
+              <div class="row-cols-2">
+                <label for="hotelStar" class="font-weight-bold text-secondary">Звёзд</label>
+                <MudRating SelectedValue="@_hotel.Star" SelectedValueChanged="HandleSelectedValueChanged" />
               </div>
             </div>
           </div>
 
+          @if (_hotel is not null && _hotel.HotelFacilities is not null && _hotel.HotelFacilities.Any())
+          {
+            <div class="card card-brand mb-2 mt-2">
+              <div class="card-body">
+                <FormFieldSet Width="col">
+                  <label for="roomFacilities" class="font-weight-bold text-secondary">Убодства в отеле</label>
+                  <div class="row align-items-start">
+                    <div class="col-sm-8">
+                      <div class="d-flex">
+                        @foreach (var item in @_hotel.HotelFacilities)
+                        {
+                          <h6 class="m-2">@item.Name</h6>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </FormFieldSet>
+              </div>
+            </div>
+          }
+
+          @if (_hotel is not null && _hotel.Foods is not null && _hotel.Foods.Any())
+          {
+            <div class="card card-brand mb-2 mt-2">
+              <div class="card-body">
+                <FormFieldSet Width="col">
+                  <label for="roomFacilities" class="font-weight-bold text-secondary">Питание в отеле</label>
+                  <div class="row align-items-start">
+                    <div class="col-sm-8">
+                      <div class="d-flex">
+                        @foreach (var item in @_hotel.Foods)
+                        {
+                          <h6 class="m-2">@item.Name</h6>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </FormFieldSet>
+              </div>
+            </div>
+          }
+
+          @if (_hotel is not null && _hotel.Locations is not null && _hotel.Locations.Any())
+          {
+            <div class="card card-brand mb-2 mt-2">
+              <div class="card-body">
+                <FormFieldSet Width="col">
+                  <label for="roomFacilities" class="font-weight-bold text-secondary">Близжайшие локации отеля</label>
+                  <div class="row align-items-start">
+                    <div class="col-sm-8">
+                      <div class="d-flex">
+                        @foreach (var item in @_hotel.Locations)
+                        {
+                          <h6 class="m-2">@item.Name</h6>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </FormFieldSet>
+              </div>
+            </div>
+          }
 
         </div>
       </div>
     </div>
   </div>
 
-  @if (!isModalLocationOpen && !isModalFoodOpen && isModalHotelFacilityOpen)
+  @if (_hotel != null && Hotel != null)
   {
-    <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
-                       OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
-  }
+    @if (!isModalLocationOpen && !isModalFoodOpen && !isModalHotelPhotoOpen && isModalHotelFacilityOpen)
+    {
+      <ShowHotelFacility IsModalOpen="@isModalHotelFacilityOpen" HotelFacilities="@_hotel.HotelFacilities?.ToList()" HotelId="@Hotel.Id"
+      OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги отеля" />
+    }
 
-  @if (!isModalHotelFacilityOpen && !isModalFoodOpen && isModalLocationOpen)
-  {
-    <ShowLocation IsModalOpen="@isModalLocationOpen" Locations="@_hotel.Locations?.ToList()" HotelId="@Hotel.Id"
-                  OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
-  }
+    @if (!isModalHotelFacilityOpen && !isModalFoodOpen && !isModalHotelPhotoOpen && isModalLocationOpen)
+    {
+      <ShowLocation IsModalOpen="@isModalLocationOpen" Locations="@_hotel.Locations?.ToList()" HotelId="@Hotel.Id"
+      OnCloseModal="CloseModalLocationHandlerAsync" ModalTitle="Близлежащие локации отеля" />
+    }
 
-  @if (!isModalHotelFacilityOpen && !isModalLocationOpen && isModalFoodOpen)
-  {
-    <ShowHotelFood IsModalOpen="@isModalFoodOpen" HotelFoods="@_hotel.Foods?.ToList()" HotelId="@Hotel.Id"
-                   OnCloseModal="CloseModalFoodHandlerAsync" ModalTitle="Питание отеля" />
+    @if (!isModalHotelFacilityOpen && !isModalLocationOpen && !isModalHotelPhotoOpen && isModalFoodOpen)
+    {
+      <ShowHotelFood IsModalOpen="@isModalFoodOpen" HotelFoods="@_hotel.Foods?.ToList()" HotelId="@Hotel.Id"
+      OnCloseModal="CloseModalFoodHandlerAsync" ModalTitle="Питание отеля" />
+    }
+
+    @if (!isModalHotelFacilityOpen && !isModalLocationOpen && !isModalFoodOpen && isModalHotelPhotoOpen)
+    {
+      <ShowHotelPhoto IsModalOpen="@isModalHotelPhotoOpen" HotelId="@Hotel.Id" Photos="@_hotel.HotelPhotos?.ToList()"
+      OnCloseModal="CloseModalPhotoHandlerAsync" ModalTitle="Фото отеля" />
+    }
   }
 
 </EditForm>
@@ -153,6 +219,7 @@
   private bool isModalHotelFacilityOpen = false;
   private bool isModalLocationOpen = false;
   private bool isModalFoodOpen = false;
+  private bool isModalHotelPhotoOpen = false;
 
   private void SetHotelStar(int star)
   {
@@ -169,6 +236,12 @@
   /// <summary> Параметр позволит передать существующий отель в форму </summary>
   [Parameter]
   public HotelDto? Hotel { get; set; }
+
+  /// <summary> Свойство для возврата в родительскую форму EditHotelPage или AddHotelPage признака, что форма закрыта </summary>
+  [Parameter]
+  public EventCallback<bool> OnHandleCloseSubordinateForm { get; set; }
+
+  private void HandleSelectedValueChanged(int val) => _hotel.Star = val;
 
   public void ResetForm()
   {
@@ -252,7 +325,8 @@
 
   private void ShowPhoto(MouseEventArgs args)
   {
-    NavManager.NavigateTo($"/hotels/{Hotel.Id}/photo");
+    //NavManager.NavigateTo($"/hotels/{Hotel.Id}/photo");
+    isModalHotelPhotoOpen = true;
   }
 
   private void ShowFacilities(MouseEventArgs args)
@@ -278,15 +352,26 @@
   {
     // чтобы модальное окно закрылось
     isModalHotelFacilityOpen = false;
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 
-  private void CloseModalLocationHandlerAsync()
+  private async Task CloseModalLocationHandlerAsync()
   {
     isModalLocationOpen = false;
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 
-  private void CloseModalFoodHandlerAsync()
+  private async Task CloseModalFoodHandlerAsync()
   {
     isModalFoodOpen = false;
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
+  }
+
+  /// <summary>Метод действий при закрытии модального окна с работой по фото отеля /// </summary>
+  private async Task CloseModalPhotoHandlerAsync()
+  {
+    isModalHotelPhotoOpen = false;
+    // обновляю данные на странице
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 }

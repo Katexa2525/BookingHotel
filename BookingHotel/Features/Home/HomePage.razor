@@ -10,6 +10,7 @@
 @using Application.DTO.Hotel.CQRS
 @using Application.DTO.Hotel.Mediatr
 @using Application.DTO.Review.ClientRequest
+@using MudBlazor
 
 <PageTitle>Отели</PageTitle>
 
@@ -22,6 +23,7 @@
         <p class="font-italic text-center">
           Есть отель, который хотели бы опубликовать?
           <a href="add-hotel">Добавьте это здесь</a>.
+          <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Href="add-hotel" />
         </p>
       </div>
     }
@@ -96,7 +98,8 @@ else
           Location = p.Location,
           Rating = p.Rating,
           Star = p.Star,
-          MainPhoto = p.MainPhoto
+          MainPhoto = p.MainPhoto,
+          HotelPhotos = p.HotelPhotos
         });
 
     }

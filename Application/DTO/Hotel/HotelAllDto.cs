@@ -1,4 +1,6 @@
-﻿namespace Application.DTO.Hotel
+﻿using Application.DTO.HotelPhoto;
+
+namespace Application.DTO.Hotel
 {
   public class HotelAllDto
   {
@@ -13,5 +15,6 @@
     public string Arrival { get; set; } = string.Empty;
     /// <summary>Время выезда в часах, например, до 12:00  </summary>
     public string Departure { get; set; } = string.Empty;
+    public IEnumerable<HotelPhotoDto>? HotelPhotos { get; set; }
   }
 }

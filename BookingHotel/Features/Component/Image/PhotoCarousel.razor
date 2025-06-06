@@ -2,11 +2,10 @@
   @if (Photos == null || (Photos != null && !Photos.Any()))
   {
     <img src="images/NoImage.png" class="card-img-top" />
-    @* <InputFile OnChange="LoadRoomImage" class="form-control-file mt-1" id="roomImage" accept=".png,.jpg,.jpeg" /> *@
   }
   else
   {
-    <div id="carouselExample" class="carousel slide">
+    <div id="@($"carouselExample{Id}")" class="carousel slide">
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img src="data:image/png;base64,@Convert.ToBase64String(Photos[0])" class="d-block w-100" />
@@ -18,11 +17,11 @@
           </div>
         }
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="@($"#carouselExample{Id}")" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="@($"#carouselExample{Id}")" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
@@ -35,4 +34,8 @@
 
   [Parameter, EditorRequired]
   public List<byte[]> Photos { get; set; } = default!; // определяет обязательный параметр компонента
+
+  /// <summary> id отеля/номера необходим для карусели картинок </summary>
+  [Parameter, EditorRequired]
+  public Guid Id { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms"
 @using Application.DTO.Review.ClientRequest
+@using MudBlazor
 
 @inject IMediator Mediator
 @inject NavigationManager NavManager
@@ -12,16 +13,21 @@
     <div class="mb-4">
       <p class="font-italic text-center">
         Есть номер, который хотели бы опубликовать?
-        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь</a>.
+        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь.
+          <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"  />
+        </a>
       </p>
     </div>
   }
 </AuthorizeView>
 
 @* Данные по отелю *@
-<p class="h1">@_hotel.Name, @_hotel.Star*</p>
+<p class="h1">
+  @_hotel.Name, @_hotel.Star
+  <span class="oi oi-star" style="font-size: 14px; vertical-align: text-top; left: -7px;" />
+</p>
 <div class="d-flex">
-  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-star"></span> @_hotel.Rating </h6>&nbsp;&nbsp;&nbsp;
+  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-chat"></span> @_hotel.Rating </h6>&nbsp;&nbsp;&nbsp;
   <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @_hotel.Location</h6>
 </div>
 
