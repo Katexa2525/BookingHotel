@@ -352,16 +352,19 @@
   {
     // чтобы модальное окно закрылось
     isModalHotelFacilityOpen = false;
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 
-  private void CloseModalLocationHandlerAsync()
+  private async Task CloseModalLocationHandlerAsync()
   {
     isModalLocationOpen = false;
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 
-  private void CloseModalFoodHandlerAsync()
+  private async Task CloseModalFoodHandlerAsync()
   {
     isModalFoodOpen = false;
+    await OnHandleCloseSubordinateForm.InvokeAsync(true);
   }
 
   /// <summary>Метод действий при закрытии модального окна с работой по фото отеля /// </summary>
