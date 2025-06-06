@@ -6,15 +6,27 @@
     {
       <div class="drawer-content">
 
-        <img src="@(!string.IsNullOrWhiteSpace(_activeHotel.MainPhoto) ? $"images/{_activeHotel.MainPhoto}"
-                                                                       : "images/NoImage.png")"
-             class="card-img-top" />
+        @* <img class="card-img-top" src="@(!string.IsNullOrWhiteSpace(_activeHotel.MainPhoto) ? $"images/{_activeHotel.MainPhoto}"
+                                                                       : "images/NoImage.png")" /> *@
+
+        @if (_activeHotel.HotelPhotos == null)
+        {
+          <img src="images/NoImage.png" class="card-img-top" />
+        }
+        else
+        {
+          <PhotoCarousel Photos="_activeHotel.HotelPhotos.Select(p => p.Photo).ToList()" Id="_activeHotel.Id" />
+        }
+
 
         <div class="trail-details">
-          <h3>@_activeHotel.Name</h3>
+          <h3>
+            @_activeHotel.Name, @_activeHotel.Star
+            <span class="oi oi-star" style="font-size: 10px; vertical-align: text-top; left: -5px;" />
+          </h3>
           <div class="d-flex justify-content-between">
             <h6 class="mb-3 text-muted"> <span class="oi oi-map-marker"></span> @_activeHotel.Location </h6>
-            <h6 class="mb-3 text-muted"> <span class="oi oi oi-star"></span> @_activeHotel.Rating </h6>
+            <h6 class="mb-3 text-muted"> <span class="oi oi-chat"></span> @_activeHotel.Rating </h6>
           </div>
           <p class="mt-4">@_activeHotel.Description</p>
         </div>
