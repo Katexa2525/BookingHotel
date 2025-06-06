@@ -66,6 +66,7 @@ namespace Application.BussinessLogic.Room
       await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(room.Prices);
       await _repositoryManager.RoomPhotoRepository.DeleteEntityRangeAsync(room.RoomPhotos);
       await _repositoryManager.RoomFacilityRepository.DeleteEntityRangeAsync(room.RoomFacilities);
+      await _repositoryManager.BookingRepository.DeleteEntityRangeAsync(room.Bookings);
 
       _repositoryManager.RoomRepository.DeleteEntity(room);
       await _repositoryManager.SaveAsync();

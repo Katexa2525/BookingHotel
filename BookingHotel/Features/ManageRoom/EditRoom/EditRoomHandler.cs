@@ -17,7 +17,7 @@ namespace BookingHotel.Features.ManageRoom.EditRoom
     {
       HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
 
-      //Получаю обновленные сведения об отеле и отправляю их в API через HTTP - запрос методом PUT
+      //Получаю обновленные сведения о номере отеля и отправляю их в API через HTTP - запрос методом PUT
       var response = await httpClient.PutAsJsonAsync(EditRoomRequest.RouteTemplate, request, cancellationToken);
       if (response.IsSuccessStatusCode)
       {

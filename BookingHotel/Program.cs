@@ -6,6 +6,7 @@ using BookingHotel.State;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -46,6 +47,8 @@ builder.Services.AddAuthorizationCore();
 // регистрирую класс в в коллекцию IService 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AppState>();
+
+builder.Services.AddMudServices();
 
 //builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 //builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();

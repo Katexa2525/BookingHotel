@@ -16,7 +16,7 @@
 }
 else
 {
-  <h3 class="mt-5 mb-1">@_hotel.Name</h3>
+  <h3 class="mt-2 mb-1">@_hotel.Name</h3>
   @if (_submitSuccessful)
   {
     <SuccessAlert Message="Отель был успешно отредактирован!" />
@@ -25,7 +25,7 @@ else
   {
     <ErrorAlert Message="@_errorMessage" />
   }
-  <HotelForm Hotel="_hotel" OnSubmit="SubmitEditHotel" TextButtonCancel="Отмена"/>
+  <HotelForm Hotel="_hotel" OnSubmit="SubmitEditHotel" TextButtonCancel="Отмена" OnHandleCloseSubordinateForm="HandleCloseSubordinateForm" />
 }
 
 @code {
@@ -71,9 +71,8 @@ else
     {
       // любые обновления, сделанные в экземпляре hotelDto из формы, применяются к отелю
       _hotel = hotelDto;
+      _submitSuccessful = true;
     }
-
-    _submitSuccessful = true;
 
     // Если пользователь обновил изображение тропы, вызывается ProcessImage для загрузки нового изображения
     if (hotelDto.ImageAction == ImageAction.Add)
@@ -98,5 +97,19 @@ else
     // Если было выбрано новое изображение, обновляем свойство Image, указав новое имя файла
     _hotel.MainPhoto = imageUploadResponse.ImageName;
     return true;
+  }
+
+  private async Task HandleCloseSubordinateForm(bool isClosed)
+  {
+    // обновляю данные на странице
+    if (isClosed)
+    {
+      var response = await Mediator.Send(new GetHotelRequest(HotelId));
+
+      if (response is not null)
+      {
+        _hotel = response.Hotel;
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@
   }
   else
   {
-    <div id="@($"carouselExample{RoomId}")" class="carousel slide">
+    <div id="@($"carouselExample{Id}")" class="carousel slide">
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img src="data:image/png;base64,@Convert.ToBase64String(Photos[0])" class="d-block w-100" />
@@ -17,11 +17,11 @@
           </div>
         }
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="@($"#carouselExample{RoomId}")" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="@($"#carouselExample{Id}")" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="@($"#carouselExample{RoomId}")" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="@($"#carouselExample{Id}")" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
@@ -35,7 +35,7 @@
   [Parameter, EditorRequired]
   public List<byte[]> Photos { get; set; } = default!; // определяет обязательный параметр компонента
 
-  /// <summary> id комнаты необходим для карусели картинок </summary>
+  /// <summary> id отеля/номера необходим для карусели картинок </summary>
   [Parameter, EditorRequired]
-  public Guid RoomId { get; set; }
+  public Guid Id { get; set; }
 }

@@ -13,7 +13,7 @@
 }
 else
 {
-  <h3 class="mt-5 mb-1">@_room.RoomType?.Name</h3>
+  <h3 class="mt-2 mb-1">@_room.RoomType?.Name</h3>
 
   @if (_submitSuccessful)
   {
@@ -81,13 +81,12 @@ else
     else
     {
       _room = roomDto;
+      _submitSuccessful = true;
     }
-
-    _submitSuccessful = true;
 
     // Если пользователь обновил изображение тропы, вызывается ProcessImage для загрузки нового изображения
     if (roomDto.ImageAction == ImageAction.Add)
-      _submitSuccessful = await ProcessImage(roomDto.HotelId, roomDto.Id, image!);
+      _submitSuccessful = await ProcessImage(roomDto.Id, image!);
 
     // Если пользователь удалил изображение, свойство Image очищается
     if (roomDto.ImageAction == ImageAction.Remove)
@@ -97,7 +96,7 @@ else
     StateHasChanged();
   }
 
-  private async Task<bool> ProcessImage(Guid hotelId, Guid roomId, IBrowserFile roomImage)
+  private async Task<bool> ProcessImage(Guid roomId, IBrowserFile roomImage)
   {
     var imageUploadResponse = await Mediator.Send(new UploadRoomImageRequest(roomId, roomImage));
     if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
