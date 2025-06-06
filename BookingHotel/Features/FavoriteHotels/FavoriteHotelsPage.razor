@@ -15,7 +15,7 @@
   <div class="grid">
     @foreach (var hotel in AppState.FavoriteHotelsState.FavoriteHotels)
     {
-      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
+      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" OnHandleCloseReviewForm="HandleCloseReviewForm" />
     }
 
   </div>
@@ -40,4 +40,9 @@ else
   private void HandleHotelSelected(HotelDto hotel) => _selectedHotel = hotel;
 
   void IDisposable.Dispose() => AppState.FavoriteHotelsState.OnChange -= StateHasChanged;
+
+  private void HandleCloseReviewForm(Tuple<bool, HotelDto> tuple)
+  {
+    throw new NotImplementedException();
+  }
 }
