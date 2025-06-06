@@ -4,15 +4,26 @@
 <div class="card shadow" style="width: 18rem;">
 
   <a href="/hotels/{@Hotel.Id}/rooms">
-    <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
+    @* <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}"
                                                             : "images/NoImage.png")"
-         class="card-img-top" alt="@Hotel.Name">
+         class="card-img-top" alt="@Hotel.Name"> *@
+
+    <div class="card-img-top">
+      @if (Hotel == null || (Hotel != null && Hotel.HotelPhotos == null) @* || (Hotel != null && Hotel.HotelPhotos != null && !Hotel.HotelPhotos.Any()) *@)
+      {
+        <img src="images/NoImage.png" class="card-img-top" />
+      }
+      else
+      {
+        <PhotoCarousel Photos="Hotel.HotelPhotos.Select(p => p.Photo).ToList()" Id="Hotel.Id" />
+      }
+    </div>
   </a>
 
   <div class="card-body">
     <a href="/hotels/{@Hotel.Id}/rooms">
       <h5 class="card-title">
-        @Hotel.Name, @Hotel.Star 
+        @Hotel.Name, @Hotel.Star
         <span class="oi oi-star" style="font-size: 10px; vertical-align: text-top; left: -5px;" />
       </h5>
     </a>
@@ -32,7 +43,7 @@
           @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
           {
             <button class="btn btn-outline-secondary float-right" title="Редактирование"
-            @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
+                    @onclick="@(() => NavManager.NavigateTo($"/edit-hotel/{Hotel.Id}"))">
               <i class="bi bi-pencil"></i>
             </button>
           }
@@ -53,7 +64,7 @@
 
   @* Форма Отзывы *@
   <ShowReview Hotel="@Hotel" IsModalOpen="@isModalHotelReviewOpen" ModalTitle="Отзыв об отеле" OnCloseModal="CloseModalReviewHandlerAsync"
-  TextButtonAccept="Опубликовать"/>
+              TextButtonAccept="Опубликовать" />
 </div>
 
 @code {

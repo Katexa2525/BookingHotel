@@ -11,7 +11,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-4">
-          <div>
+          @* <div>
             <!--Если у отеля нет изображения, выполняю отрисовку компонента InputFile, позволяя пользователю выбрать его-->
             @if (string.IsNullOrWhiteSpace(_hotel.MainPhoto))
             {
@@ -30,7 +30,12 @@
                 </div>
               </div>
             }
-          </div>
+          </div> *@
+
+          @if (_hotel != null && _hotel.HotelPhotos != null)
+          {
+            <PhotoCarousel Photos="_hotel.HotelPhotos.Select(p => p.Photo).ToList()" Id="Hotel.Id" />
+          }
 
           <AuthorizeView Context="authContext">
             @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
