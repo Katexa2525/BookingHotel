@@ -9,7 +9,7 @@
          class="card-img-top" alt="@Hotel.Name"> *@
 
     <div class="card-img-top">
-      @if (Hotel == null || (Hotel != null && Hotel.HotelPhotos == null) @* || (Hotel != null && Hotel.HotelPhotos != null && !Hotel.HotelPhotos.Any()) *@)
+      @if (Hotel == null || (Hotel != null && Hotel.HotelPhotos == null))
       {
         <img src="images/NoImage.png" class="card-img-top" />
       }
