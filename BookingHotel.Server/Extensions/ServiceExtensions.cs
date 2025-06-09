@@ -12,6 +12,7 @@ using Application.BussinessLogic.Room;
 using Application.BussinessLogic.RoomFacility;
 using Application.BussinessLogic.RoomPhoto;
 using Application.BussinessLogic.RoomType;
+using Application.BussinessLogic.TypeFood;
 using Application.Interfaces.Repository;
 using Domain.Models;
 using Infrastructure;
@@ -99,7 +100,7 @@ namespace BookingHotel.Server.Extensions
       services.AddScoped<IRoomTypeBussinessLogic, RoomTypeBussinessLogic>();
       services.AddScoped<IGuestBussinessLogic, GuestBussinessLogic>();
       services.AddScoped<IReviewBussinessLogic, ReviewBussinessLogic>();
-      
+      services.AddScoped<ITypeFoodBussinessLogic, TypeFoodBussinessLogic>();
     }
 
     public static void ConfigureAuthenticationJWTKeycloak(this IServiceCollection services)

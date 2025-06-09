@@ -12,6 +12,7 @@ using Application.DTO.RoomFacility;
 using Application.DTO.RoomPhoto;
 using Application.DTO.RoomType;
 using Application.DTO.Service;
+using Application.DTO.TypeFood;
 using AutoMapper;
 using Domain.Models;
 
@@ -106,6 +107,9 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Review, ReviewDto>().ReverseMap();
       CreateMap<Review, ReviewCreateDto>().ReverseMap();
       CreateMap<Review, ReviewCreateWithIdDto>().ReverseMap();
+
+      CreateMap<TypeFood, TypeFoodCreateWithIdDto>().ReverseMap();
+      CreateMap<TypeFood, TypeFoodDto>().ReverseMap();
 
       CreateMap<Service, ServiceDto>().ReverseMap();
       
