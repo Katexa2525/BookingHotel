@@ -1,9 +1,7 @@
-﻿@inject NavigationManager NavManager
+﻿@using Application.DTO.TypeFood.ClientRequest
+@inject NavigationManager NavManager
 @inject IMediator Mediator
 @inject IMapper Mapper
-
-@using System.Collections.Generic
-@using Application.DTO.FoodType
 
 @if (IsModalOpen)
 {
@@ -16,32 +14,48 @@
         </div>
         <div class="modal-body" style="max-height: 500px; overflow-y: auto; width: 100%;">
           <table class="table">
-            <thead>
+            @* <thead>
               <tr>
                 <th>Наименование типа питания</th>
               </tr>
-            </thead>
+            </thead> *@
             <tbody>
-              @foreach (var item in _hotelFoods)
+              @if (_hotelFoods is not null)
               {
-                _food = item;
-                selectedOptionTypeFood = (_foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)) != null) ? _foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)).Name : "";
-                <tr>
-                  <td>
-                    <div class="col">
-                      <DropdownList Options="@_foodTypes.Select(p=>p.Name).ToList()"
-                      SelectedOption="@selectedOptionTypeFood" OnSelectionChanged="@HandleSelection" />
-                    </div>
-                  </td>
-                  <td>
-                    <AuthorizeView>
-                      @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
-                      {
-                        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteRow(item)" />
-                      }
-                    </AuthorizeView>
-                  </td>
-                </tr>
+                @foreach (var item in _hotelFoods)
+                {
+                  _food = item;
+                  if (_foodTypes != null)
+                  {
+                    selectedOptionTypeFood = (_foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)) != null) ?
+                    _foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)).Name : "";
+                    <tr>
+                      <td>
+                        <div class="col">
+                          @* <DropdownList Options="@_foodTypes.Select(p=>p.Name).ToList()"
+                                        SelectedOption="@selectedOptionTypeFood" OnSelectionChanged="@HandleSelection" /> *@
+
+                          <MudSelect T="string" @bind-Value="selectedOptionTypeFood" SelectedValuesChanged="OnSelectedValuesChanged" Label="Тип питания"
+                          FullWidth="true" FitContent="true" Variant="Variant.Outlined" ShrinkLabel>
+                            @foreach (var item in _foodTypes.Select(p => p.Name).ToList())
+                            {
+                              <MudSelectItem Value="@item">@item</MudSelectItem>
+                            }
+                          </MudSelect>
+
+                        </div>
+                      </td>
+                      <td>
+                        <AuthorizeView>
+                          @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
+                          {
+                            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteRow(item)" />
+                          }
+                        </AuthorizeView>
+                      </td>
+                    </tr>
+                  }
+                }
               }
             </tbody>
           </table>
@@ -76,18 +90,11 @@
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private List<FoodDto>? _hotelFoods = new List<FoodDto>();
-  private FoodDto _food;
+  private FoodDto _food = new FoodDto();
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
   private List<FoodDto>? _hotelFoodsDel = new List<FoodDto>();
-  private List<FoodTypeDto>? _foodTypes = new List<FoodTypeDto>()
-  {
-    new FoodTypeDto { Id = Guid.Parse("072fc618-8703-437f-9662-5ba97d0ab4f0"), Name = "Завтрак" },
-    new FoodTypeDto { Id = Guid.Parse("4d53a1ed-9613-4406-8a31-a411c934e628"), Name = "Полупансион" },
-    new FoodTypeDto { Id = Guid.Parse("b2d7509e-c5b3-4936-8deb-26e51052446f"), Name = "Завтрак, обед и ужин" },
-    new FoodTypeDto { Id = Guid.Parse("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782"), Name = "Всё включено" },
-    new FoodTypeDto { Id = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), Name = "Завтрак полноценный" },
-    new FoodTypeDto { Id = Guid.Parse("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"), Name = "Без питания" }
-  };
+  private List<TypeFoodDto>? _foodTypes = new List<TypeFoodDto>();
+
   // что выбрано из списка типа питания
   private string selectedOptionTypeFood = "";
 
@@ -118,6 +125,10 @@
   protected override async Task OnInitializedAsync()
   {
     _submitSuccessful = false;
+    // получаю типы  питания
+    var response = await Mediator.Send(new GetTypeFoodsRequest());
+    if (response is not null)
+      _foodTypes = response.TypeFoods;
   }
 
   protected override async Task OnParametersSetAsync()
@@ -141,16 +152,16 @@
 
   private void AddRow()
   {
-    _hotelFoods.Add(new FoodDto
-      {
-        HotelId = this.HotelId
-      });
+    if (_hotelFoods is not null)
+      _hotelFoods.Add(new FoodDto { HotelId = this.HotelId });
   }
 
   private void DeleteRow(FoodDto item)
   {
-    _hotelFoodsDel.Add(item);
-    _hotelFoods.Remove(item);
+    if (_hotelFoodsDel is not null)
+      _hotelFoodsDel.Add(item);
+    if (_hotelFoods is not null)
+      _hotelFoods.Remove(item);
   }
 
   private async Task Save(MouseEventArgs args)
@@ -213,6 +224,16 @@
     catch (Exception ex)
     {
       Console.WriteLine($"Ошибка: {ex.StackTrace}");
+    }
+  }
+
+  private void OnSelectedValuesChanged(IEnumerable<string> typefood)
+  {
+    if (typefood is not null && typefood.Any())
+    {
+      selectedOptionTypeFood = typefood.First();
+      _food.Name = selectedOptionTypeFood;
+      _food.TypeFoodId = _foodTypes.FirstOrDefault(p => p.Name.Equals(selectedOptionTypeFood)).Id;
     }
   }
 }
