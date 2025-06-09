@@ -1,6 +1,6 @@
-﻿namespace Application.DTO.FoodType
+﻿namespace Application.DTO.TypeFood
 {
-  public class FoodTypeDto
+  public class TypeFoodDto
   {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

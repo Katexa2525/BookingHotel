@@ -2,9 +2,6 @@
 @inject IMediator Mediator
 @inject IMapper Mapper
 
-@using System.Collections.Generic
-@using Application.DTO.FoodType
-
 @if (IsModalOpen)
 {
   <div class="modal show d-block" tabindex="-1">
@@ -22,26 +19,33 @@
               </tr>
             </thead>
             <tbody>
-              @foreach (var item in _hotelFoods)
+              @if (_hotelFoods is not null)
               {
-                _food = item;
-                selectedOptionTypeFood = (_foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)) != null) ? _foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)).Name : "";
-                <tr>
-                  <td>
-                    <div class="col">
-                      <DropdownList Options="@_foodTypes.Select(p=>p.Name).ToList()"
-                      SelectedOption="@selectedOptionTypeFood" OnSelectionChanged="@HandleSelection" />
-                    </div>
-                  </td>
-                  <td>
-                    <AuthorizeView>
-                      @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
-                      {
-                        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteRow(item)" />
-                      }
-                    </AuthorizeView>
-                  </td>
-                </tr>
+                @foreach (var item in _hotelFoods)
+                {
+                  _food = item;
+                  if (_foodTypes != null)
+                  {
+                    selectedOptionTypeFood = (_foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)) != null) ?
+                                              _foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)).Name : "";
+                    <tr>
+                      <td>
+                        <div class="col">
+                          <DropdownList Options="@_foodTypes.Select(p=>p.Name).ToList()"
+                          SelectedOption="@selectedOptionTypeFood" OnSelectionChanged="@HandleSelection" />
+                        </div>
+                      </td>
+                      <td>
+                        <AuthorizeView>
+                          @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
+                          {
+                            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteRow(item)" />
+                          }
+                        </AuthorizeView>
+                      </td>
+                    </tr>
+                  }
+                }
               }
             </tbody>
           </table>
@@ -79,14 +83,14 @@
   private FoodDto _food;
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
   private List<FoodDto>? _hotelFoodsDel = new List<FoodDto>();
-  private List<FoodTypeDto>? _foodTypes = new List<FoodTypeDto>()
+  private List<TypeFoodDto>? _foodTypes = new List<TypeFoodDto>()
   {
-    new FoodTypeDto { Id = Guid.Parse("072fc618-8703-437f-9662-5ba97d0ab4f0"), Name = "Завтрак" },
-    new FoodTypeDto { Id = Guid.Parse("4d53a1ed-9613-4406-8a31-a411c934e628"), Name = "Полупансион" },
-    new FoodTypeDto { Id = Guid.Parse("b2d7509e-c5b3-4936-8deb-26e51052446f"), Name = "Завтрак, обед и ужин" },
-    new FoodTypeDto { Id = Guid.Parse("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782"), Name = "Всё включено" },
-    new FoodTypeDto { Id = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), Name = "Завтрак полноценный" },
-    new FoodTypeDto { Id = Guid.Parse("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"), Name = "Без питания" }
+    new TypeFoodDto { Id = Guid.Parse("072fc618-8703-437f-9662-5ba97d0ab4f0"), Name = "Завтрак" },
+    new TypeFoodDto { Id = Guid.Parse("4d53a1ed-9613-4406-8a31-a411c934e628"), Name = "Полупансион" },
+    new TypeFoodDto { Id = Guid.Parse("b2d7509e-c5b3-4936-8deb-26e51052446f"), Name = "Завтрак, обед и ужин" },
+    new TypeFoodDto { Id = Guid.Parse("ceb0cba6-80dd-43b0-a9a3-3b9a4165f782"), Name = "Всё включено" },
+    new TypeFoodDto { Id = Guid.Parse("e0a5a158-5ef8-414c-896a-49fdf04dc7a4"), Name = "Завтрак полноценный" },
+    new TypeFoodDto { Id = Guid.Parse("c9c6eb97-1d58-45d8-879a-9b2cf6c30cbd"), Name = "Без питания" }
   };
   // что выбрано из списка типа питания
   private string selectedOptionTypeFood = "";
