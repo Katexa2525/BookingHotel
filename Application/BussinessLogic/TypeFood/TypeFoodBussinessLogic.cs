@@ -1,4 +1,5 @@
-﻿using Application.DTO.TypeFood;
+﻿using Application.DTO.Hotel;
+using Application.DTO.TypeFood;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -21,9 +22,12 @@ namespace Application.BussinessLogic.TypeFood
 
     public async Task<List<TypeFoodDto>> GetAllAsync(bool trackChanges)
     {
-      return await _repositoryManager.TypeFoodRepository.GetAll(trackChanges).AsQueryable()
-                                                        .ProjectTo<TypeFoodDto>(_mapper.ConfigurationProvider)
-                                                        .ToListAsync();
+      //return await _repositoryManager.TypeFoodRepository.GetAll(trackChanges).AsQueryable()
+      //                                                  .ProjectTo<TypeFoodDto>(_mapper.ConfigurationProvider)
+      //                                                  .ToListAsync();
+
+      var listDB = _mapper.Map<List<TypeFoodDto>>(await _repositoryManager.TypeFoodRepository.GetAllAsync(trackChanges));
+      return listDB.ToList();
     }
 
     public async Task<TypeFoodDto> GetByIdAsync(Guid id, bool trackChanges)
