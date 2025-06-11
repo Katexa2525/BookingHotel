@@ -54,6 +54,7 @@
   private RoomDto? _selectedRoom;
   // закрытое поле, содержащее данные о номерах определенного отеля, или все номера всех отелей
   private IEnumerable<RoomDto>? _allRooms;
+  private IEnumerable<RoomDto>? _allRoomsCopy; // копия всех номеров по данному отелю
   /// <summary> Путь на страницу поиска </summary>
   private string routeSearch = string.Empty;
   private HotelDto _hotel = new HotelDto();
@@ -106,6 +107,9 @@
     else
       _allRooms = new List<RoomDto>();
 
+    // сохраняю в копию все комнаты по отелю, чтобы можно было вернуть после поиска
+    _allRoomsCopy = _allRooms;
+
     // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами
     var responseHotel = await Mediator.Send(new GetHotelRequest(HotelId));
 
@@ -133,8 +137,20 @@
     Booking.DepartureDate = bookingDto.DepartureDate;
     Booking.NumberOfAdults = bookingDto.NumberOfAdults;
     Booking.NumberOfChilds = bookingDto.NumberOfChilds;
+
+    if (_allRoomsCopy is not null)
+    {
+      _allRooms = _allRoomsCopy.Where(p => p.PeopleNumber >= bookingDto.NumberOfAdults + bookingDto.NumberOfChilds).ToList();
+      // if (_allRooms is not null)
+      //   _allRooms = _allRooms.Where(p => p.Bookings.Where(r => ((r.ArrivalDate <= bookingDto.ArrivalDate && r.DepartureDate >= bookingDto.ArrivalDate) ||
+      //                                                           (r.ArrivalDate <= bookingDto.DepartureDate && r.DepartureDate >= bookingDto.DepartureDate) ||
+      //                                                           (r.ArrivalDate > bookingDto.ArrivalDate && r.DepartureDate >= bookingDto.ArrivalDate))
+      //                                                    )).ToList();
+      StateHasChanged();
+    }
+
     // перехожу на страницу поиска
-    NavManager.NavigateTo(routeSearch);
+    //NavManager.NavigateTo(routeSearch);
   }
 
   private async Task HandleCloseSubordinateForm(bool isClosed)
