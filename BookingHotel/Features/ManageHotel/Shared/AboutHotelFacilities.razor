@@ -1,6 +1,6 @@
 ﻿@* Удобства и услуги | Питание отеля *@
 @if ((@Hotel.HotelFacilities is not null || @Hotel.Foods is not null) &&
-    (@Hotel.HotelFacilities.Any() || @Hotel.Foods.Any()))
+   (@Hotel.HotelFacilities.Any() || @Hotel.Foods.Any()))
 {
   <div class="card shadow">
     <div class="card-body">
@@ -66,12 +66,12 @@
 @code {
 
   [Parameter, EditorRequired]
-  public HotelDto Hotel { get; set; }
+  public HotelDto Hotel { get; set; } = new HotelDto();
 
   [Parameter, EditorRequired]
-  public string CaptionFacilities { get; set; }
+  public string CaptionFacilities { get; set; } = string.Empty;
 
   [Parameter, EditorRequired]
-  public string CaptionFoods { get; set; }
+  public string CaptionFoods { get; set; } = string.Empty;
 
 }

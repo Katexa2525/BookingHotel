@@ -43,7 +43,7 @@
 
     <div class="col">
       <button type="button" class="btn btn-primary" title="Поиск..." 
-              @onclick="@(async () => await OnSelected.InvokeAsync(Booking))">
+      @onclick="@(async () => await OnSelected.InvokeAsync(Booking))">
         <i class="bi bi-binoculars"></i>
         Найти
       </button>
@@ -54,7 +54,7 @@
 @code {
 
   [Parameter]
-  public BookingDto Booking { get; set; }
+  public BookingDto Booking { get; set; } = new BookingDto();
 
   [Parameter, EditorRequired]
   public EventCallback<BookingDto> OnSelected { get; set; }
