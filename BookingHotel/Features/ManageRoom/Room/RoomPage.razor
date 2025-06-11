@@ -11,9 +11,8 @@
     <div class="mb-4">
       <p class="font-italic text-center">
         Есть номер, который хотели бы опубликовать?
-        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь.
-          <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"  />
-        </a>
+        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь.</a>
+        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Href="@($"/hotels/{HotelId}/rooms/add-room")" />
       </p>
     </div>
   }
@@ -45,6 +44,7 @@
   @* <SearchComponent Placeholder="Поиск номера отеля..." TextNavigateTo=@routeSearch /> *@
   @* данные передаются в параметры компонента с помощью атрибутов элемента *@
   <SearchDateComponent Booking="@Booking" OnSelected="HandleBookingSelected" />
+
   // номера по отелю
   <div class="card-container">
     @foreach (var room in _allRooms)
