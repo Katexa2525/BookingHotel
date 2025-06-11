@@ -1,6 +1,4 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms"
-@using Application.DTO.Review.ClientRequest
-@using MudBlazor
 
 @inject IMediator Mediator
 @inject NavigationManager NavManager
@@ -105,26 +103,31 @@
     // запрос на получения всех номеров отеля RoomId через GetRoomsRequest и Mediator
     var response = await Mediator.Send(new GetRoomsRequest(HotelId));
 
-    _allRooms = response.Rooms.Select(p => new RoomDto
-      {
-        Id = p.Id,
-        HotelId = p.HotelId,
-        Description = p.Description,
-        PeopleNumber = p.PeopleNumber,
-        Square = p.Square,
-        RoomTypeId = p.RoomTypeId,
-        Prices = p.Prices,
-        RoomFacilities = p.RoomFacilities,
-        RoomPhotos = p.RoomPhotos,
-        RoomType = p.RoomType,
-        Bookings = p.Bookings,
-        MainPhoto = p.MainPhoto
-      });
+    if (response is not null && response.Rooms is not null)
+    {
+      _allRooms = response.Rooms.Select(p => new RoomDto
+        {
+          Id = p.Id,
+          HotelId = p.HotelId,
+          Description = p.Description,
+          PeopleNumber = p.PeopleNumber,
+          Square = p.Square,
+          RoomTypeId = p.RoomTypeId,
+          Prices = p.Prices,
+          RoomFacilities = p.RoomFacilities,
+          RoomPhotos = p.RoomPhotos,
+          RoomType = p.RoomType,
+          Bookings = p.Bookings,
+          MainPhoto = p.MainPhoto
+        });
+    }
+    else
+      _allRooms = new List<RoomDto>();
 
     // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами
     var responseHotel = await Mediator.Send(new GetHotelRequest(HotelId));
 
-    if (responseHotel is not null)
+    if (responseHotel is not null && responseHotel.Hotel is not null)
     {
       // если отель получен, сведения о нём копирую в локальное поле для передачи в HotelForm
       _hotel = responseHotel.Hotel;
@@ -148,6 +151,8 @@
     Booking.DepartureDate = bookingDto.DepartureDate;
     Booking.NumberOfAdults = bookingDto.NumberOfAdults;
     Booking.NumberOfChilds = bookingDto.NumberOfChilds;
+    // перехожу на страницу поиска
+    NavManager.NavigateTo(routeSearch);
   }
 
   private async Task HandleCloseSubordinateForm(bool isClosed)
