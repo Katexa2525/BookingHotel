@@ -1,6 +1,4 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms"
-@using Application.DTO.Review.ClientRequest
-@using MudBlazor
 
 @inject IMediator Mediator
 @inject NavigationManager NavManager
@@ -13,40 +11,22 @@
     <div class="mb-4">
       <p class="font-italic text-center">
         Есть номер, который хотели бы опубликовать?
-        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь.
-          <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small"  />
-        </a>
+        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь.</a>
+        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Href="@($"/hotels/{HotelId}/rooms/add-room")" />
       </p>
     </div>
   }
 </AuthorizeView>
 
-@* Данные по отелю *@
-<p class="h1">
-  @_hotel.Name, @_hotel.Star
-  <span class="oi oi-star" style="font-size: 14px; vertical-align: text-top; left: -7px;" />
-</p>
-<div class="d-flex">
-  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-chat"></span> @_hotel.Rating </h6>&nbsp;&nbsp;&nbsp;
-  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @_hotel.Location</h6>
-</div>
-
-@* близжайшие локации около отеля *@
-@if (_hotel.Locations is not null && _hotel.Locations.Any())
-{
-  <div class="d-flex">
-    @foreach (var item in @_hotel.Locations)
-    {
-      <h6 class="card-subtitle mb-3 text-muted">@item.Name, &nbsp;&nbsp;&nbsp;</h6>
-    }
-  </div>
-}
+@* Данные по отелю и близжайшие локации около отеля*@
+<AboutHotelDataAndLocation Hotel="@_hotel" />
 
 @if (_allRooms is not null && _allRooms.Any())
 {
   @* <SearchComponent Placeholder="Поиск номера отеля..." TextNavigateTo=@routeSearch /> *@
   @* данные передаются в параметры компонента с помощью атрибутов элемента *@
   <SearchDateComponent Booking="@Booking" OnSelected="HandleBookingSelected" />
+
   // номера по отелю
   <div class="card-container">
     @foreach (var room in _allRooms)
@@ -74,6 +54,7 @@
   private RoomDto? _selectedRoom;
   // закрытое поле, содержащее данные о номерах определенного отеля, или все номера всех отелей
   private IEnumerable<RoomDto>? _allRooms;
+  private IEnumerable<RoomDto>? _allRoomsCopy; // копия всех номеров по данному отелю
   /// <summary> Путь на страницу поиска </summary>
   private string routeSearch = string.Empty;
   private HotelDto _hotel = new HotelDto();
@@ -105,26 +86,34 @@
     // запрос на получения всех номеров отеля RoomId через GetRoomsRequest и Mediator
     var response = await Mediator.Send(new GetRoomsRequest(HotelId));
 
-    _allRooms = response.Rooms.Select(p => new RoomDto
-      {
-        Id = p.Id,
-        HotelId = p.HotelId,
-        Description = p.Description,
-        PeopleNumber = p.PeopleNumber,
-        Square = p.Square,
-        RoomTypeId = p.RoomTypeId,
-        Prices = p.Prices,
-        RoomFacilities = p.RoomFacilities,
-        RoomPhotos = p.RoomPhotos,
-        RoomType = p.RoomType,
-        Bookings = p.Bookings,
-        MainPhoto = p.MainPhoto
-      });
+    if (response is not null && response.Rooms is not null)
+    {
+      _allRooms = response.Rooms.Select(p => new RoomDto
+        {
+          Id = p.Id,
+          HotelId = p.HotelId,
+          Description = p.Description,
+          PeopleNumber = p.PeopleNumber,
+          Square = p.Square,
+          RoomTypeId = p.RoomTypeId,
+          Prices = p.Prices,
+          RoomFacilities = p.RoomFacilities,
+          RoomPhotos = p.RoomPhotos,
+          RoomType = p.RoomType,
+          Bookings = p.Bookings,
+          MainPhoto = p.MainPhoto
+        });
+    }
+    else
+      _allRooms = new List<RoomDto>();
+
+    // сохраняю в копию все комнаты по отелю, чтобы можно было вернуть после поиска
+    _allRoomsCopy = _allRooms;
 
     // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами
     var responseHotel = await Mediator.Send(new GetHotelRequest(HotelId));
 
-    if (responseHotel is not null)
+    if (responseHotel is not null && responseHotel.Hotel is not null)
     {
       // если отель получен, сведения о нём копирую в локальное поле для передачи в HotelForm
       _hotel = responseHotel.Hotel;
@@ -148,6 +137,20 @@
     Booking.DepartureDate = bookingDto.DepartureDate;
     Booking.NumberOfAdults = bookingDto.NumberOfAdults;
     Booking.NumberOfChilds = bookingDto.NumberOfChilds;
+
+    if (_allRoomsCopy is not null)
+    {
+      _allRooms = _allRoomsCopy.Where(p => p.PeopleNumber >= bookingDto.NumberOfAdults + bookingDto.NumberOfChilds).ToList();
+      // if (_allRooms is not null)
+      //   _allRooms = _allRooms.Where(p => p.Bookings.Where(r => ((r.ArrivalDate <= bookingDto.ArrivalDate && r.DepartureDate >= bookingDto.ArrivalDate) ||
+      //                                                           (r.ArrivalDate <= bookingDto.DepartureDate && r.DepartureDate >= bookingDto.DepartureDate) ||
+      //                                                           (r.ArrivalDate > bookingDto.ArrivalDate && r.DepartureDate >= bookingDto.ArrivalDate))
+      //                                                    )).ToList();
+      StateHasChanged();
+    }
+
+    // перехожу на страницу поиска
+    //NavManager.NavigateTo(routeSearch);
   }
 
   private async Task HandleCloseSubordinateForm(bool isClosed)

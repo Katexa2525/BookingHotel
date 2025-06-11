@@ -38,7 +38,10 @@
         <div class="card card-brand mb-4 shadow">
           <div class="card-body">
             <div class="row">
-              <h3>@_room.RoomType.Name</h3>
+              @if (_room.RoomType is not null)
+              {
+                <h3>@_room.RoomType.Name</h3>
+              }
 
               <RoomPeopleSquareComponent PeopleNumber="@_room.PeopleNumber" Square="@_room.Square" />
 
@@ -133,7 +136,7 @@
             <div class="row">
               @if (_room != null && _room.RoomPhotos != null && _room.RoomPhotos.Any())
               {
-                <PhotoCarousel Photos="_room.RoomPhotos.Select(p=>p.Photo).ToList()" />
+                <PhotoCarousel Photos="_room.RoomPhotos.Select(p=>p.Photo).ToList()" Id="_room.Id" />
               }
             </div>
             <div class="row">
@@ -219,7 +222,7 @@
     // получаю данные отеля по HotelId, чтобы отобразить их на странице с номерами
     var responseHotel = await Mediator.Send(new GetHotelRequest(HotelId));
 
-    if (responseHotel is not null)
+    if (responseHotel is not null && responseHotel.Hotel is not null)
     {
       _hotel = responseHotel.Hotel;
     }
@@ -231,7 +234,7 @@
     // получаю данные по номеру
     var response = await Mediator.Send(new GetRoomRequest(RoomId));
 
-    if (response is not null)
+    if (response is not null && response.Room is not null)
     {
       _room = response.Room;
     }

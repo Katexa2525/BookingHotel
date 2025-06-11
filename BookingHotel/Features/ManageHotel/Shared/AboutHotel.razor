@@ -27,8 +27,8 @@
 
 @code {
   [Parameter, EditorRequired]
-  public HotelDto Hotel { get; set; }
+  public HotelDto Hotel { get; set; } = new HotelDto();
 
   [Parameter, EditorRequired]
-  public string Caption { get; set; }
+  public string Caption { get; set; } = string.Empty;
 }
