@@ -1,0 +1,25 @@
+﻿@* Данные по отелю *@
+<p class="h1">
+  @Hotel.Name, @Hotel.Star
+  <span class="oi oi-star" style="font-size: 14px; vertical-align: text-top; left: -7px;" />
+</p>
+<div class="d-flex">
+  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-chat"></span> @Hotel.Rating </h6>&nbsp;&nbsp;&nbsp;
+  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @Hotel.Location</h6>
+</div>
+
+@* близжайшие локации около отеля *@
+@if (Hotel.Locations is not null && Hotel.Locations.Any())
+{
+  <div class="d-flex">
+    @foreach (var item in @Hotel.Locations)
+    {
+      <h6 class="card-subtitle mb-3 text-muted">@item.Name, &nbsp;&nbsp;&nbsp;</h6>
+    }
+  </div>
+}
+
+@code {
+  [Parameter, EditorRequired]
+  public HotelDto Hotel { get; set; }
+}

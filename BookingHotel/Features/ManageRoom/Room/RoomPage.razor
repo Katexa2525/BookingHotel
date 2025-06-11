@@ -18,26 +18,8 @@
   }
 </AuthorizeView>
 
-@* Данные по отелю *@
-<p class="h1">
-  @_hotel.Name, @_hotel.Star
-  <span class="oi oi-star" style="font-size: 14px; vertical-align: text-top; left: -7px;" />
-</p>
-<div class="d-flex">
-  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-chat"></span> @_hotel.Rating </h6>&nbsp;&nbsp;&nbsp;
-  <h6 class="card-subtitle mb-3 text-muted"><span class="oi oi-map-marker"></span> @_hotel.Location</h6>
-</div>
-
-@* близжайшие локации около отеля *@
-@if (_hotel.Locations is not null && _hotel.Locations.Any())
-{
-  <div class="d-flex">
-    @foreach (var item in @_hotel.Locations)
-    {
-      <h6 class="card-subtitle mb-3 text-muted">@item.Name, &nbsp;&nbsp;&nbsp;</h6>
-    }
-  </div>
-}
+@* Данные по отелю и близжайшие локации около отеля*@
+<AboutHotelDataAndLocation Hotel="@_hotel" />
 
 @if (_allRooms is not null && _allRooms.Any())
 {
