@@ -102,7 +102,7 @@
           RoomType = p.RoomType,
           Bookings = p.Bookings,
           MainPhoto = p.MainPhoto,
-        // определяю цену на сегодня
+          // определяю цену на сегодня
           DayPrice = p.Prices is not null && p.Prices.Any(p => p.DateStart <= DateTime.Now && p.DateEnd >= DateTime.Now) ?
                      p.Prices.First(p => p.DateStart <= DateTime.Now && p.DateEnd >= DateTime.Now).DayPrice : 0.00
         });
@@ -143,7 +143,7 @@
     Booking.NumberOfAdults = bookingDto.NumberOfAdults;
     Booking.NumberOfChilds = bookingDto.NumberOfChilds;
 
-    dayCount = (bookingDto.DepartureDate - bookingDto.ArrivalDate).Days + 1;
+    dayCount = (bookingDto.DepartureDate - bookingDto.ArrivalDate).Days;
 
     if (_allRoomsCopy is not null)
     {
@@ -166,6 +166,9 @@
         // рассчитываю цену за кол-во дней, выбранных в фильтре
         foreach (var item in _allRooms)
         {
+          // определяю цену по началу выбранной даты поиска  
+          item.DayPrice = item.Prices is not null && item.Prices.Any(p => p.DateStart <= bookingDto.ArrivalDate && p.DateEnd >= bookingDto.ArrivalDate) ?
+                          item.Prices.First(p => p.DateStart <= bookingDto.ArrivalDate && p.DateEnd >= bookingDto.ArrivalDate).DayPrice : 0.00;
           item.DayPrice = Math.Round(item.DayPrice * dayCount, 2);
         }
       }

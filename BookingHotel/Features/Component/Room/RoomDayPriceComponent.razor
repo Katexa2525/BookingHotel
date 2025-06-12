@@ -23,7 +23,9 @@ else if (DayPrice > 0 && DayCount > 1)
   protected override void OnParametersSet()
   {
     int ch = Math.Abs(DayCount % 10);
-    if (ch == 1)
+    if (DayCount > 9 && DayCount < 21)
+      strNight = "ночей";
+    else if (ch == 1)
       strNight = "ночь";
     else if (ch > 1 && ch < 5)
       strNight = "ночи";
