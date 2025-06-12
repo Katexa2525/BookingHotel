@@ -147,7 +147,8 @@
               </div>
             </div>
             <div class="row">
-              <a href="#" class="btn btn-primary">Забронировать</a>
+              @* <a href="#" class="btn btn-primary">Забронировать</a> *@
+              <button type="button" class="btn btn-primary" @onclick="BookingHandler">Забронировать</button>
             </div>
             @*  </div> *@
           </div>
@@ -244,7 +245,7 @@
     if (response is not null && response.Room is not null)
     {
       _room = response.Room;
-      
+
       DateTime dateArrivalDate = DateTime.Parse(_arrivalDate);
       DateTime dateDepartureDate = DateTime.Parse(_departureDate);
       // кол-во ночей
@@ -259,5 +260,9 @@
       _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
     }
 
+  }
+  private void BookingHandler(MouseEventArgs args)
+  {
+    Console.WriteLine("Забронировано!");
   }
 }
