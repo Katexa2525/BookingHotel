@@ -59,9 +59,11 @@ namespace Application.BussinessLogic.Price
 
     public List<PriceDto> GetByCondition(Expression<Func<PriceEntity, bool>> expression, bool trackChanges)
     {
-      return _repositoryManager.PriceRepository.GetByCondition(expression, trackChanges).AsQueryable()
-                                  .ProjectTo<PriceDto>(_mapper.ConfigurationProvider)
-                                  .ToList();
+      return _repositoryManager.PriceRepository.GetByCondition(expression, trackChanges)
+                                               .OrderBy(p=>p.DateStart).OrderBy(r=>r.DateEnd)
+                                               .AsQueryable()
+                                               .ProjectTo<PriceDto>(_mapper.ConfigurationProvider)
+                                               .ToList();
     }
   }
 }

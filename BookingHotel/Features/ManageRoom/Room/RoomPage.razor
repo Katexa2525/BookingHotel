@@ -23,7 +23,6 @@
 
 @if (_allRooms is not null && _allRooms.Any())
 {
-  @* <SearchComponent Placeholder="Поиск номера отеля..." TextNavigateTo=@routeSearch /> *@
   @* данные передаются в параметры компонента с помощью атрибутов элемента *@
   <SearchDateComponent Booking="@Booking" OnSelected="HandleBookingSelected" />
 
@@ -33,7 +32,7 @@
     {
       <div class="card shadow">
         <div class="card-body">
-          <RoomCard Room="@room" HotelId="@HotelId" OnSelected="HandleRoomSelected" />
+          <RoomCard Room="@room" HotelId="@HotelId" OnSelected="HandleRoomSelected" DayCountForPrice="@dayCount" />
         </div>
       </div>
     }
@@ -61,6 +60,7 @@
   private string? _errorMessage;
   private string countReview = string.Empty;
   private BookingDto Booking = new BookingDto();
+  private int dayCount = 1; // кол-во дней по цене
 
   /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
   [Parameter]
@@ -101,7 +101,10 @@
           RoomPhotos = p.RoomPhotos,
           RoomType = p.RoomType,
           Bookings = p.Bookings,
-          MainPhoto = p.MainPhoto
+          MainPhoto = p.MainPhoto,
+        // определяю цену на сегодня
+          DayPrice = p.Prices is not null && p.Prices.Any(p => p.DateStart <= DateTime.Now && p.DateEnd >= DateTime.Now) ?
+                     p.Prices.First(p => p.DateStart <= DateTime.Now && p.DateEnd >= DateTime.Now).DayPrice : 0.00
         });
     }
     else
@@ -133,19 +136,40 @@
   /// <param name="bookingDto">Модель, где новые данные </param>
   private void HandleBookingSelected(BookingDto bookingDto)
   {
+    IEnumerable<RoomDto>? _allRoomsDate = new List<RoomDto>();
+
     Booking.ArrivalDate = bookingDto.ArrivalDate;
     Booking.DepartureDate = bookingDto.DepartureDate;
     Booking.NumberOfAdults = bookingDto.NumberOfAdults;
     Booking.NumberOfChilds = bookingDto.NumberOfChilds;
 
+    dayCount = (bookingDto.DepartureDate - bookingDto.ArrivalDate).Days + 1;
+
     if (_allRoomsCopy is not null)
     {
+      // фильтрация номеров по доступному кол-ву для размещения
       _allRooms = _allRoomsCopy.Where(p => p.PeopleNumber >= bookingDto.NumberOfAdults + bookingDto.NumberOfChilds).ToList();
-      // if (_allRooms is not null)
-      //   _allRooms = _allRooms.Where(p => p.Bookings.Where(r => ((r.ArrivalDate <= bookingDto.ArrivalDate && r.DepartureDate >= bookingDto.ArrivalDate) ||
-      //                                                           (r.ArrivalDate <= bookingDto.DepartureDate && r.DepartureDate >= bookingDto.DepartureDate) ||
-      //                                                           (r.ArrivalDate > bookingDto.ArrivalDate && r.DepartureDate >= bookingDto.ArrivalDate))
-      //                                                    )).ToList();
+
+      // получения коллекции номеров, которые пересекаются по датам бронирования
+      if (_allRooms is not null)
+      {
+        _allRoomsDate = _allRooms.Where(p => p.Bookings is not null &&
+              p.Bookings.Any(r => ((r.ArrivalDate <= bookingDto.ArrivalDate && r.DepartureDate >= bookingDto.DepartureDate) ||
+                                   (r.ArrivalDate <= bookingDto.ArrivalDate && r.DepartureDate >= bookingDto.ArrivalDate && r.DepartureDate <= bookingDto.DepartureDate) ||
+                                   (r.ArrivalDate >= bookingDto.ArrivalDate && r.DepartureDate <= bookingDto.DepartureDate) ||
+                                   (r.ArrivalDate >= bookingDto.ArrivalDate && r.ArrivalDate <= bookingDto.DepartureDate && r.DepartureDate >= bookingDto.DepartureDate))
+                             )).ToList();
+        // вычисляю разность коллекций, чтобы удалить записи из списка _allRooms, содержащиеся в _allRoomsDate
+        if (_allRoomsDate.Any())
+          _allRooms = _allRooms.Except(_allRoomsDate);
+
+        // рассчитываю цену за кол-во дней, выбранных в фильтре
+        foreach (var item in _allRooms)
+        {
+          item.DayPrice = Math.Round(item.DayPrice * dayCount, 2);
+        }
+      }
+      // обновляю форму
       StateHasChanged();
     }
 

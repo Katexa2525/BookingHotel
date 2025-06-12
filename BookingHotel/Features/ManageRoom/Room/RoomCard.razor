@@ -46,6 +46,9 @@
           @* Удобства в номере *@
           <RoomFacilitiesComponent RoomFacilities="@Room.RoomFacilities" />
 
+          @* Цена за ночь *@ 
+          <RoomDayPriceComponent DayPrice="@Room.DayPrice" DayCount="@DayCountForPrice" />
+
           <div class="d-flex justify-content-between">
 
             <AuthorizeView Context="authContext">
@@ -90,4 +93,8 @@
   /// <summary>События определяются с использованием типов делегатов Action или Func, или через тип EventCallback </summary>
   [Parameter, EditorRequired]
   public EventCallback<RoomDto> OnSelected { get; set; }
+
+  [Parameter, EditorRequired]
+  public int DayCountForPrice { get; set; } = 0;
+  
 }
