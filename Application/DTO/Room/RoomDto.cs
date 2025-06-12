@@ -26,5 +26,7 @@ namespace Application.DTO.Room
 
     /// <summary> ImageAction позволяет установить, какую операцию выполнить с изображением при обновлении тропы </summary>
     public ImageAction ImageAction { get; set; }
+    /// <summary> Цена за день или ночь необходима для отображения на форме, в БД не пишется </summary>
+    public double DayPrice { get; set; }
   }
 }
