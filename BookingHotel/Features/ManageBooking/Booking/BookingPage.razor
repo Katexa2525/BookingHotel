@@ -132,7 +132,6 @@
       <div class="col-5 text-end">
         <div class="card card-brand mb-4 shadow">
           <div class="card-body">
-            @* <div class="d-flex justify-content-between"> *@
             <div class="row">
               @if (_room != null && _room.RoomPhotos != null && _room.RoomPhotos.Any())
               {
@@ -142,15 +141,12 @@
             <div class="row">
               <div class="d-flex justify-content-between mt-5">
                 <h4 class="mb-3 me-5">Итого</h4>
-                @* <h4 class="mb-3 me-5">@_room.DayPrice BYN</h4> *@
                 <RoomDayPriceComponent DayCount="@dayCount" DayPrice="@_room.DayPrice" />
               </div>
             </div>
             <div class="row">
-              @* <a href="#" class="btn btn-primary">Забронировать</a> *@
               <button type="button" class="btn btn-primary" @onclick="BookingHandler">Забронировать</button>
             </div>
-            @*  </div> *@
           </div>
         </div>
       </div>
