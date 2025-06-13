@@ -1,4 +1,6 @@
 using Application.BussinessLogic.RoleClaim;
+using Application.Interfaces.Email;
+using Application.Services;
 using Blazored.LocalStorage;
 using BookingHotel;
 using BookingHotel.MappingProfile;
@@ -47,8 +49,9 @@ builder.Services.AddAuthorizationCore();
 // регистрирую класс в в коллекцию IService 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AppState>();
-
 builder.Services.AddMudServices();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 //builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 //builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
