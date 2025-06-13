@@ -150,6 +150,8 @@
 
   private void AddRow()
   {
+    if (_roomPrices is not null)
+    {
     _roomPrices.Add(new PriceDto
       {
         RoomId = this.RoomId,
@@ -158,12 +160,15 @@
         CurrencyId = Guid.Parse("232BA1BD-0192-4E35-B4A2-908DD61EA5CC"),
         Name = "BYN"
       });
+    }
   }
 
   private void DeleteRow(PriceDto item)
   {
+    if (_roomPricesDel is not null)
     _roomPricesDel.Add(item);
-    _roomPrices.Remove(item);
+    if (_roomPrices is not null)
+      _roomPrices.Remove(item);
   }
 
   private async Task Save(MouseEventArgs args)

@@ -1,0 +1,51 @@
+﻿<div class="card card-brand mb-4">
+  <div class="card-body">
+    <h5 class="fw-bold">Гость</h5>
+    <div class="row">
+      <div class="col">
+        <FormFieldSet Width="col">
+          @* <label class="font-weight-bold text-secondary">Фамилия</label>
+          <InputText @bind-Value="Guest.LastName" class="form-control" /> *@
+          <MudTextField T="string" @bind-Value="Guest.LastName" Label ="Фамилия" Required="true" RequiredError="Требуется фамилия гостя!" />
+        </FormFieldSet>
+      </div>
+      <div class="col">
+        <FormFieldSet Width="col">
+          @* <label class="font-weight-bold text-secondary">Имя</label>
+          <InputText @bind-Value="Guest.FirstName" class="form-control" /> *@
+          <MudTextField T="string" @bind-Value="Guest.FirstName" Label="Имя" Required="true" RequiredError="Требуется имя гостя!" />
+        </FormFieldSet>
+      </div>
+      <div class="col">
+        <FormFieldSet Width="col">
+          @* <label class="font-weight-bold text-secondary">Отчество</label>
+          <InputText @bind-Value="Guest.PatronymicName" class="form-control" /> *@
+          <MudTextField T="string" @bind-Value="Guest.PatronymicName" Label="Отчество" />
+        </FormFieldSet>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col">
+        <FormFieldSet Width="col">
+          @* <label class="font-weight-bold text-secondary">Телефон</label>
+          <InputText @bind-Value="Guest.PhoneNumber" class="form-control" /> *@
+          <MudTextField T="string" @bind-Value="Guest.PhoneNumber" Label="Телефон" />
+        </FormFieldSet>
+      </div>
+      <div class="col">
+        <FormFieldSet Width="col">
+          @* <label class="font-weight-bold text-secondary">Электронная почта</label>
+          <InputText @bind-Value="Guest.Email" class="form-control" type="email" /> *@
+          <MudTextField T="string" @bind-Value="Guest.Email" Label="Электронная почта" Required="true" RequiredError="Требуется адрес электронной почты!" />
+        </FormFieldSet>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+@code {
+  [Parameter, EditorRequired]
+  public GuestDto Guest { get; set; } = new GuestDto();
+}

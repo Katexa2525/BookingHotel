@@ -34,6 +34,8 @@
 
   <ItemGroup>
     <Folder Include="Features\Home\Shared\" />
+    <Folder Include="Features\ManageBooking\EditBooking\" />
+    <Folder Include="Features\ManageGuest\Guest\" />
   </ItemGroup>
 
 </Project>

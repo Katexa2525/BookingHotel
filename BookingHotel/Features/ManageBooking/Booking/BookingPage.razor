@@ -1,6 +1,9 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms/{RoomId:guid}/booking/{ArrivalDate}/{DepartureDate}/{NumberOfAdults:int}/{NumberOfChilds:int}"
 
 @inject IMediator Mediator
+@inject IMapper Mapper
+@inject IDialogService DialogService
+@inject NavigationManager NavManager
 
 @using System.ComponentModel.DataAnnotations
 
@@ -20,10 +23,12 @@
               <div class="col-4">
                 <h5> Заезд </h5>
                 <h5> @_arrivalDate </h5>
+                <h6> @_hotel.Arrival </h6>
               </div>
               <div class="col-4">
                 <h5> Выезд </h5>
                 <h5> @_departureDate </h5>
+                <h6> @_hotel.Departure </h6>
               </div>
               <div class="col-4">
                 <h5> Гости </h5>
@@ -33,7 +38,6 @@
             </div>
           </div>
         </div>
-
 
         <div class="card card-brand mb-4 shadow">
           <div class="card-body">
@@ -45,7 +49,8 @@
 
               <RoomPeopleSquareComponent PeopleNumber="@_room.PeopleNumber" Square="@_room.Square" />
 
-              <InputTextArea @bind-Value="_room.Description" class="form-control" id="roomDescription" />
+              <InputTextArea @bind-Value="_room.Description" class="form-control" id="roomDescription" readonly 
+                             style="background-color: white;" />
             </div>
 
             @if (_room is not null && _room.RoomFacilities is not null && _room.RoomFacilities.Any())
@@ -70,47 +75,7 @@
               <h5>Данные гостей</h5>
               @foreach (var item in @_guests)
               {
-                <div class="card card-brand mb-4">
-                  <div class="card-body">
-                    <h5 class="fw-bold">Гость</h5>
-                    <div class="row">
-                      <div class="col">
-                        <FormFieldSet Width="col">
-                          <label class="font-weight-bold text-secondary">Фамилия</label>
-                          <InputText @bind-Value="item.LastName" class="form-control" />
-                        </FormFieldSet>
-                      </div>
-                      <div class="col">
-                        <FormFieldSet Width="col">
-                          <label class="font-weight-bold text-secondary">Имя</label>
-                          <InputText @bind-Value="item.FirstName" class="form-control" />
-                        </FormFieldSet>
-                      </div>
-                      <div class="col">
-                        <FormFieldSet Width="col">
-                          <label class="font-weight-bold text-secondary">Отчество</label>
-                          <InputText @bind-Value="item.PatronymicName" class="form-control" />
-                        </FormFieldSet>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col">
-                        <FormFieldSet Width="col">
-                          <label class="font-weight-bold text-secondary">Телефон</label>
-                          <InputText @bind-Value="item.PhoneNumber" class="form-control" />
-                        </FormFieldSet>
-                      </div>
-                      <div class="col">
-                        <FormFieldSet Width="col">
-                          <label class="font-weight-bold text-secondary">Электронная почта</label>
-                          <InputText @bind-Value="item.Email" class="form-control" type="email" />
-                        </FormFieldSet>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
+                <BookingGuestForm Guest="item" />
               }
             </div>
           </div>
@@ -132,7 +97,6 @@
       <div class="col-5 text-end">
         <div class="card card-brand mb-4 shadow">
           <div class="card-body">
-            @* <div class="d-flex justify-content-between"> *@
             <div class="row">
               @if (_room != null && _room.RoomPhotos != null && _room.RoomPhotos.Any())
               {
@@ -142,14 +106,15 @@
             <div class="row">
               <div class="d-flex justify-content-between mt-5">
                 <h4 class="mb-3 me-5">Итого</h4>
-                @* <h4 class="mb-3 me-5">@_room.DayPrice BYN</h4> *@
-                <RoomDayPriceComponent DayCount="@dayCount" DayPrice="@_room.DayPrice" />
+                @if (_room != null)
+                {
+                  <RoomDayPriceComponent DayCount="@dayCount" DayPrice="@_room.DayPrice" />
+                }
               </div>
             </div>
             <div class="row">
-              <a href="#" class="btn btn-primary">Забронировать</a>
+              <button type="button" class="btn btn-primary" @onclick="BookingHandler">Забронировать</button>
             </div>
-            @*  </div> *@
           </div>
         </div>
       </div>
@@ -192,6 +157,7 @@
   private RoomDto _room = new RoomDto();
   private HotelDto _hotel = new HotelDto();
   private List<GuestDto> _guests = new List<GuestDto>();
+  private BookingDto _booking = new BookingDto();
 
   [Parameter]
   public Guid HotelId { get; set; }
@@ -213,12 +179,18 @@
 
   protected override async Task OnInitializedAsync()
   {
+    // преобразование в нормальный строковый формат даты
     _arrivalDate = ArrivalDate.Replace('_', '.');
     _departureDate = DepartureDate.Replace('_', '.');
-    _guests = new List<GuestDto>(NumberOfAdults + NumberOfChilds);
 
+    // дата заезда выезда в формате даты
     dateArrivalDate = DateTime.Parse(_arrivalDate);
     dateDepartureDate = DateTime.Parse(_departureDate);
+
+    // кол-во ночей
+    dayCount = (dateDepartureDate - dateArrivalDate).Days;
+
+    _guests = new List<GuestDto>(NumberOfAdults + NumberOfChilds);
 
     // коллекция для заполнения гостей по брони
     for (int i = 0; i < NumberOfAdults + NumberOfChilds; i++)
@@ -232,6 +204,9 @@
     if (responseHotel is not null && responseHotel.Hotel is not null)
     {
       _hotel = responseHotel.Hotel;
+      // дополняю дату заезда выезда в формате даты временем
+      dateArrivalDate = dateArrivalDate.AddHours(Convert.ToInt32(_hotel.Arrival.Substring(0, 2))).AddMinutes(Convert.ToInt32(_hotel.Arrival.Substring(3, 2)));
+      dateDepartureDate = dateDepartureDate.AddHours(Convert.ToInt32(_hotel.Departure.Substring(0, 2))).AddMinutes(Convert.ToInt32(_hotel.Departure.Substring(3, 2)));
     }
     else
     {
@@ -244,11 +219,6 @@
     if (response is not null && response.Room is not null)
     {
       _room = response.Room;
-      
-      DateTime dateArrivalDate = DateTime.Parse(_arrivalDate);
-      DateTime dateDepartureDate = DateTime.Parse(_departureDate);
-      // кол-во ночей
-      dayCount = (dateDepartureDate - dateArrivalDate).Days;
       // определяю цену по началу выбранной даты поиска
       _room.DayPrice = _room.Prices is not null && _room.Prices.Any(p => p.DateStart <= dateArrivalDate && p.DateEnd >= dateArrivalDate) ?
                        _room.Prices.First(p => p.DateStart <= dateArrivalDate && p.DateEnd >= dateArrivalDate).DayPrice : 0.00;
@@ -258,6 +228,78 @@
     {
       _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
     }
-
   }
+
+  private async Task BookingHandler(MouseEventArgs args)
+  {
+    if (IsGuestsNotFill(_guests))
+    {
+      await DialogAsync("Ошибка", "Бронирование невозможно. Не заполнены данные гостей.");
+      return;
+    }
+
+    // формирую модель для записи бронирования
+    _booking.Name = _room.RoomType is not null ? _hotel.Name.Trim() + "|" + _room.RoomType.Name.Trim() : _hotel.Name.Trim();
+    _booking.RoomId = _room.Id;
+    _booking.NumberOfAdults = NumberOfAdults;
+    _booking.NumberOfChilds = NumberOfChilds;
+    _booking.ArrivalDate = dateArrivalDate;
+    _booking.DepartureDate = dateDepartureDate;
+    _booking.Description = _description;
+    //_booking.Guests = _guests; // описание гостей
+
+    // сохранение бронирования
+    var response = await Mediator.Send(new AddBookingRequest(Mapper.Map<BookingCreateDto>(_booking)));
+    if (response is not null && response.bookingId == Guid.Empty)
+    {
+      await DialogAsync("Ошибка", "Произошла ошибка при бронировании");
+      // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить пользовательский интерфейс сообщением об ошибке
+      StateHasChanged();
+      return;
+    }
+    else
+    {
+      // обновление моделей гостей
+      foreach (var item in _guests)
+      {
+        item.BookingId = response.bookingId;
+        // сохранение гостей
+        var responseGuest = await Mediator.Send(new AddGuestRequest(Mapper.Map<GuestCreateDto>(item)));
+        if (responseGuest is not null && responseGuest.guestId == Guid.Empty)
+        {
+          await DialogAsync("Ошибка", "Произошла ошибка при бронировании. Не заполнены данные по гостям. ");
+          // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить пользовательский интерфейс сообщением об ошибке
+          StateHasChanged();
+          return;
+        }
+      }
+      // переход на страницу отеля с номерами
+      NavManager.NavigateTo($"/hotels/{HotelId}/rooms");
+    }
+
+    await DialogAsync("Информация", "Забронировано!");
+  }
+
+  /// <summary>
+  /// Метод для определения заполнения данных по гостям
+  /// </summary>
+  /// <param name="guests"></param>
+  /// <returns></returns>
+  private bool IsGuestsNotFill(List<GuestDto> guests)
+  {
+    return guests.Any(p => string.IsNullOrEmpty(p.FirstName) || string.IsNullOrEmpty(p.FirstName) || string.IsNullOrEmpty(p.Email));
+  }
+
+  private async Task DialogAsync(string dialogTitle, string dialogContent)
+  {
+    var options = new DialogOptions { CloseOnEscapeKey = true, Position = DialogPosition.Center };
+    var dialogParameters = new DialogParameters
+      {
+        ["DialogTitle"] = dialogTitle,
+        ["DialogContent"] = dialogContent
+      };
+
+    await DialogService.ShowAsync<DialogOK>("", dialogParameters, options);
+  }
+
 }
