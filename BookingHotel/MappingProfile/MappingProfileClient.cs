@@ -1,5 +1,6 @@
 ﻿using Application.DTO.Booking;
 using Application.DTO.Food;
+using Application.DTO.Guest;
 using Application.DTO.Hotel;
 using Application.DTO.HotelFacility;
 using Application.DTO.HotelPhoto;
@@ -51,6 +52,8 @@ namespace BookingHotel.MappingProfile
 
       CreateMap<HotelPhotoDto, HotelPhotoCreateDto>();
       CreateMap<HotelPhotoDto, HotelPhotoCreateWithIdDto>();
+
+      CreateMap<GuestDto, GuestCreateDto>();
     }
   }
 }

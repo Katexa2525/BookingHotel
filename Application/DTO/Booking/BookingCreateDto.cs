@@ -1,4 +1,5 @@
 ﻿using Application.DTO.Guest;
+using Application.DTO.Room;
 using Application.DTO.Service;
 
 namespace Application.DTO.Booking
@@ -14,6 +15,7 @@ namespace Application.DTO.Booking
     public DateTime DepartureDate { get; set; }
     /// <summary> Комментарий к бронированию </summary>
     public string? Description { get; set; } = string.Empty;
+    public Guid RoomId { get; set; }
     public IEnumerable<GuestDto> Guests { get; set; }
     public IEnumerable<ServiceDto> Services { get; set; }
   }

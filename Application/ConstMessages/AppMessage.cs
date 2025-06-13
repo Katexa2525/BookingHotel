@@ -81,5 +81,7 @@
     public static readonly string GetHotelPhotoByIdTextErrorMessage = "Запись по фото отеля не может быть найдена.";
     public static readonly string HotelPhotoPageSaveTextErrorMessage = "Возникла проблема с сохранением фото отеля!";
 
+    public static readonly string GetGuestByIdTextErrorMessage = "Гость из бронирования не может быть найден.";
+
   }
 }

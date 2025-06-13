@@ -1,6 +1,9 @@
 ﻿@page "/hotels/{HotelId:guid}/rooms/{RoomId:guid}/booking/{ArrivalDate}/{DepartureDate}/{NumberOfAdults:int}/{NumberOfChilds:int}"
 
 @inject IMediator Mediator
+@inject IMapper Mapper
+@inject IDialogService DialogService
+@inject NavigationManager NavManager
 
 @using System.ComponentModel.DataAnnotations
 
@@ -150,8 +153,7 @@
               </div>
             </div>
             <div class="row">
-              @* <button type="button" class="btn btn-primary" @onclick="BookingHandler">Забронировать</button> *@
-              <button type="submit" class="btn btn-primary">Забронировать</button>
+              <button type="button" class="btn btn-primary" @onclick="BookingHandler">Забронировать</button>
             </div>
           </div>
         </div>
@@ -164,17 +166,17 @@
 
 <style>
   h2 {
-    margin-top: 20px;
-    color: #333;
+  margin-top: 20px;
+  color: #333;
   }
 
   ul li {
-    font-size: 16px;
-    margin-bottom: 5px;
+  font-size: 16px;
+  margin-bottom: 5px;
   }
 
   .btn {
-    margin-top: 10px;
+  margin-top: 10px;
   }
 </style>
 
@@ -268,8 +270,14 @@
     }
   }
 
-  private void BookingHandler(MouseEventArgs args)
+  private async Task BookingHandler(MouseEventArgs args)
   {
+    if (IsGuestsNotFill(_guests))
+    {
+      await DialogAsync("Ошибка", "Бронирование невозможно. Не заполнены данные гостей.");
+      return;
+    }
+
     // формирую модель для записи бронирования
     _booking.Name = _room.RoomType is not null ? _hotel.Name.Trim() + "|" + _room.RoomType.Name.Trim() : _hotel.Name.Trim();
     _booking.RoomId = _room.Id;
@@ -278,9 +286,60 @@
     _booking.ArrivalDate = dateArrivalDate;
     _booking.DepartureDate = dateDepartureDate;
     _booking.Description = _description;
-    _booking.Guests = _guests; // описание гостей
+    //_booking.Guests = _guests; // описание гостей
 
-    Console.WriteLine("Забронировано!");
+    // сохранение бронирования
+    var response = await Mediator.Send(new AddBookingRequest(Mapper.Map<BookingCreateDto>(_booking)));
+    if (response is not null && response.bookingId == Guid.Empty)
+    {
+      await DialogAsync("Ошибка", "Произошла ошибка при бронировании");
+      // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить пользовательский интерфейс сообщением об ошибке
+      StateHasChanged();
+      return;
+    }
+    else
+    {
+      // обновление моделей гостей
+      foreach (var item in _guests)
+      {
+        item.BookingId = response.bookingId;
+        // сохранение гостей
+        var responseGuest = await Mediator.Send(new AddGuestRequest(Mapper.Map<GuestCreateDto>(item)));
+        if (responseGuest is not null && responseGuest.guestId == Guid.Empty)
+        {
+          await DialogAsync("Ошибка", "Произошла ошибка при бронировании. Не заполнены данные по гостям. ");
+          // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить пользовательский интерфейс сообщением об ошибке
+          StateHasChanged();
+          return;
+        }
+      }
+      // переход на страницу отеля с номерами
+      NavManager.NavigateTo($"/hotels/{HotelId}/rooms");
+    }
+
+    await DialogAsync("Информация", "Забронировано!");
+  }
+
+  /// <summary>
+  /// Метод для определения заполнения данных по гостям
+  /// </summary>
+  /// <param name="guests"></param>
+  /// <returns></returns>
+  private bool IsGuestsNotFill(List<GuestDto> guests)
+  {
+    return guests.Any(p => string.IsNullOrEmpty(p.FirstName) || string.IsNullOrEmpty(p.FirstName) || string.IsNullOrEmpty(p.Email));
+  }
+
+  private async Task DialogAsync(string dialogTitle, string dialogContent)
+  {
+    var options = new DialogOptions { CloseOnEscapeKey = true, Position = DialogPosition.Center };
+    var dialogParameters = new DialogParameters
+      {
+        ["DialogTitle"] = dialogTitle,
+        ["DialogContent"] = dialogContent
+      };
+
+    await DialogService.ShowAsync<DialogOK>("", dialogParameters, options);
   }
 
 }
