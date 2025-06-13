@@ -1,5 +1,4 @@
-﻿using Application.DTO.Booking;
-using Application.DTO.Guest;
+﻿using Application.DTO.Guest;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;

@@ -20,10 +20,12 @@
               <div class="col-4">
                 <h5> Заезд </h5>
                 <h5> @_arrivalDate </h5>
+                <h6> @_hotel.Arrival </h6>
               </div>
               <div class="col-4">
                 <h5> Выезд </h5>
                 <h5> @_departureDate </h5>
+                <h6> @_hotel.Departure </h6>
               </div>
               <div class="col-4">
                 <h5> Гости </h5>
@@ -141,11 +143,15 @@
             <div class="row">
               <div class="d-flex justify-content-between mt-5">
                 <h4 class="mb-3 me-5">Итого</h4>
-                <RoomDayPriceComponent DayCount="@dayCount" DayPrice="@_room.DayPrice" />
+                @if (_room != null)
+                {
+                  <RoomDayPriceComponent DayCount="@dayCount" DayPrice="@_room.DayPrice" />
+                }
               </div>
             </div>
             <div class="row">
-              <button type="button" class="btn btn-primary" @onclick="BookingHandler">Забронировать</button>
+              @* <button type="button" class="btn btn-primary" @onclick="BookingHandler">Забронировать</button> *@
+              <button type="submit" class="btn btn-primary">Забронировать</button>
             </div>
           </div>
         </div>
@@ -158,17 +164,17 @@
 
 <style>
   h2 {
-  margin-top: 20px;
-  color: #333;
+    margin-top: 20px;
+    color: #333;
   }
 
   ul li {
-  font-size: 16px;
-  margin-bottom: 5px;
+    font-size: 16px;
+    margin-bottom: 5px;
   }
 
   .btn {
-  margin-top: 10px;
+    margin-top: 10px;
   }
 </style>
 
@@ -189,6 +195,7 @@
   private RoomDto _room = new RoomDto();
   private HotelDto _hotel = new HotelDto();
   private List<GuestDto> _guests = new List<GuestDto>();
+  private BookingDto _booking = new BookingDto();
 
   [Parameter]
   public Guid HotelId { get; set; }
@@ -210,12 +217,18 @@
 
   protected override async Task OnInitializedAsync()
   {
+    // преобразование в нормальный строковый формат даты
     _arrivalDate = ArrivalDate.Replace('_', '.');
     _departureDate = DepartureDate.Replace('_', '.');
-    _guests = new List<GuestDto>(NumberOfAdults + NumberOfChilds);
 
+    // дата заезда выезда в формате даты
     dateArrivalDate = DateTime.Parse(_arrivalDate);
     dateDepartureDate = DateTime.Parse(_departureDate);
+
+    // кол-во ночей
+    dayCount = (dateDepartureDate - dateArrivalDate).Days;
+
+    _guests = new List<GuestDto>(NumberOfAdults + NumberOfChilds);
 
     // коллекция для заполнения гостей по брони
     for (int i = 0; i < NumberOfAdults + NumberOfChilds; i++)
@@ -229,6 +242,9 @@
     if (responseHotel is not null && responseHotel.Hotel is not null)
     {
       _hotel = responseHotel.Hotel;
+      // дополняю дату заезда выезда в формате даты временем
+      dateArrivalDate = dateArrivalDate.AddHours(Convert.ToInt32(_hotel.Arrival.Substring(0, 2))).AddMinutes(Convert.ToInt32(_hotel.Arrival.Substring(3, 2)));
+      dateDepartureDate = dateDepartureDate.AddHours(Convert.ToInt32(_hotel.Departure.Substring(0, 2))).AddMinutes(Convert.ToInt32(_hotel.Departure.Substring(3, 2)));
     }
     else
     {
@@ -241,11 +257,6 @@
     if (response is not null && response.Room is not null)
     {
       _room = response.Room;
-
-      DateTime dateArrivalDate = DateTime.Parse(_arrivalDate);
-      DateTime dateDepartureDate = DateTime.Parse(_departureDate);
-      // кол-во ночей
-      dayCount = (dateDepartureDate - dateArrivalDate).Days;
       // определяю цену по началу выбранной даты поиска
       _room.DayPrice = _room.Prices is not null && _room.Prices.Any(p => p.DateStart <= dateArrivalDate && p.DateEnd >= dateArrivalDate) ?
                        _room.Prices.First(p => p.DateStart <= dateArrivalDate && p.DateEnd >= dateArrivalDate).DayPrice : 0.00;
@@ -255,10 +266,21 @@
     {
       _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
     }
-
   }
+
   private void BookingHandler(MouseEventArgs args)
   {
+    // формирую модель для записи бронирования
+    _booking.Name = _room.RoomType is not null ? _hotel.Name.Trim() + "|" + _room.RoomType.Name.Trim() : _hotel.Name.Trim();
+    _booking.RoomId = _room.Id;
+    _booking.NumberOfAdults = NumberOfAdults;
+    _booking.NumberOfChilds = NumberOfChilds;
+    _booking.ArrivalDate = dateArrivalDate;
+    _booking.DepartureDate = dateDepartureDate;
+    _booking.Description = _description;
+    _booking.Guests = _guests; // описание гостей
+
     Console.WriteLine("Забронировано!");
   }
+
 }

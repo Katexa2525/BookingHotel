@@ -143,7 +143,7 @@
     Booking.NumberOfAdults = bookingDto.NumberOfAdults;
     Booking.NumberOfChilds = bookingDto.NumberOfChilds;
 
-    dayCount = (bookingDto.DepartureDate - bookingDto.ArrivalDate).Days;
+    dayCount = (bookingDto.DepartureDate.Date - bookingDto.ArrivalDate.Date).Days;
 
     if (_allRoomsCopy is not null)
     {
