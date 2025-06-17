@@ -1,0 +1,346 @@
+﻿@page "/booking-recommendation"
+
+@inject NavigationManager NavManager
+@using System.ComponentModel.DataAnnotations
+
+<h3 class="mb-4">Найдите идеальный отель</h3>
+<p>Заполните ваши предпочтения, и мы подберем лучшие варианты</p>
+
+<EditForm Model="@preferences" OnValidSubmit="@FindRecommendations">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Место назначения:</label>
+        <InputText @bind-Value="preferences.Destination" class="form-control" placeholder="Город или регион" />
+        <ValidationMessage For="@(() => preferences.Destination)" />
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Тип отдыха:</label>
+        <InputSelect @bind-Value="preferences.TripType" class="form-control">
+          <option value="">Любой</option>
+          <option value="beach">Пляжный</option>
+          <option value="city">Городской</option>
+          <option value="mountain">Горный</option>
+          <option value="cultural">Культурный</option>
+          <option value="business">Бизнес</option>
+        </InputSelect>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>Дата заезда:</label>
+        <InputDate @bind-Value="preferences.CheckInDate" class="form-control" />
+        <ValidationMessage For="@(() => preferences.CheckInDate)" />
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>Дата выезда:</label>
+        <InputDate @bind-Value="preferences.CheckOutDate" class="form-control" />
+        <ValidationMessage For="@(() => preferences.CheckOutDate)" />
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>Гостей:</label>
+        <InputNumber @bind-Value="preferences.Guests" class="form-control" min="1" max="10" />
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>Комнат:</label>
+        <InputNumber @bind-Value="preferences.Rooms" class="form-control" min="1" max="5" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Бюджет за ночь:</label>
+        <div class="d-flex align-items-center">
+          <span class="me-2">@preferences.MinBudget.ToString("C0")</span>
+          <InputRange min="500" max="20000" step="500" class="form-range flex-grow-1" />
+          <span class="ms-2">@preferences.MaxBudget.ToString("C0")</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Категория отеля:</label>
+        <div class="d-flex flex-wrap">
+          @foreach (var star in new[] { 5, 4, 3 })
+          {
+            <div class="form-check me-3">
+              <InputCheckbox class="form-check-input"
+                             @bind-Value="@preferences.SelectedStars[star]"
+                             id="@($"star{star}")" />
+              <label class="form-check-label" for="@($"star{star}")">
+                @for (int i = 0; i < star; i++)
+                {
+                  <span>★</span>
+                }
+              </label>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Удобства:</label>
+        <div class="d-flex flex-wrap">
+          @foreach (var amenity in amenities)
+          {
+            <div class="form-check me-3">
+              @if (preferences.SelectedAmenities.ContainsKey(amenity))
+              {
+                <InputCheckbox class="form-check-input"
+                               @bind-Value="@preferences.SelectedAmenities[amenity]"
+                               id="@amenity" />
+                <label class="form-check-label" for="@amenity">@amenity</label>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Тип питания:</label>
+        <InputSelect @bind-Value="preferences.MealPlan" class="form-control">
+          <option value="">Любой</option>
+          <option value="RO">Только номер</option>
+          <option value="BB">Завтрак</option>
+          <option value="HB">Полупансион</option>
+          <option value="FB">Полный пансион</option>
+          <option value="AI">Все включено</option>
+        </InputSelect>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-primary w-100 py-2">
+      <i class="bi bi-search me-2"></i>Найти рекомендации
+    </button>
+  </div>
+</EditForm>
+
+@if (isLoading)
+{
+  <div class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-2">Ищем лучшие варианты...</p>
+  </div>
+}
+
+@if (recommendations != null)
+{
+  <div class="mt-5">
+    <h4>Рекомендуемые варианты (@recommendations.Count)</h4>
+
+    @if (!recommendations.Any())
+    {
+      <div class="alert alert-warning mt-3">
+        По вашим критериям не найдено подходящих отелей. Попробуйте изменить параметры поиска.
+      </div>
+    }
+    else
+    {
+      <div class="row row-cols-1 row-cols-md-2 g-4 mt-2">
+        @foreach (var hotel in recommendations)
+        {
+          <div class="col">
+            <div class="card h-100">
+              <div class="row g-0 h-100">
+                <div class="col-md-5">
+                  <img src="@hotel.ImageUrl" class="img-fluid rounded-start h-100"
+                       style="object-fit: cover;" alt="@hotel.Name">
+                </div>
+                <div class="col-md-7">
+                  <div class="card-body d-flex flex-column h-100">
+                    <div class="d-flex justify-content-between">
+                      <h5 class="card-title">@hotel.Name</h5>
+                      <span class="text-warning">
+                        @for (int i = 0; i < hotel.Stars; i++)
+                        {
+                          <span>★</span>
+                        }
+                      </span>
+                    </div>
+                    <p class="card-text small">@hotel.Location</p>
+
+                    <div class="mt-2">
+                      @foreach (var amenity in hotel.TopAmenities.Take(3))
+                      {
+                        <span class="badge bg-light text-dark me-1">@amenity</span>
+                      }
+                    </div>
+
+                    <div class="mt-auto">
+                      <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                          <h4 class="text-primary mb-0">@hotel.PricePerNight.ToString("C0")</h4>
+                          <small class="text-muted">за ночь</small>
+                        </div>
+                        <button class="btn btn-outline-primary" @onclick="() => BookHotel(hotel)">
+                          Забронировать
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}
+
+@code {
+  private SearchPreferences preferences = new();
+  private List<string> amenities = new() { "Бассейн", "SPA", "Wi-Fi", "Парковка", "Завтрак", "Кондиционер", "Тренажерный зал" };
+  private List<HotelRecommendation>? recommendations;
+  private bool isLoading = false;
+
+  protected override void OnInitialized()
+  {
+    // Установим дефолтные даты: заезд - завтра, выезд - через 3 дня
+    preferences.CheckInDate = DateTime.Today.AddDays(1);
+    preferences.CheckOutDate = DateTime.Today.AddDays(4);
+  }
+
+  private async Task FindRecommendations()
+  {
+    isLoading = true;
+    recommendations = null;
+
+    // Имитация загрузки данных с сервера
+    await Task.Delay(1500);
+
+    // Генерация тестовых рекомендаций
+    recommendations = GenerateRecommendations();
+
+    isLoading = false;
+  }
+
+  private void BookHotel(HotelRecommendation hotel)
+  {
+    // Навигация на страницу бронирования с выбранным отелем
+    NavManager.NavigateTo($"/booking?hotelId={hotel.Id}");
+  }
+
+  private List<HotelRecommendation> GenerateRecommendations()
+  {
+    // В реальном приложении здесь был бы вызов API
+    return new List<HotelRecommendation>
+        {
+            new HotelRecommendation {
+                Id = 1,
+                Name = "Grand Paradise Resort",
+                Location = "Сочи, Краснодарский край",
+                Stars = 5,
+                PricePerNight = 12000,
+                ImageUrl = "https://example.com/hotel1.jpg",
+                TopAmenities = new List<string> { "Бассейн", "SPA", "Завтрак", "Wi-Fi", "Пляж" }
+            },
+            new HotelRecommendation {
+                Id = 2,
+                Name = "City Business Hotel",
+                Location = "Москва, Центр",
+                Stars = 4,
+                PricePerNight = 8500,
+                ImageUrl = "https://example.com/hotel2.jpg",
+                TopAmenities = new List<string> { "Wi-Fi", "Кондиционер", "Тренажерный зал", "Парковка" }
+            },
+            new HotelRecommendation {
+                Id = 3,
+                Name = "Mountain View Lodge",
+                Location = "Приэльбрусье, Кабардино-Балкария",
+                Stars = 3,
+                PricePerNight = 5600,
+                ImageUrl = "https://example.com/hotel3.jpg",
+                TopAmenities = new List<string> { "SPA", "Терраса", "Камин", "Завтрак" }
+            }
+        }.Where(h =>
+      h.PricePerNight >= preferences.MinBudget &&
+      h.PricePerNight <= preferences.MaxBudget)
+     .ToList();
+  }
+
+  public class SearchPreferences
+  {
+    [Required(ErrorMessage = "Укажите место назначения")]
+    public string Destination { get; set; } = "";
+
+    public string TripType { get; set; } = "";
+
+    [Required(ErrorMessage = "Укажите дату заезда")]
+    public DateTime CheckInDate { get; set; }
+
+    [Required(ErrorMessage = "Укажите дату выезда")]
+    [CustomValidation(typeof(SearchPreferences), "ValidateDates")]
+    public DateTime CheckOutDate { get; set; }
+
+    [Range(1, 10, ErrorMessage = "Укажите количество гостей")]
+    public int Guests { get; set; } = 2;
+
+    [Range(1, 5, ErrorMessage = "Укажите количество комнат")]
+    public int Rooms { get; set; } = 1;
+
+    public int MinBudget { get; set; } = 2000;
+    public int MaxBudget { get; set; } = 10000;
+
+    public Dictionary<int, bool> SelectedStars { get; set; } = new()
+        {
+            { 5, true },
+            { 4, true },
+            { 3, true }
+        };
+
+    public Dictionary<string, bool> SelectedAmenities { get; set; } = new();
+
+    public string MealPlan { get; set; } = "";
+
+    public static ValidationResult ValidateDates(DateTime checkOutDate, ValidationContext context)
+    {
+      var model = (SearchPreferences)context.ObjectInstance;
+      return checkOutDate > model.CheckInDate
+          ? ValidationResult.Success
+          : new ValidationResult("Дата выезда должна быть позже даты заезда");
+    }
+  }
+
+  public class HotelRecommendation
+  {
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
+    public string Location { get; set; } = "";
+    public int Stars { get; set; }
+    public decimal PricePerNight { get; set; }
+    public string ImageUrl { get; set; } = "";
+    public List<string> TopAmenities { get; set; } = new();
+  }
+}
