@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Application.BussinessLogic.RoleClaim
 {
@@ -16,8 +11,7 @@ namespace Application.BussinessLogic.RoleClaim
     public MultipleRoleClaimsPrincipalFactory(IAccessTokenProviderAccessor accessor) : base(accessor)
     {    }
 
-    public async override ValueTask<ClaimsPrincipal> CreateUserAsync(TAccount account,
-        RemoteAuthenticationUserOptions options)
+    public async override ValueTask<ClaimsPrincipal> CreateUserAsync(TAccount account, RemoteAuthenticationUserOptions options)
     {
       var user = await base.CreateUserAsync(account, options);
       var claimsIdentity = (ClaimsIdentity)user.Identity;

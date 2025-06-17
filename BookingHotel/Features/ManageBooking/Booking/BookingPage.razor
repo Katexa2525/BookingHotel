@@ -3,9 +3,11 @@
 @inject IMediator Mediator
 @inject IMapper Mapper
 @inject IDialogService DialogService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavManager
 
 @using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
 
 <div class="card card-brand mb-4 shadow">
   <div class="card-body">
@@ -159,6 +161,8 @@
   private List<GuestDto> _guests = new List<GuestDto>();
   private BookingDto _booking = new BookingDto();
 
+  private ClaimsPrincipal user;
+
   [Parameter]
   public Guid HotelId { get; set; }
 
@@ -179,6 +183,9 @@
 
   protected override async Task OnInitializedAsync()
   {
+    var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    user = authState.User;
+
     // преобразование в нормальный строковый формат даты
     _arrivalDate = ArrivalDate.Replace('_', '.');
     _departureDate = DepartureDate.Replace('_', '.');
