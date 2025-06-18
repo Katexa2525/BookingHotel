@@ -93,14 +93,14 @@
             </FormFieldSet>
 
             <div class="row">
-              <div class="col-4">
+              <div class="col-2">
                 <FormFieldSet Width="col">
                   <label for="hotelArrival" class="font-weight-bold text-secondary">Заезд с</label>
                   <InputText @bind-Value="_hotel.Arrival" class="form-control" id="hotelArrival" />
                 </FormFieldSet>
               </div>
 
-              <div class="col-4">
+              <div class="col-2">
                 <FormFieldSet Width="col">
                   <label for="hotelDeparture" class="font-weight-bold text-secondary">Выезд до</label>
                   <InputText @bind-Value="_hotel.Departure" class="form-control" id="hotelDeparture" />
@@ -113,6 +113,21 @@
                   <MudRating SelectedValue="@_hotel.Star" SelectedValueChanged="HandleSelectedValueChanged" />
                 </div>
               </div>
+
+              <div class="col-2">
+                <FormFieldSet Width="col">
+                  <label for="hotelLatitude" class="font-weight-bold text-secondary">Широта</label>
+                  <InputNumber @bind-Value="_hotel.Latitude" class="form-control" id="hotelLatitude" />
+                </FormFieldSet>
+              </div>
+
+              <div class="col-2">
+                <FormFieldSet Width="col">
+                  <label for="hotelLongitude" class="font-weight-bold text-secondary">Долгота</label>
+                  <InputNumber @bind-Value="_hotel.Longitude" class="form-control" id="hotelLongitude" />
+                </FormFieldSet>
+              </div>
+
             </div>
           }
 
@@ -285,6 +300,8 @@
       _hotel.HotelPhotos = Hotel.HotelPhotos;
       _hotel.HotelUsefulInfo = Hotel.HotelUsefulInfo;
       _hotel.Reviews = Hotel.Reviews;
+      _hotel.Longitude = Hotel.Longitude;
+      _hotel.Latitude = Hotel.Latitude;
     }
   }
 
