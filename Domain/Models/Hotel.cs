@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
@@ -21,6 +22,10 @@ namespace Domain.Models
     /// <summary>Время выезда в часах, например, до 12:00  </summary>
     [MaxLength(5)]
     public string? Departure { get; set; } = string.Empty;
+    /// <summary>Широта </summary>
+    public double Latitude { get; set; }
+    /// <summary>Долгота </summary>
+    public double Longitude { get; set; }
     /// <summary> Коллекция номеров в отеле </summary>
     public ICollection<Room>? Rooms { get; set; }
     /// <summary> Типы питания, предостовляемые отелем </summary>

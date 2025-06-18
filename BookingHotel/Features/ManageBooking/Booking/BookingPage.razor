@@ -285,7 +285,7 @@
       NavManager.NavigateTo($"/hotels/{HotelId}/rooms");
     }
 
-    await DialogAsync("Информация", "Забронировано!");
+    await DialogAsync("Информация", "Забронировано! Документ выслан на почту.");
   }
 
   /// <summary>
@@ -295,7 +295,8 @@
   /// <returns></returns>
   private bool IsGuestsNotFill(List<GuestDto> guests)
   {
-    return guests.Any(p => string.IsNullOrEmpty(p.FirstName) || string.IsNullOrEmpty(p.FirstName) || string.IsNullOrEmpty(p.Email));
+    return guests.Any(p => string.IsNullOrEmpty(p.FirstName) || string.IsNullOrEmpty(p.LastName) ||
+                           string.IsNullOrEmpty(p.Email));
   }
 
   private async Task DialogAsync(string dialogTitle, string dialogContent)
