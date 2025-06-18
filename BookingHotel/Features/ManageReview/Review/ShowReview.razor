@@ -1,6 +1,8 @@
-﻿@inject NavigationManager NavManager
+﻿@using Application.Interfaces.Auth
+@inject NavigationManager NavManager
 @inject IMediator Mediator
 @inject IMapper Mapper
+@inject IAuthenticationStateFunc AuthenticationStateFunc
 
 @if (IsModalOpen)
 {
@@ -87,6 +89,9 @@
   protected override async Task OnParametersSetAsync()
   {
     _review = new ReviewDto();
+    _review.UserId = await AuthenticationStateFunc.GetUserIdFromClaimsPrincipal();
+    _review.Name = await AuthenticationStateFunc.GetUserNameFromClaimsPrincipal();
+
     // создаю новый EditContext для модели отеля
     _editContext = new EditContext(_review);
     // Настраиваю EditContext для использования нового класса BootstrapCssClassProvider

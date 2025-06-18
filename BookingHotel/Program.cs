@@ -1,4 +1,6 @@
+using Application.BussinessLogic.AuthProviders;
 using Application.BussinessLogic.RoleClaim;
+using Application.Interfaces.Auth;
 using Application.Interfaces.Email;
 using Application.Services;
 using Blazored.LocalStorage;
@@ -52,6 +54,7 @@ builder.Services.AddScoped<AppState>();
 builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAuthenticationStateFunc, AuthenticationStateFunc>();
 
 //builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 //builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();

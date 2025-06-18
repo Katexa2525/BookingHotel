@@ -10,5 +10,7 @@
     /// <summary> Кол-во звезд для отеля по отзыву. На основании звезд будет вычисляться общий рейтинг отеля </summary>
     public int Star { get; set; }
     public Guid HotelId { get; set; }
+    /// <summary> id пользователя из Keycloak </summary>
+    public string? UserId { get; set; } = string.Empty;
   }
 }

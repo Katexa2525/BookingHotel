@@ -3,11 +3,12 @@
 @inject IMediator Mediator
 @inject IMapper Mapper
 @inject IDialogService DialogService
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAuthenticationStateFunc AuthenticationStateFunc
 @inject NavigationManager NavManager
 
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
+@using Application.Interfaces.Auth
 
 <div class="card card-brand mb-4 shadow">
   <div class="card-body">
@@ -52,7 +53,7 @@
               <RoomPeopleSquareComponent PeopleNumber="@_room.PeopleNumber" Square="@_room.Square" />
 
               <InputTextArea @bind-Value="_room.Description" class="form-control" id="roomDescription" readonly 
-                             style="background-color: white;" />
+              style="background-color: white;" />
             </div>
 
             @if (_room is not null && _room.RoomFacilities is not null && _room.RoomFacilities.Any())
@@ -152,6 +153,7 @@
   private DateTime dateArrivalDate;
   private DateTime dateDepartureDate;
   private int dayCount = 0;
+  private string? _userId = string.Empty;
 
   //Random random = new Random();
   //int price = Random.Shared.Next(1000, 10001);
@@ -160,8 +162,6 @@
   private HotelDto _hotel = new HotelDto();
   private List<GuestDto> _guests = new List<GuestDto>();
   private BookingDto _booking = new BookingDto();
-
-  private ClaimsPrincipal user;
 
   [Parameter]
   public Guid HotelId { get; set; }
@@ -183,8 +183,8 @@
 
   protected override async Task OnInitializedAsync()
   {
-    var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-    user = authState.User;
+    //UserId Keycloak из ClaimsPrincipal
+    _userId = await AuthenticationStateFunc.GetUserIdFromClaimsPrincipal();
 
     // преобразование в нормальный строковый формат даты
     _arrivalDate = ArrivalDate.Replace('_', '.');
@@ -253,6 +253,7 @@
     _booking.ArrivalDate = dateArrivalDate;
     _booking.DepartureDate = dateDepartureDate;
     _booking.Description = _description;
+    _booking.UserId = _userId;
     //_booking.Guests = _guests; // описание гостей
 
     // сохранение бронирования

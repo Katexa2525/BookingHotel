@@ -16,6 +16,8 @@ namespace Application.DTO.Booking
     public DateTime DepartureDate { get; set; }
     /// <summary> Комментарий к бронированию </summary>
     public string? Description { get; set; } = string.Empty;
+    /// <summary> id пользователя из Keycloak </summary>
+    public string? UserId { get; set; } = string.Empty;
     public IEnumerable<GuestDto> Guests { get; set; }
     public IEnumerable<ServiceDto> Services { get; set; }
   }
