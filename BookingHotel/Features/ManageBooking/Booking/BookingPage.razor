@@ -185,6 +185,11 @@
   {
     var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
     user = authState.User;
+    if (user is not null && user.Identity is not null && user.Identity.IsAuthenticated)
+    {
+      var userId = user.FindFirst(c => c.Type == "sub")?.Value;
+      Console.WriteLine($"User ID: {userId}");
+    }
 
     // преобразование в нормальный строковый формат даты
     _arrivalDate = ArrivalDate.Replace('_', '.');
