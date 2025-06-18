@@ -3,11 +3,12 @@
 @inject IMediator Mediator
 @inject IMapper Mapper
 @inject IDialogService DialogService
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAuthenticationStateFunc AuthenticationStateFunc
 @inject NavigationManager NavManager
 
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
+@using Application.Interfaces.Auth
 
 <div class="card card-brand mb-4 shadow">
   <div class="card-body">
@@ -152,6 +153,7 @@
   private DateTime dateArrivalDate;
   private DateTime dateDepartureDate;
   private int dayCount = 0;
+  private string? _userId = string.Empty;
 
   //Random random = new Random();
   //int price = Random.Shared.Next(1000, 10001);
@@ -160,9 +162,6 @@
   private HotelDto _hotel = new HotelDto();
   private List<GuestDto> _guests = new List<GuestDto>();
   private BookingDto _booking = new BookingDto();
-
-  private ClaimsPrincipal userClaimsPrincipal = new ClaimsPrincipal();
-  private string? _userId = string.Empty;
 
   [Parameter]
   public Guid HotelId { get; set; }
@@ -182,25 +181,10 @@
   [Parameter]
   public int NumberOfChilds { get; set; }
 
-  /// <summary>Метод получения UserId Keycloak из ClaimsPrincipal </summary>
-  private async Task<string> GetUserIdFromClaimsPrincipal()
-  {
-    var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-    userClaimsPrincipal = authState.User;
-    if (userClaimsPrincipal is not null && userClaimsPrincipal.Identity is not null && userClaimsPrincipal.Identity.IsAuthenticated)
-    {
-      var userId = userClaimsPrincipal.FindFirst(c => c.Type == "sub")?.Value;
-      Console.WriteLine($"User ID: {userId}");
-
-      return userId is not null ? userId : string.Empty;
-    }
-    return string.Empty;
-  }
-
   protected override async Task OnInitializedAsync()
   {
     //UserId Keycloak из ClaimsPrincipal
-    _userId = await GetUserIdFromClaimsPrincipal();
+    _userId = await AuthenticationStateFunc.GetUserIdFromClaimsPrincipal();
 
     // преобразование в нормальный строковый формат даты
     _arrivalDate = ArrivalDate.Replace('_', '.');
