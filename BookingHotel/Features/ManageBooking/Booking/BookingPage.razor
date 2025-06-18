@@ -52,7 +52,7 @@
               <RoomPeopleSquareComponent PeopleNumber="@_room.PeopleNumber" Square="@_room.Square" />
 
               <InputTextArea @bind-Value="_room.Description" class="form-control" id="roomDescription" readonly 
-                             style="background-color: white;" />
+              style="background-color: white;" />
             </div>
 
             @if (_room is not null && _room.RoomFacilities is not null && _room.RoomFacilities.Any())
@@ -161,7 +161,8 @@
   private List<GuestDto> _guests = new List<GuestDto>();
   private BookingDto _booking = new BookingDto();
 
-  private ClaimsPrincipal user;
+  private ClaimsPrincipal userClaimsPrincipal = new ClaimsPrincipal();
+  private string? _userId = string.Empty;
 
   [Parameter]
   public Guid HotelId { get; set; }
@@ -181,15 +182,25 @@
   [Parameter]
   public int NumberOfChilds { get; set; }
 
-  protected override async Task OnInitializedAsync()
+  /// <summary>Метод получения UserId Keycloak из ClaimsPrincipal </summary>
+  private async Task<string> GetUserIdFromClaimsPrincipal()
   {
     var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-    user = authState.User;
-    if (user is not null && user.Identity is not null && user.Identity.IsAuthenticated)
+    userClaimsPrincipal = authState.User;
+    if (userClaimsPrincipal is not null && userClaimsPrincipal.Identity is not null && userClaimsPrincipal.Identity.IsAuthenticated)
     {
-      var userId = user.FindFirst(c => c.Type == "sub")?.Value;
+      var userId = userClaimsPrincipal.FindFirst(c => c.Type == "sub")?.Value;
       Console.WriteLine($"User ID: {userId}");
+
+      return userId is not null ? userId : string.Empty;
     }
+    return string.Empty;
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    //UserId Keycloak из ClaimsPrincipal
+    _userId = await GetUserIdFromClaimsPrincipal();
 
     // преобразование в нормальный строковый формат даты
     _arrivalDate = ArrivalDate.Replace('_', '.');
@@ -258,6 +269,7 @@
     _booking.ArrivalDate = dateArrivalDate;
     _booking.DepartureDate = dateDepartureDate;
     _booking.Description = _description;
+    _booking.UserId = _userId;
     //_booking.Guests = _guests; // описание гостей
 
     // сохранение бронирования
