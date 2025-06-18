@@ -15,13 +15,15 @@ namespace Infrastructure.Repository
     }
 
     public IEnumerable<Hotel> GetAll(bool trackChanges) => FindAll(trackChanges)
-      .Include(h => h.Locations).Include(h => h.Foods).Include(h => h.HotelUsefulInfo)
-      .Include(h => h.HotelFacilities).Include(h => h.HotelPhotos).Include(h => h.Reviews).Include(h => h.Rooms)
+      .Include(h => h.HotelPhotos)
+      //.Include(h => h.Locations).Include(h => h.Foods).Include(h => h.HotelUsefulInfo)
+      //.Include(h => h.HotelFacilities).Include(h => h.Reviews).Include(h => h.Rooms)
       .ToList();
 
     public async Task<IEnumerable<Hotel>> GetAllAsync(bool trackChanges) => await FindAll(trackChanges)
-      .Include(h => h.Locations).Include(h => h.Foods).Include(h => h.HotelUsefulInfo)
-      .Include(h => h.HotelFacilities).Include(h => h.HotelPhotos).Include(h => h.Reviews).Include(h => h.Rooms)
+      .Include(h => h.HotelPhotos)
+      //.Include(h => h.Locations).Include(h => h.Foods).Include(h => h.HotelUsefulInfo)
+      //.Include(h => h.HotelFacilities).Include(h => h.Reviews).Include(h => h.Rooms)
       .ToListAsync();
 
     public IEnumerable<Hotel> GetByCondition(Expression<Func<Hotel, bool>> expression, bool trackChanges)
