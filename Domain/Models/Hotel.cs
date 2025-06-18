@@ -23,9 +23,9 @@ namespace Domain.Models
     [MaxLength(5)]
     public string? Departure { get; set; } = string.Empty;
     /// <summary>Широта </summary>
-    public double Latitude { get; set; }
+    public double? Latitude { get; set; }
     /// <summary>Долгота </summary>
-    public double Longitude { get; set; }
+    public double? Longitude { get; set; }
     /// <summary> Коллекция номеров в отеле </summary>
     public ICollection<Room>? Rooms { get; set; }
     /// <summary> Типы питания, предостовляемые отелем </summary>

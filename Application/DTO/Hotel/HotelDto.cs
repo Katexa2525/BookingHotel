@@ -24,9 +24,9 @@ namespace Application.DTO.Hotel
     /// <summary>Время выезда в часах, например, до 12:00  </summary>
     public string Departure { get; set; } = string.Empty;
     /// <summary>Широта </summary>
-    public double Latitude { get; set; }
+    public double? Latitude { get; set; }
     /// <summary>Долгота </summary>
-    public double Longitude { get; set; }
+    public double? Longitude { get; set; }
     public IEnumerable<RoomDto>? Rooms { get; set; }
     public IEnumerable<FoodDto>? Foods { get; set; }
     public IEnumerable<HotelFacilityDto>? HotelFacilities { get; set; }
