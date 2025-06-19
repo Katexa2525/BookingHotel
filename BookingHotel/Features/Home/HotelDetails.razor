@@ -1,4 +1,5 @@
-﻿
+﻿@using LeafletForBlazor
+
 <div class="drawer-wrapper @(_isOpen ? "slide" : "")">
   <div class="drawer-mask"></div>
   <div class="drawer">
@@ -34,6 +35,14 @@
       <div class="drawer-controls">
         <button class="btn btn-secondary" @onclick="Close">Close</button>
       </div>
+
+      <button type="button" @onclick="onClickRun">Показать на карте</button>
+      //launch moving points
+      <RealTimeMap @ref="realTimeMap"
+                   width="600px"
+                   height="600px"
+                   Parameters="@parameters" OnAfterMapLoaded="OnMapLoaded"></RealTimeMap>
+
     }
   </div>
 </div>
@@ -41,6 +50,9 @@
 @code {
   private bool _isOpen;
   private HotelDto? _activeHotel;
+  private static double _latitude;
+  private static double _longitude;
+  private static Guid _id;
 
   /// <summary>Параметр компонента определяется как открытое свойство, декорирование атрибутами</summary>
   [Parameter, EditorRequired]
@@ -51,6 +63,11 @@
     if (Hotel != null)
     {
       _activeHotel = Hotel;
+
+      _latitude = Hotel.Latitude is not null ? Hotel.Latitude.Value : 0;
+      _longitude = Hotel.Longitude is not null ? Hotel.Longitude.Value : 0;
+      _id = Hotel.Id;
+
       _isOpen = true;
     }
   }
@@ -60,5 +77,82 @@
     _activeHotel = null;
     _isOpen = false;
   }
+
+  RealTimeMap? realTimeMap; //reference to map control
+  RealTimeMap.LoadParameters parameters = new RealTimeMap.LoadParameters()  //general map settings
+    {
+      basemap = new RealTimeMap.Basemap()
+      {
+        basemapLayers = new List<RealTimeMap.BasemapLayer>()
+                {
+                    new RealTimeMap.BasemapLayer()
+                    {
+                        url = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        attribution = "©Open Street Map",
+                        title = "Open Street Map",
+                        detectRetina = true
+                    },
+                    new RealTimeMap.BasemapLayer()
+                    {
+                        url = "https://tile.opentopomap.org/{z}/{x}/{y}.png",
+                        attribution = "Open Topo",
+                        title = "Open Topo",
+                        detectRetina = true
+                    },
+                }
+
+      },
+      location = new RealTimeMap.Location()
+      {
+        latitude = _latitude,
+        longitude = _longitude,
+      //  latitude = 44.4501715,
+      //  longitude = 26.1107672,
+      },
+      zoomLevel = 18
+    };
+
+  RealTimeMap.PointSymbol symbol = new RealTimeMap.PointSymbol()
+    {
+      color = "red",
+      fillColor = "yellow",
+      radius = 10,
+      weight = 3,
+      opacity = 1,
+      fillOpacity = 1
+    };
+  bool run = false;
+
+  private async Task onClickRun() //Button onclick event
+  {
+    RealTimeMap.PointTooltip tooltip = new RealTimeMap.PointTooltip()
+      {
+        content = $"{_activeHotel.Name}, {_activeHotel.Star}* - {Math.Round(_latitude, 3)}; {Math.Round(_longitude, 3)}",
+        opacity = 0.6
+      };
+    await realTimeMap.movePoint(new double[] { _latitude, _longitude }, symbol, tooltip);
+  }
+
+  List<RealTimeMap.StreamPoint> markers = new()
+    {
+        new RealTimeMap.StreamPoint()
+        {
+            guid = _id,
+            latitude = _latitude,
+            longitude = _longitude,
+            type = "custom-marker",
+            value = "Метка 1"
+        }
+    };
+
+  private async Task OnMapLoaded(RealTimeMap.MapEventArgs args)
+  {
+    if (realTimeMap is null) return;
+
+    await realTimeMap.Geometric.Points.upload(markers, true);
+
+  }
+
+  
 }
 
