@@ -1,4 +1,9 @@
-﻿using Application.DTO.HotelPhoto;
+﻿using Application.DTO.Food;
+using Application.DTO.HotelFacility;
+using Application.DTO.HotelPhoto;
+using Application.DTO.Location;
+using Application.DTO.Review;
+using Application.DTO.Room;
 
 namespace Application.DTO.Hotel
 {
@@ -19,6 +24,11 @@ namespace Application.DTO.Hotel
     public double? Latitude { get; set; }
     /// <summary>Долгота </summary>
     public double? Longitude { get; set; }
+    public IEnumerable<RoomDto>? Rooms { get; set; }
+    public IEnumerable<FoodDto>? Foods { get; set; }
+    public IEnumerable<HotelFacilityDto>? HotelFacilities { get; set; }
     public IEnumerable<HotelPhotoDto>? HotelPhotos { get; set; }
+    public IEnumerable<LocationDto>? Locations { get; set; }
+    public IEnumerable<ReviewDto>? Reviews { get; set; }
   }
 }
