@@ -1,7 +1,4 @@
-﻿using Application.DTO.Guest;
-using Application.DTO.Service;
-
-namespace Application.DTO.Booking
+﻿namespace Application.DTO.Booking
 {
   public class BookingAllDto
   {
@@ -15,9 +12,8 @@ namespace Application.DTO.Booking
     public DateTime DepartureDate { get; set; }
     /// <summary> Комментарий к бронированию </summary>
     public string? Description { get; set; } = string.Empty;
+    public Guid RoomId { get; set; }
     /// <summary> id пользователя из Keycloak </summary>
     public string? UserId { get; set; } = string.Empty;
-    public IEnumerable<GuestDto> Guests { get; set; }
-    public IEnumerable<ServiceDto> Services { get; set; }
   }
 }
