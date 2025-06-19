@@ -6,6 +6,7 @@
 @inject IHttpClientFactory ClientFactory
 @inject NavigationManager NavManager
 @inject IAuthenticationStateFunc AuthenticationStateFunc
+@inject IRecommendationsService RecommendationsService
 
 @using System.Security.Claims
 @using Application.DTO.Booking
@@ -13,6 +14,7 @@
 @using Application.DTO.Hotel.CQRS
 @using Application.DTO.Hotel.Mediatr
 @using Application.DTO.Review.ClientRequest
+@using Application.Interfaces.Recommendation
 @using MudBlazor
 @using Application.Interfaces.Auth
 
@@ -98,16 +100,13 @@ else
 
       _allHotels = response.Hotels.Select(p => new HotelDto
         {
-          Id = p.Id,
-          Name = p.Name,
-          Description = p.Description,
-          Location = p.Location,
-          Rating = p.Rating,
-          Star = p.Star,
-          MainPhoto = p.MainPhoto,
-          HotelPhotos = p.HotelPhotos,
-          Latitude = p.Latitude,
-          Longitude = p.Longitude
+          Id = p.Id, Name = p.Name, Description = p.Description,
+          Location = p.Location, Rating = p.Rating,
+          Star = p.Star, MainPhoto = p.MainPhoto, HotelPhotos = p.HotelPhotos,
+          Latitude = p.Latitude,Longitude = p.Longitude,
+          Rooms = p.Rooms, Reviews = p.Reviews, HotelFacilities = p.HotelFacilities,
+          Locations = p.Locations, Foods = p.Foods,
+          Arrival = p.Arrival, Departure = p.Departure
         });
 
       _userId = await AuthenticationStateFunc.GetUserIdFromClaimsPrincipal();
@@ -116,19 +115,9 @@ else
         // запрос на получения всех бронирований через GetHotelsRequest и Mediator
         //var responseBookings = await Mediator.Send(new GetBookingsRequest());
         var responseBookings = await Mediator.Send(new GetBookingsByUserIdRequest(_userId));
-
-        _allBookings = responseBookings.Booking.Select(p => new BookingDto
-          {
-            ArrivalDate = p.ArrivalDate,
-            DepartureDate = p.DepartureDate,
-            Description = p.Description,
-            Id = p.Id,
-            Name = p.Name,
-            NumberOfAdults = p.NumberOfAdults,
-            NumberOfChilds = p.NumberOfChilds,
-            UserId = p.UserId,
-            RoomId = p.RoomId
-          });//.Where(i => i.UserId != null && i.UserId.Equals(_userId)).ToList();
+        _allBookings = responseBookings.Booking;
+        // запускаю рекомендации по удобствам отеля
+        _allHotels = RecommendationsService.RecommendHotelsByHotelFacilities(_allBookings, _allHotels, 100);
       }
     }
     catch (HttpRequestException ex)
