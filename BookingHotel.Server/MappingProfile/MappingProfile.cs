@@ -95,7 +95,7 @@ namespace BookingHotel.Server.MappingProfile
       CreateMap<Price, PriceCreateWithIdDto>().ReverseMap();
       CreateMap<Price, PriceDto>().ReverseMap();
 
-      
+      CreateMap<Booking, BookingAllDto>().ReverseMap();
       CreateMap<Booking, BookingCreateDto>().ReverseMap();
       CreateMap<Booking, BookingDto>().ReverseMap();
       CreateMap<Booking, BookingUpdateDto>().ReverseMap();

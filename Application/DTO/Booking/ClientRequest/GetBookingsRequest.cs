@@ -1,9 +1,8 @@
-﻿using Application.DTO.Hotel.ClientRequest;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.DTO.Booking.ClientRequest
 {
-  public record GetBookingsRequest : IRequest<GetHotelsRequest.Response>
+  public record GetBookingsRequest : IRequest<GetBookingsRequest.Response>
   {
     public const string RouteTemplate = "api/bookings";
 

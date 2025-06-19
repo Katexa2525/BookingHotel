@@ -1,5 +1,4 @@
-﻿using Application.DTO.Room.ClientRequest;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.DTO.HotelFacility.ClientRequest
 {
