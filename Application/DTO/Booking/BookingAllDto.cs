@@ -1,4 +1,6 @@
-﻿namespace Application.DTO.Booking
+﻿using Application.DTO.Room;
+
+namespace Application.DTO.Booking
 {
   public class BookingAllDto
   {

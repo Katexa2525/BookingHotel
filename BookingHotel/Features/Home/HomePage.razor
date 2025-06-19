@@ -114,8 +114,10 @@ else
       if (_userId is not null && _userId != string.Empty)
       {
         // запрос на получения всех бронирований через GetHotelsRequest и Mediator
-        var responseBookings = await Mediator.Send(new GetBookingsRequest());
-        _allBookings = responseBookings.Bookings.Select(p => new BookingDto
+        //var responseBookings = await Mediator.Send(new GetBookingsRequest());
+        var responseBookings = await Mediator.Send(new GetBookingsByUserIdRequest(_userId));
+
+        _allBookings = responseBookings.Booking.Select(p => new BookingDto
           {
             ArrivalDate = p.ArrivalDate,
             DepartureDate = p.DepartureDate,
@@ -126,7 +128,7 @@ else
             NumberOfChilds = p.NumberOfChilds,
             UserId = p.UserId,
             RoomId = p.RoomId
-          }).Where(i => i.UserId != null && i.UserId.Equals(_userId)).ToList();
+          });//.Where(i => i.UserId != null && i.UserId.Equals(_userId)).ToList();
       }
     }
     catch (HttpRequestException ex)

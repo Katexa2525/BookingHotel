@@ -1,5 +1,7 @@
 ﻿using Application.DTO.Booking;
 using Application.DTO.Booking.CQRS;
+using Application.DTO.HotelFacility.CQRS;
+using Application.DTO.HotelFacility;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +31,15 @@ namespace BookingHotel.Server.Controllers
     public async Task<ActionResult<BookingDto>> GetById([FromRoute] Guid id)
     {
       var result = await _mediator.Send(new GetByIdBookingQuery() { Id = id });
+      return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("{userid}/bookings")]
+    [ProducesResponseType(typeof(List<BookingDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<BookingDto>>> GetFacilitiesByHotelId([FromRoute] string userid)
+    {
+      var result = await _mediator.Send(new GetAllBookingByUserIdQuery() {  UserId = userid });
       return Ok(result);
     }
 
