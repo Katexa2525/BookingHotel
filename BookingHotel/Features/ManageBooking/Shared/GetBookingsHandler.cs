@@ -21,7 +21,7 @@ namespace BookingHotel.Features.ManageBooking.Shared
         HttpClient? httpClient = _httpClientFactory.CreateClient("NoAuthenticationClient");
 
         // Выполняется запрос к API. В случае успеха ответ десериализуется и возвращается вызывающей стороне
-        var allBookings = await httpClient.GetFromJsonAsync<List<BookingAllDto>>(GetBookingsRequest.RouteTemplate, cancellationToken);
+        var allBookings = await httpClient.GetFromJsonAsync<List<BookingDto>>(GetBookingsRequest.RouteTemplate, cancellationToken);
         return new GetBookingsRequest.Response(allBookings);
       }
       catch (HttpRequestException)
