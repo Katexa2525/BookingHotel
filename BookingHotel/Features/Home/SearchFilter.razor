@@ -1,20 +1,30 @@
 ﻿@inject NavigationManager NavManager
 
 <!-- значение введенное пользователем привязано к полю _maxRating-->
-<div class="filters">
-  <label for="minRating">Минимальный рейтинг</label>
+<div class="filters row mb-4 align-items-center">
+  @* <label for="minRating">Минимальный рейтинг</label>
   <input id="mintRating" type="number" class="form-control" @bind="_minRating" />
 
   <label for="maxRating">Максимальный рейтинг</label>
-  <input id="maxRating" type="number" class="form-control" @bind="_maxRating" />
-
-  <button class="btn btn-outline-primary" @onclick="FilterSearchResults">
-    Filter
-  </button>
-
-  <button class="btn btn-outline-secondary" @onclick="ClearSearchFilter">
-    Clear
-  </button>
+  <input id="maxRating" type="number" class="form-control" @bind="_maxRating" /> *@
+  <div class="col-3">
+    <MudNumericField @bind-Value="_minRating" Label="Минимальный рейтинг" Format="F1" Variant="Variant.Outlined" />
+  </div>
+  <div class="col-3">
+    <MudNumericField @bind-Value="_maxRating" Label="Максимальный рейтинг" Format="F1" Variant="Variant.Outlined" />
+  </div>
+  <div class="col-1">
+    @* <button class="btn btn-outline-primary" @onclick="FilterSearchResults">
+      Фильтр
+    </button> *@
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="FilterSearchResults">Фильтр</MudButton>
+  </div>
+  <div class="col-1">
+    @* <button class="btn btn-outline-secondary" @onclick="ClearSearchFilter">
+      Очистить
+    </button> *@
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="ClearSearchFilter">Очистить</MudButton>
+  </div>
 </div>
 
 @code {
@@ -43,10 +53,10 @@
     var uriWithQuerystring = NavManager.GetUriWithQueryParameters(
       // создаем uri, содержащий пары ключ-значение, представленные в виде строки запроса
       new Dictionary<string, object?>()
-      {
-        [nameof(SearchPage.MinRating)] = _minRating == 0 ? null : _minRating,
-        [nameof(SearchPage.MaxRating)] = _maxRating == 0 ? null : _maxRating
-      }
+        {
+          [nameof(SearchPage.MinRating)] = _minRating == 0 ? null : _minRating,
+          [nameof(SearchPage.MaxRating)] = _maxRating == 0 ? null : _maxRating
+        }
     );
     NavManager.NavigateTo(uriWithQuerystring);
   }

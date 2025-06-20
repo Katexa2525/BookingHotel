@@ -17,6 +17,7 @@
 
 @if(_searchResults==null)
 {
+
   <p>Загрузка результатов поиска...</p>
 }
 else
@@ -25,7 +26,7 @@ else
   <div class="grid">
     @foreach (var hotel in _searchResults)
     {
-      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" />
+      <HotelCard Hotel="hotel" OnSelected="HandleHotelSelected" OnHandleCloseReviewForm="HandleCloseReviewForm" />
     }
   </div>
 }
@@ -64,7 +65,9 @@ else
           Location = p.Location,
           Rating = p.Rating,
           Star = p.Star,
-          MainPhoto = p.MainPhoto
+          MainPhoto = p.MainPhoto,
+          HotelPhotos = p.HotelPhotos,
+          Latitude = p.Latitude, Longitude = p.Longitude
         });
 
       _searchResults = _allHotels.Where(x => x.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
@@ -132,6 +135,32 @@ else
     {
       // иначе, используем неотфильтрованные кешированные результаты поиска  
       _searchResults = _cachedSearchResults;
+    }
+  }
+
+  private async Task HandleCloseReviewForm(Tuple<bool, HotelDto> tuple)
+  {
+    bool isCloseReviewForm = tuple.Item1;
+    HotelDto hotel = tuple.Item2;
+    if (isCloseReviewForm)
+    {
+      // получаю данные по отелю
+      var responseHotel = await Mediator.Send(new GetHotelRequest(hotel.Id));
+
+      if (responseHotel is not null && responseHotel.Hotel is not null && responseHotel.Hotel.Reviews is not null)
+      {
+        var reviews = responseHotel.Hotel.Reviews;
+        // вычисляю рейтинг для отеля, после добавления отзыва
+        double ratingHotel = Math.Round((double)reviews.Sum(p => p.Star) / (double)reviews.Count(), 1);
+        // запрос на обновление данных отеля по значению рейтинга
+        if (ratingHotel != responseHotel.Hotel.Rating)
+        {
+          hotel = responseHotel.Hotel;
+          hotel.Rating = ratingHotel;
+          var responseEditHotel = await Mediator.Send(new EditHotelRequest(hotel));
+          StateHasChanged();
+        }
+      }
     }
   }
 }
