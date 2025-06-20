@@ -32,39 +32,49 @@
             }
           </div> *@
 
+
           @if (_hotel != null && _hotel.HotelPhotos != null)
           {
             <PhotoCarousel Photos="_hotel.HotelPhotos.Select(p => p.Photo).ToList()" Id="_hotel.Id" />
+          }
+          else
+          {
+            <img src="images/NoImage.png" class="card-img-top" />
           }
 
           <AuthorizeView Context="authContext">
             @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
             {
-              <div class="mt-5 mb-5">
-                <button type="button" @onclick="ShowRooms" title="Комнаты отеля">
-                  <img src="images/room.png" alt="Комнаты" width="50" height="50">
-                </button>
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <div class="mt-5 mb-5">
+                    <button type="button" @onclick="ShowRooms" title="Комнаты отеля">
+                      <img src="images/room.png" alt="Комнаты" width="50" height="50">
+                    </button>
 
-                <button type="button" @onclick="ShowFacilities" title="Удобства отеля">
-                  <img src="images/Facility.png" alt="Удобства" width="50" height="50">
-                </button>
+                    <button type="button" @onclick="ShowFacilities" title="Удобства отеля">
+                      <img src="images/Facility.png" alt="Удобства" width="50" height="50">
+                    </button>
 
-                <button type="button" @onclick="ShowPhoto" title="Фото отеля">
-                  <img src="images/camera.png" alt="Фото" width="50" height="50">
-                </button>
+                    <button type="button" @onclick="ShowPhoto" title="Фото отеля">
+                      <img src="images/camera.png" alt="Фото" width="50" height="50">
+                    </button>
 
-                <button type="button" @onclick="ShowLocation" title="Близлежащие локации отеля">
-                  <img src="images/location.png" alt="Близлежащие локации" width="50" height="50">
-                </button>
+                    <button type="button" @onclick="ShowLocation" title="Близлежащие локации отеля">
+                      <img src="images/location.png" alt="Близлежащие локации" width="50" height="50">
+                    </button>
 
-                <button type="button" @onclick="ShowFood" title="Питание отеля">
-                  <img src="images/food.png" alt="Питание" width="50" height="50">
-                </button>
-              </div>
-
-              <div class="row mt-5 mb-5">
-                <div class="col text-right">
-                  <SaveButton TextButtonAccept="Сохранить" />
+                    <button type="button" @onclick="ShowFood" title="Питание отеля">
+                      <img src="images/food.png" alt="Питание" width="50" height="50">
+                    </button>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="row mt-5 mb-5">
+                    <div class="col text-center">
+                      <SaveButton TextButtonAccept="Сохранить" />
+                    </div>
+                  </div>
                 </div>
               </div>
             }
