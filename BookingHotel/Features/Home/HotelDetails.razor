@@ -1,6 +1,4 @@
-﻿@using LeafletForBlazor
-
-<div class="drawer-wrapper @(_isOpen ? "slide" : "")">
+﻿<div class="drawer-wrapper @(_isOpen ? "slide" : "")">
   <div class="drawer-mask"></div>
   <div class="drawer">
     @if (_activeHotel is not null)
@@ -149,7 +147,8 @@
   {
     if (realTimeMap is null) return;
 
-    await realTimeMap.Geometric.Points.upload(markers, true);
+    //await realTimeMap.Geometric.Points.upload(markers, true);
+    await args.sender!.Geometric.Points.upload(markers, true);
 
   }
 
