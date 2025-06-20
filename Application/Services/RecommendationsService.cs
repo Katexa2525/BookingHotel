@@ -31,10 +31,8 @@ namespace Application.Services
       // Рекомендуем отели с похожими удобствами
       var recommendations = allHotels
           .Where(h => !userBookedHotels.Contains(h.Id))
-          .OrderByDescending(h => h.Star)
-          //.OrderByDescending(h => h.HotelFacilities.Count(
-          //                           a => userPreferences.Contains(a.Name)))
-          .ThenByDescending(h => h.Rating)
+          .OrderByDescending(h => h.HotelFacilities.Count(a => userPreferences.Contains(a.Name)))
+          .ThenByDescending(h => h.Star).ThenByDescending(h => h.Rating)
           .Take(topN)
           //.Select()
           .ToList();
