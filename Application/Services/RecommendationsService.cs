@@ -2,10 +2,7 @@
 using Application.DTO.Booking.ClientRequest;
 using Application.DTO.Hotel;
 using Application.Interfaces.Recommendation;
-using Domain.Models;
 using MediatR;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Application.Services
 {

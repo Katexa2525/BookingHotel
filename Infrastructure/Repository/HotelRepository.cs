@@ -14,13 +14,13 @@ namespace Infrastructure.Repository
       _repositoryContext = repositoryContext;
     }
 
-    public IEnumerable<Hotel> GetAll(bool trackChanges) => FindAll(trackChanges)
+    public IEnumerable<Hotel> GetAll(bool trackChanges) => FindAll(trackChanges).OrderByDescending(p=>p.Star).ThenByDescending(r=>r.Rating)
       .Include(h => h.HotelPhotos)
       .Include(h => h.Locations).Include(h => h.Foods)//.Include(h => h.HotelUsefulInfo)
       .Include(h => h.HotelFacilities).Include(h => h.Reviews).Include(h => h.Rooms)
       .ToList();
 
-    public async Task<IEnumerable<Hotel>> GetAllAsync(bool trackChanges) => await FindAll(trackChanges)
+    public async Task<IEnumerable<Hotel>> GetAllAsync(bool trackChanges) => await FindAll(trackChanges).OrderByDescending(p => p.Star).ThenByDescending(r => r.Rating)
       .Include(h => h.HotelPhotos)
       .Include(h => h.Locations).Include(h => h.Foods)//.Include(h => h.HotelUsefulInfo)
       .Include(h => h.HotelFacilities).Include(h => h.Reviews).Include(h => h.Rooms)
