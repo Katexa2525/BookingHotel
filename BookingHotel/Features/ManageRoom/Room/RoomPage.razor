@@ -5,48 +5,60 @@
 
 <PageTitle>Номера</PageTitle>
 
-<AuthorizeView Context="authContext">
-  @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
-  {
-    <div class="mb-4">
-      <p class="font-italic text-center">
-        Есть номер, который хотели бы опубликовать?
-        <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь.</a>
-        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Href="@($"/hotels/{HotelId}/rooms/add-room")" />
-      </p>
-    </div>
-  }
-</AuthorizeView>
-
-@* Данные по отелю и близжайшие локации около отеля*@
-<AboutHotelDataAndLocation Hotel="@_hotel" />
-
-@if (_allRooms is not null && _allRooms.Any())
+@if (isLoading)
 {
-  @* данные передаются в параметры компонента с помощью атрибутов элемента *@
-  <SearchDateComponent Booking="@Booking" OnSelected="HandleBookingSelected" />
-
-  // номера по отелю
-  <div class="card-container">
-    @foreach (var room in _allRooms)
-    {
-      <div class="card shadow">
-        <div class="card-body">
-          <RoomCard Room="@room" HotelId="@HotelId" OnSelected="HandleRoomSelected" DayCountForPrice="@dayCount" />
-        </div>
-      </div>
-    }
+  <div class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-2">Загрузка...</p>
   </div>
 }
+else
+{
+  <AuthorizeView Context="authContext">
+    @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
+    {
+      <div class="mb-4">
+        <p class="font-italic text-center">
+          Есть номер, который хотели бы опубликовать?
+          <a href="/hotels/{@HotelId}/rooms/add-room">Добавьте это здесь.</a>
+          <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Href="@($"/hotels/{HotelId}/rooms/add-room")" />
+        </p>
+      </div>
+    }
+  </AuthorizeView>
 
-@* про отель *@
-<AboutHotel Caption="Про отель" Hotel="@_hotel" />
+  @* Данные по отелю и близжайшие локации около отеля*@
+  <AboutHotelDataAndLocation Hotel="@_hotel" />
 
-@* Удобства и услуги, питание отеля *@
-<AboutHotelFacilities CaptionFacilities="Удобства и услуги отеля" CaptionFoods="Питание" Hotel="@_hotel" />
+  @if (_allRooms is not null && _allRooms.Any())
+  {
+    @* данные передаются в параметры компонента с помощью атрибутов элемента *@
+    <SearchDateComponent Booking="@Booking" OnSelected="HandleBookingSelected" />
 
-@* Отзывы *@
-<HotelReview Caption="@countReview" Hotel="@_hotel" OnHandleCloseSubordinateForm="HandleCloseSubordinateForm" />
+    // номера по отелю
+    <div class="card-container">
+      @foreach (var room in _allRooms)
+      {
+        <div class="card shadow">
+          <div class="card-body">
+            <RoomCard Room="@room" HotelId="@HotelId" OnSelected="HandleRoomSelected" DayCountForPrice="@dayCount" />
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @* про отель *@
+  <AboutHotel Caption="Про отель" Hotel="@_hotel" />
+
+  @* Удобства и услуги, питание отеля *@
+  <AboutHotelFacilities CaptionFacilities="Удобства и услуги отеля" CaptionFoods="Питание" Hotel="@_hotel" />
+
+  @* Отзывы *@
+  <HotelReview Caption="@countReview" Hotel="@_hotel" OnHandleCloseSubordinateForm="HandleCloseSubordinateForm" />
+}
 
 @code {
 
@@ -61,6 +73,7 @@
   private string countReview = string.Empty;
   private BookingDto Booking = new BookingDto();
   private int dayCount = 1; // кол-во дней по цене
+  private bool isLoading = false;
 
   /// <summary>Параметр для передачи в маршрут Id отеля для отображения всех номеров отеля </summary>
   [Parameter]
@@ -82,6 +95,7 @@
     Booking.DepartureDate = DateTime.Now.AddDays(1);
     Booking.NumberOfAdults = 1;
     Booking.NumberOfChilds = 0;
+    isLoading = true;
 
     // запрос на получения всех номеров отеля RoomId через GetRoomsRequest и Mediator
     var response = await Mediator.Send(new GetRoomsRequest(HotelId));
@@ -102,9 +116,9 @@
           RoomType = p.RoomType,
           Bookings = p.Bookings,
           MainPhoto = p.MainPhoto,
-          // определяю цену на сегодня
+        // определяю цену на сегодня
           DayPrice = p.Prices is not null && p.Prices.Any(p => p.DateStart <= DateTime.Now && p.DateEnd >= DateTime.Now) ?
-                     p.Prices.First(p => p.DateStart <= DateTime.Now && p.DateEnd >= DateTime.Now).DayPrice : 0.00
+                       p.Prices.First(p => p.DateStart <= DateTime.Now && p.DateEnd >= DateTime.Now).DayPrice : 0.00
         });
     }
     else
@@ -130,6 +144,8 @@
 
     // устанавливаю маршрут для поиска в переменную
     routeSearch = $"hotels/{HotelId}/rooms/searchRoom";
+
+    isLoading = false;
   }
 
   /// <summary> Метод обработчика, который получает обновленные данные фильтра </summary>
@@ -166,7 +182,7 @@
         // рассчитываю цену за кол-во дней, выбранных в фильтре
         foreach (var item in _allRooms)
         {
-          // определяю цену по началу выбранной даты поиска  
+          // определяю цену по началу выбранной даты поиска
           item.DayPrice = item.Prices is not null && item.Prices.Any(p => p.DateStart <= bookingDto.ArrivalDate && p.DateEnd >= bookingDto.ArrivalDate) ?
                           item.Prices.First(p => p.DateStart <= bookingDto.ArrivalDate && p.DateEnd >= bookingDto.ArrivalDate).DayPrice : 0.00;
           item.DayPrice = Math.Round(item.DayPrice * dayCount, 2);

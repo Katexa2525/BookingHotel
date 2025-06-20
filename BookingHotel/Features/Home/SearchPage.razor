@@ -13,12 +13,18 @@
 <PageTitle>Search hotels</PageTitle>
 
 <h3 class="mt-5 mb-4">Результаты поиска для "@SearchTerm"</h3>
+
 <SearchFilter SearchTerm="@SearchTerm" MinRating="MinRating" MaxRating="MaxRating" />
 
 @if(_searchResults==null)
 {
-
-  <p>Загрузка результатов поиска...</p>
+  @* <p>Загрузка результатов поиска...</p> *@
+  <div class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-2">Поиск...</p>
+  </div>
 }
 else
 {
