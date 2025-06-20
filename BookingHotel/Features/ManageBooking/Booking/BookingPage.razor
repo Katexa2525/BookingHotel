@@ -10,6 +10,18 @@
 @using System.Security.Claims
 @using Application.Interfaces.Auth
 
+
+@if (isLoading)
+{
+  <div class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-2">Загрузка...</p>
+  </div>
+}
+else
+{
 <div class="card card-brand mb-4 shadow">
   <div class="card-body">
     <div class="row">
@@ -126,6 +138,7 @@
 
   </div>
 </div>
+}
 
 <style>
   h2 {
@@ -154,6 +167,7 @@
   private DateTime dateDepartureDate;
   private int dayCount = 0;
   private string? _userId = string.Empty;
+  private bool isLoading = false;
 
   //Random random = new Random();
   //int price = Random.Shared.Next(1000, 10001);
@@ -183,6 +197,7 @@
 
   protected override async Task OnInitializedAsync()
   {
+    isLoading = true;
     //UserId Keycloak из ClaimsPrincipal
     _userId = await AuthenticationStateFunc.GetUserIdFromClaimsPrincipal();
 
@@ -235,6 +250,7 @@
     {
       _errorMessage = AppMessage.RoomPageLoadTextErrorMessage;
     }
+    isLoading = false;
   }
 
   private async Task BookingHandler(MouseEventArgs args)
