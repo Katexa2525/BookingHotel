@@ -6,6 +6,6 @@ namespace Application.DTO.Booking.ClientRequest
   {
     public const string RouteTemplate = "api/bookings";
 
-    public record Response(List<BookingAllDto>? Bookings);
+    public record Response(List<BookingDto>? Bookings);
   }
 }

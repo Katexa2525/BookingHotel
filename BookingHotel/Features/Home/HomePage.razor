@@ -117,7 +117,7 @@ else
         var responseBookings = await Mediator.Send(new GetBookingsByUserIdRequest(_userId));
         _allBookings = responseBookings.Booking;
         // запускаю рекомендации по удобствам отеля
-        _allHotels = RecommendationsService.RecommendHotelsByHotelFacilities(_allBookings, _allHotels, 100);
+        _allHotels = await RecommendationsService.RecommendHotelsAsync(_allBookings, _allHotels, 100);
       }
     }
     catch (HttpRequestException ex)
