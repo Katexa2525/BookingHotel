@@ -15,7 +15,7 @@ namespace Application.DTO.Guest.Mediatr
 
     public async Task<List<GuestAllDto>> Handle(GetAllGuestQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetAllAsync(trackChanges: true);
+      return await _bussinessLogic.GetAllAsync(trackChanges: false);
     }
   }
 }

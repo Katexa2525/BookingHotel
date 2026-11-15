@@ -3,6 +3,7 @@ using Application.DTO.Hotel;
 using Application.Interfaces.Repository;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using HotelEntity = Domain.Models.Hotel;
 
@@ -23,10 +24,53 @@ namespace Application.BussinessLogic.Hotel
       _repositoryManager = repositoryManager;
     }
 
-    public async Task<List<HotelAllDto>> GetAllAsync(bool trackChanges)
+    public async Task<HotelListPageDto> GetPageAsync(int pageNumber, int pageSize, string? searchTerm, double? minRating, double? maxRating, CancellationToken cancellationToken)
     {
-      var listDB = _mapper.Map<List<HotelAllDto>>(await _repositoryManager.HotelRepository.GetAllAsync(trackChanges));
-      return listDB.ToList();
+      if (pageNumber < 1)
+        throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be positive.");
+      if (pageSize is < 1 or > 100)
+        throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be between 1 and 100.");
+      if (pageNumber > int.MaxValue / pageSize)
+        throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number is too large.");
+
+      var query = _repositoryManager.HotelRepository.GetHotelListQuery(trackChanges: false);
+      if (!string.IsNullOrWhiteSpace(searchTerm))
+        query = query.Where(h => h.Name.Contains(searchTerm) || h.Location.Contains(searchTerm));
+      if (minRating.HasValue)
+        query = query.Where(h => h.Rating >= minRating.Value);
+      if (maxRating.HasValue)
+        query = query.Where(h => h.Rating <= maxRating.Value);
+
+      var totalCount = await query.CountAsync(cancellationToken);
+      var hotels = await query
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .Select(h => new HotelListDto
+        {
+          Id = h.Id,
+          Name = h.Name,
+          Description = h.Description ?? string.Empty,
+          Location = h.Location,
+          Rating = h.Rating,
+          Star = h.Star,
+          MainPhoto = h.MainPhoto,
+          Arrival = h.Arrival ?? string.Empty,
+          Departure = h.Departure ?? string.Empty,
+          Latitude = h.Latitude,
+          Longitude = h.Longitude,
+          FacilityNames = h.HotelFacilities.Select(facility => facility.Name).ToList(),
+          FoodNames = h.Foods.Select(food => food.Name).ToList(),
+          NearbyLocationNames = h.Locations.Select(location => location.Name).ToList()
+        })
+        .ToListAsync(cancellationToken);
+
+      return new HotelListPageDto
+      {
+        Hotels = hotels,
+        PageNumber = pageNumber,
+        PageSize = pageSize,
+        TotalCount = totalCount
+      };
     }
 
     public async Task<Guid> CreateAsync(HotelCreateDto dto)

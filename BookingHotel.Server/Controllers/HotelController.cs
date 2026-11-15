@@ -14,6 +14,7 @@ using Application.DTO.RoomPhoto.CQRS;
 using Application.DTO.RoomPhoto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using Application.DTO.HotelPhoto;
 using Application.DTO.HotelPhoto.CQRS;
 
@@ -31,10 +32,23 @@ namespace BookingHotel.Server.Controllers
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(List<HotelAllDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<HotelAllDto>>> GetAll()
+    [ProducesResponseType(typeof(HotelListPageDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<HotelListPageDto>> GetAll(
+      [FromQuery, Range(1, int.MaxValue)] int pageNumber = 1,
+      [FromQuery, Range(1, 100)] int pageSize = 20,
+      [FromQuery] string? searchTerm = null,
+      [FromQuery] double? minRating = null,
+      [FromQuery] double? maxRating = null,
+      CancellationToken cancellationToken = default)
     {
-      var result = await _mediator.Send(new GetAllHotelQuery() { });
+      var result = await _mediator.Send(new GetAllHotelQuery
+      {
+        PageNumber = pageNumber,
+        PageSize = pageSize,
+        SearchTerm = searchTerm,
+        MinRating = minRating,
+        MaxRating = maxRating
+      }, cancellationToken);
       return Ok(result);
     }
 

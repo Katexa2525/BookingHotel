@@ -16,12 +16,12 @@ namespace Infrastructure.Repository
 
     public IEnumerable<Booking> GetAll(bool trackChanges)
     {
-      return FindAll(trackChanges).Include(h => h.Guests).Include(h => h.Services).ToList();
+      return FindAll(trackChanges).ToList();
     }
 
     public async Task<IEnumerable<Booking>> GetAllAsync(bool trackChanges)
     {
-      return await FindAll(trackChanges).Include(h => h.Guests).Include(h => h.Services).ToListAsync();    
+      return await FindAll(trackChanges).ToListAsync();
     }
 
     public IEnumerable<Booking> GetByCondition(Expression<Func<Booking, bool>> expression, bool trackChanges)

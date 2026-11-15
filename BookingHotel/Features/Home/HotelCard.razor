@@ -9,14 +9,8 @@
          class="card-img-top" alt="@Hotel.Name"> *@
 
     <div class="card-img-top">
-      @if (Hotel.HotelPhotos is null)
-      {
-        <img src="images/NoImage.png" class="card-img-top" />
-      }
-      else
-      {
-        <PhotoCarousel Photos="Hotel.HotelPhotos.Select(p => p.Photo).ToList()" Id="Hotel.Id" />
-      }
+      <img src="@(!string.IsNullOrWhiteSpace(Hotel.MainPhoto) ? $"images/{Hotel.MainPhoto}" : "images/NoImage.png")"
+           class="card-img-top" alt="@Hotel.Name" />
     </div>
   </a>
 

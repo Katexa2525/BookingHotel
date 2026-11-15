@@ -15,7 +15,7 @@ namespace Application.DTO.Booking.Mediatr
 
     public async Task<List<BookingAllDto>> Handle(GetAllBookingQuery request, CancellationToken cancellationToken)
     {
-      return await _bussinessLogic.GetAllAsync(trackChanges: true);
+      return await _bussinessLogic.GetAllAsync(trackChanges: false);
     }
   }
 }

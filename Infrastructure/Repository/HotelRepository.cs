@@ -14,17 +14,13 @@ namespace Infrastructure.Repository
       _repositoryContext = repositoryContext;
     }
 
-    public IEnumerable<Hotel> GetAll(bool trackChanges) => FindAll(trackChanges).OrderByDescending(p=>p.Star).ThenByDescending(r=>r.Rating)
-      .Include(h => h.HotelPhotos)
-      .Include(h => h.Locations).Include(h => h.Foods)//.Include(h => h.HotelUsefulInfo)
-      .Include(h => h.HotelFacilities).Include(h => h.Reviews).Include(h => h.Rooms)
-      .ToList();
+    public IEnumerable<Hotel> GetAll(bool trackChanges) => GetHotelListQuery(trackChanges).ToList();
 
-    public async Task<IEnumerable<Hotel>> GetAllAsync(bool trackChanges) => await FindAll(trackChanges).OrderByDescending(p => p.Star).ThenByDescending(r => r.Rating)
-      .Include(h => h.HotelPhotos)
-      .Include(h => h.Locations).Include(h => h.Foods)//.Include(h => h.HotelUsefulInfo)
-      .Include(h => h.HotelFacilities).Include(h => h.Reviews).Include(h => h.Rooms)
-      .ToListAsync();
+    public async Task<IEnumerable<Hotel>> GetAllAsync(bool trackChanges) => await GetHotelListQuery(trackChanges).ToListAsync();
+
+    public IQueryable<Hotel> GetHotelListQuery(bool trackChanges) => FindAll(trackChanges)
+      .OrderByDescending(h => h.Star)
+      .ThenByDescending(h => h.Rating);
 
     public IEnumerable<Hotel> GetByCondition(Expression<Func<Hotel, bool>> expression, bool trackChanges)
     {

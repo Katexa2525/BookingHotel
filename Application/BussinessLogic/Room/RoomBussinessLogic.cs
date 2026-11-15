@@ -23,9 +23,8 @@ namespace Application.BussinessLogic.Room
 
     public async Task<List<RoomAllDto>> GetAllAsync(bool trackChanges)
     {
-      return await _repositoryManager.RoomRepository.GetAll(trackChanges).AsQueryable()
-                                  .ProjectTo<RoomAllDto>(_mapper.ConfigurationProvider)
-                                  .ToListAsync();
+      var rooms = await _repositoryManager.RoomRepository.GetAllAsync(trackChanges);
+      return _mapper.Map<List<RoomAllDto>>(rooms);
     }
 
     public async Task<RoomDto> GetByIdAsync(Guid id, bool trackChanges)

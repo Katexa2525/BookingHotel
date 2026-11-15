@@ -8,14 +8,8 @@
         @* <img class="card-img-top" src="@(!string.IsNullOrWhiteSpace(_activeHotel.MainPhoto) ? $"images/{_activeHotel.MainPhoto}"
                                                                        : "images/NoImage.png")" /> *@
 
-        @if (_activeHotel.HotelPhotos == null)
-        {
-          <img src="images/NoImage.png" class="card-img-top" />
-        }
-        else
-        {
-          <PhotoCarousel Photos="_activeHotel.HotelPhotos.Select(p => p.Photo).ToList()" Id="_activeHotel.Id" />
-        }
+        <img src="@(!string.IsNullOrWhiteSpace(_activeHotel.MainPhoto) ? $"images/{_activeHotel.MainPhoto}" : "images/NoImage.png")"
+             class="card-img-top" alt="@_activeHotel.Name" />
 
 
         <div class="trail-details">
