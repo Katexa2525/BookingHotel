@@ -16,23 +16,26 @@
         <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
           <table class="table">
             <tbody>
-              @foreach (var item in _hotelFacilities)
+              @if (_hotelFacilities is not null)
               {
-                <tr>
-                  <td>
-                    <FormFieldSet Width="col">
-                      <InputText @bind-Value="@item.Name" class="form-control" id="facilityName" />
-                    </FormFieldSet>
-                  </td>
-                  <td>
-                    <AuthorizeView>
-                      @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
-                      {
-                        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteRow(item)" />
-                      }
-                    </AuthorizeView>
-                  </td>
-                </tr>
+                foreach (var item in _hotelFacilities)
+                {
+                  <tr>
+                    <td>
+                      <FormFieldSet Width="col">
+                        <InputText @bind-Value="@item.Name" class="form-control" id="facilityName" />
+                      </FormFieldSet>
+                    </td>
+                    <td>
+                      <AuthorizeView>
+                        @if (context.User.IsInRole("Administrator") || context.User.IsInRole("Hotel_owner"))
+                        {
+                          <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteRow(item)" />
+                        }
+                      </AuthorizeView>
+                    </td>
+                  </tr>
+                }
               }
             </tbody>
           </table>
@@ -68,7 +71,7 @@
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private List<HotelFacilityDto>? _hotelFacilities = new List<HotelFacilityDto>();
-  private HotelFacilityDto _facility;
+  //private HotelFacilityDto _facility;
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
   private List<HotelFacilityDto>? _hotelFacilitiesDel = new List<HotelFacilityDto>();
 
