@@ -64,6 +64,8 @@ namespace BookingHotel.Server.Extensions
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
     {
       var jwtSettings = configuration.GetSection("JwtSettings");
+      var securityKey = jwtSettings["securityKey"]
+          ?? throw new InvalidOperationException("Configuration value 'JwtSettings:securityKey' is required.");
       services.AddAuthentication(opt =>
       {
         opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -79,7 +81,7 @@ namespace BookingHotel.Server.Extensions
           ValidateIssuerSigningKey = true,
           ValidIssuer = jwtSettings["validIssuer"],
           ValidAudience = jwtSettings["validAudience"],
-          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["securityKey"]))
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey))
         };
       });
     }

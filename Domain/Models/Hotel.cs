@@ -27,17 +27,17 @@ namespace Domain.Models
     /// <summary>Долгота </summary>
     public double? Longitude { get; set; }
     /// <summary> Коллекция номеров в отеле </summary>
-    public ICollection<Room>? Rooms { get; set; }
+    public ICollection<Room> Rooms { get; set; } = new List<Room>();
     /// <summary> Типы питания, предостовляемые отелем </summary>
-    public ICollection<Food>? Foods { get; set; }
+    public ICollection<Food> Foods { get; set; } = new List<Food>();
     /// <summary> Удобства, предоставляемые отелем, например: wifi, парковка, трансфер и тд  </summary>
-    public ICollection<HotelFacility>? HotelFacilities { get; set; }
+    public ICollection<HotelFacility> HotelFacilities { get; set; } = new List<HotelFacility>();
     /// <summary> Коллекция фоток отеля </summary>
-    public ICollection<HotelPhoto>? HotelPhotos { get; set; }
+    public ICollection<HotelPhoto> HotelPhotos { get; set; } = new List<HotelPhoto>();
     /// <summary> Местоположение рядом находящихся объектов, например, рядом аэропорт, рядом подъемник, ботанический сад в 15 км и тд </summary>
-    public ICollection<Location>? Locations { get; set; }
+    public ICollection<Location> Locations { get; set; } = new List<Location>();
     /// <summary> Отзывы по отелю </summary>
-    public ICollection<Review>? Reviews { get; set; }
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
     /// <summary>Связь один-к-одному по полезной информации по отелю </summary>
     public HotelUsefulInfo? HotelUsefulInfo { get; set; }
   }

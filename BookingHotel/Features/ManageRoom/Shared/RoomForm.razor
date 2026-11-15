@@ -9,13 +9,13 @@
       <div class="row">
         <div class="col-6">
 
-          @if (_room == null || (_room != null && _room.RoomPhotos == null) || (_room != null && _room.RoomPhotos != null && !_room.RoomPhotos.Any()))
+          @if (_room.RoomPhotos is null || !_room.RoomPhotos.Any())
           {
             <img src="images/NoImage.png" class="card-img-top" />
           }
           else
           {
-            <PhotoCarousel Photos="_room.RoomPhotos.Select(p => p.Photo).ToList()" Id="Room.Id" />
+            <PhotoCarousel Photos="_room.RoomPhotos.Select(p => p.Photo).ToList()" Id="_room.Id" />
           }
 
           <AuthorizeView Context="authContext">
@@ -117,19 +117,19 @@
 
   @if (!isModalRoomPriceOpen && !isModalRoomPhotoOpen && isModalRoomFacilityOpen)
   {
-    <ShowRoomFacility IsModalOpen="@isModalRoomFacilityOpen" RoomFacilities="@_room.RoomFacilities?.ToList()" RoomId="@Room.Id"
+    <ShowRoomFacility IsModalOpen="@isModalRoomFacilityOpen" RoomFacilities="@_room!.RoomFacilities?.ToList()" RoomId="@_room!.Id"
                       OnCloseModal="CloseModalFacilityHandlerAsync" ModalTitle="Удобства и услуги номера отеля" />
   }
 
   @if (!isModalRoomFacilityOpen && !isModalRoomPhotoOpen && isModalRoomPriceOpen)
   {
-    <ShowRoomPrice IsModalOpen="@isModalRoomPriceOpen" RoomPrices="@_room.Prices?.ToList()" RoomId="@Room.Id"
+    <ShowRoomPrice IsModalOpen="@isModalRoomPriceOpen" RoomPrices="@_room!.Prices?.ToList()" RoomId="@_room!.Id"
                    OnCloseModal="CloseModalPriceHandlerAsync" ModalTitle="Цены номера отеля" />
   }
 
   @if (!isModalRoomFacilityOpen && !isModalRoomPriceOpen && isModalRoomPhotoOpen)
   {
-    <ShowRoomPhoto IsModalOpen="@isModalRoomPhotoOpen" Photos="@_room.RoomPhotos?.ToList()" RoomId="@Room.Id"
+    <ShowRoomPhoto IsModalOpen="@isModalRoomPhotoOpen" Photos="@_room!.RoomPhotos?.ToList()" RoomId="@_room!.Id"
                    OnCloseModal="CloseModalPhotoHandlerAsync" ModalTitle="Фото номера отеля" />
   }
 
@@ -154,7 +154,7 @@
 
   /// <summary> Параметр передает коллекцию типов номеров на форму </summary>
   [Parameter]
-  public List<RoomTypeDto>? RoomTypes { get; set; }
+  public List<RoomTypeDto> RoomTypes { get; set; } = new();
 
   [Parameter]
   public string TextButtonCancel { get; set; } = "Отмена";
@@ -184,6 +184,10 @@
     if (Room is not null)
     {
       _room = Room;
+    }
+    else
+    {
+      _room = new RoomDto();
     }
 
     // создаю новый EditContext для модели отеля
@@ -285,8 +289,11 @@
   /// <returns></returns>
   private RoomDto SetValueForRoomTypeId(RoomDto room, List<RoomTypeDto> RoomTypes, string selectedOptionType)
   {
-    Guid roomTypeId = RoomTypes.First(p => p.Name.Equals(selectedOptionType)).Id;
-    room.RoomTypeId = roomTypeId;
+    var roomType = RoomTypes.FirstOrDefault(p => p.Name.Equals(selectedOptionType));
+    if (roomType is null)
+      throw new InvalidOperationException($"Room type '{selectedOptionType}' is not available.");
+
+    room.RoomTypeId = roomType.Id;
 
     return room;
   }

@@ -55,10 +55,10 @@ namespace Application.BussinessLogic.Hotel
     {
       //var hotel = await _repositoryManager.HotelRepository.GetOneAsync(x => x.Id == id, trackChanges);
       var hotel = _repositoryManager.HotelRepository.GetByCondition(x => x.Id == id, trackChanges).FirstOrDefault();
-      if (hotel == null)
-        return null;  //new HotelDto();
-      else
-        return  _mapper.Map<HotelDto>(hotel);
+      if (hotel is null)
+        throw new KeyNotFoundException($"Hotel '{id}' was not found.");
+
+      return _mapper.Map<HotelDto>(hotel);
     }
 
     public async Task DeleteAsync(Guid hotelId)

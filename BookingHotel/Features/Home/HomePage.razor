@@ -87,8 +87,8 @@ else
 
   private HotelDto? _selectedHotel;
   // закрытое поле, содержащее данные об отелях
-  private IEnumerable<HotelDto>? _allHotels;
-  private IEnumerable<BookingDto>? _allBookings;
+  private IEnumerable<HotelDto> _allHotels = Array.Empty<HotelDto>();
+  private IEnumerable<BookingDto> _allBookings = Array.Empty<BookingDto>();
   private string? _userId = string.Empty;
 
   protected override async Task OnInitializedAsync()
@@ -97,6 +97,8 @@ else
     {
       // запрос на получения всех отелей через GetHotelsRequest и Mediator
       var response = await Mediator.Send(new GetHotelsRequest());
+      if (response?.Hotels is null)
+        throw new InvalidOperationException("The hotel list was not returned by the server.");
 
       _allHotels = response.Hotels.Select(p => new HotelDto
         {
@@ -115,7 +117,7 @@ else
         // запрос на получения всех бронирований через GetHotelsRequest и Mediator
         //var responseBookings = await Mediator.Send(new GetBookingsRequest());
         var responseBookings = await Mediator.Send(new GetBookingsByUserIdRequest(_userId));
-        _allBookings = responseBookings.Booking;
+        _allBookings = responseBookings?.Booking ?? new List<BookingDto>();
         // запускаю рекомендации по удобствам отеля
         _allHotels = await RecommendationsService.RecommendHotelsAsync(_allBookings, _allHotels, 100);
       }

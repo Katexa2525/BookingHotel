@@ -4,6 +4,6 @@ namespace Application.DTO.Food.CQRS
 {
   public class UpdateFoodCommand : IRequest<Unit>
   {
-    public FoodDto Dto { get; set; }
+    public FoodDto Dto { get; set; } = null!;
   }
 }

@@ -49,6 +49,8 @@ namespace Application.BussinessLogic.TypeFood
     public async Task DeleteAsync(Guid typefoodId)
     {
       var typefood = await _repositoryManager.TypeFoodRepository.GetOneAsync(x => x.Id == typefoodId);
+      if (typefood is null)
+        throw new KeyNotFoundException($"Food type '{typefoodId}' was not found.");
 
       _repositoryManager.TypeFoodRepository.DeleteEntity(typefood);
       await _repositoryManager.SaveAsync();
@@ -57,6 +59,8 @@ namespace Application.BussinessLogic.TypeFood
     public async Task UpdateAsync(TypeFoodDto dto)
     {
       var existingTypeFood = await _repositoryManager.TypeFoodRepository.GetOneAsync(x => x.Id == dto.Id);
+      if (existingTypeFood is null)
+        throw new KeyNotFoundException($"Food type '{dto.Id}' was not found.");
 
       _mapper.Map(dto, existingTypeFood);
 

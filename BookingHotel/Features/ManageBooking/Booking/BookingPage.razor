@@ -143,7 +143,6 @@
 
 
 @code {
-  private bool bookingConfirmed = false;
   private string? _errorMessage;
   private string _arrivalDate = string.Empty;
   private string _departureDate = string.Empty;
@@ -256,7 +255,7 @@
 
     // сохранение бронирования
     var response = await Mediator.Send(new AddBookingRequest(Mapper.Map<BookingCreateDto>(_booking)));
-    if (response is not null && response.bookingId == Guid.Empty)
+    if (response is null || response.bookingId == Guid.Empty)
     {
       await DialogAsync("Ошибка", "Произошла ошибка при бронировании");
       // Если при сохранении отеля произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить пользовательский интерфейс сообщением об ошибке

@@ -47,6 +47,8 @@ namespace Application.BussinessLogic.Food
     {
       //var food = await _repositoryFood.FindOneAsync(x => x.Id == foodId);
       var food = await _repositoryManager.FoodRepository.GetOneAsync(x => x.Id == foodId);
+      if (food is null)
+        throw new KeyNotFoundException($"Food '{foodId}' was not found.");
 
       _repositoryManager.FoodRepository.DeleteEntity(food);
       await _repositoryManager.SaveAsync();
@@ -56,6 +58,8 @@ namespace Application.BussinessLogic.Food
     {
       //var existingFood = await _repositoryFood.FindOneAsync(x => x.Id == dto.Id);
       var existingFood = await _repositoryManager.FoodRepository.GetOneAsync(x => x.Id == dto.Id);
+      if (existingFood is null)
+        throw new KeyNotFoundException($"Food '{dto.Id}' was not found.");
 
       _mapper.Map(dto, existingFood);
 

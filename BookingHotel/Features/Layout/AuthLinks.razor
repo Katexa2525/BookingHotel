@@ -2,7 +2,7 @@
 
 <AuthorizeView>
   <Authorized>
-    Привет, @context.User.Identity.Name!
+    Привет, @(context.User.Identity?.Name ?? string.Empty)!
     @* <a href="authentication/logout">Выход</a> *@
 
     <button class="btn btn-outline-secondary float-right" title="Выход"

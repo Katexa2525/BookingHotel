@@ -1,6 +1,5 @@
 ﻿@* Удобства и услуги | Питание отеля *@
-@if ((@Hotel.HotelFacilities is not null || @Hotel.Foods is not null) &&
-   (@Hotel.HotelFacilities.Any() || @Hotel.Foods.Any()))
+@if (Hotel.HotelFacilities?.Any() == true || Hotel.Foods?.Any() == true)
 {
   <div class="card shadow">
     <div class="card-body">

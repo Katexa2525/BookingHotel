@@ -4,6 +4,6 @@ namespace Application.DTO.Room.CQRS
 {
   public class UpdateRoomCommand : IRequest<Unit>
   {
-    public RoomUpdateDto Dto { get; set; }
+    public RoomUpdateDto Dto { get; set; } = null!;
   }
 }

@@ -6,6 +6,6 @@ namespace Application.DTO.TypeFood
   {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    public ICollection<FoodDto> Foods { get; set; }
+    public ICollection<FoodDto> Foods { get; set; } = new List<FoodDto>();
   }
 }

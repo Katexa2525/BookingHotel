@@ -3,6 +3,6 @@
   public class HotelPhotoCreateWithIdDto
   {
     public Guid HotelId { get; set; }
-    public byte[] Photo { get; set; }
+    public byte[] Photo { get; set; } = Array.Empty<byte>();
   }
 }

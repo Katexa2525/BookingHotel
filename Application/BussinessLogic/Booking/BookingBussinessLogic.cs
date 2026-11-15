@@ -27,10 +27,10 @@ namespace Application.BussinessLogic.Booking
     public async Task<BookingDto> GetByIdAsync(Guid id, bool trackChanges)
     {
       var booking = _repositoryManager.BookingRepository.GetByCondition(x => x.Id == id, trackChanges).FirstOrDefault();
-      if (booking == null)
-        return null;  
-      else
-        return _mapper.Map<BookingDto>(booking);
+      if (booking is null)
+        throw new KeyNotFoundException($"Booking '{id}' was not found.");
+
+      return _mapper.Map<BookingDto>(booking);
     }
 
     public async Task<Guid> CreateAsync(BookingCreateDto dto)

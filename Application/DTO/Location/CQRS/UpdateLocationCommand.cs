@@ -4,6 +4,6 @@ namespace Application.DTO.Location.CQRS
 {
   public class UpdateLocationCommand : IRequest<Unit>
   {
-    public LocationDto Dto { get; set; }
+    public LocationDto Dto { get; set; } = null!;
   }
 }

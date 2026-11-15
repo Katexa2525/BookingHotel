@@ -2,6 +2,6 @@
 {
   public class HotelPhotoCreateDto
   {
-    public byte[] Photo { get; set; }
+    public byte[] Photo { get; set; } = Array.Empty<byte>();
   }
 }

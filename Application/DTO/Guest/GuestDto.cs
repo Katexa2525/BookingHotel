@@ -11,6 +11,6 @@ namespace Application.DTO.Guest
     public string? PhoneNumber { get; set; } = string.Empty;
     public string? Email { get; set; } = string.Empty;
     public Guid BookingId { get; set; }
-    public BookingDto Booking { get; set; }
+    public BookingDto Booking { get; set; } = null!;
   }
 }

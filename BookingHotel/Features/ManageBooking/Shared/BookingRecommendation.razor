@@ -72,7 +72,7 @@
         <label>Бюджет за ночь:</label>
         <div class="d-flex align-items-center">
           <span class="me-2">@preferences.MinBudget.ToString("C0")</span>
-          <InputRange min="500" max="20000" step="500" class="form-range flex-grow-1" />
+          <input type="range" min="500" max="20000" step="500" class="form-range flex-grow-1" @bind="preferences.MinBudget" />
           <span class="ms-2">@preferences.MaxBudget.ToString("C0")</span>
         </div>
       </div>
@@ -324,7 +324,7 @@
 
     public string MealPlan { get; set; } = "";
 
-    public static ValidationResult ValidateDates(DateTime checkOutDate, ValidationContext context)
+    public static ValidationResult? ValidateDates(DateTime checkOutDate, ValidationContext context)
     {
       var model = (SearchPreferences)context.ObjectInstance;
       return checkOutDate > model.CheckInDate

@@ -12,8 +12,11 @@ namespace Application.BussinessLogic.AuthProviders
 
       var jsonBytes = ParseBase64WithoutPadding(payload);
 
-      var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-      claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
+      var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes)
+          ?? throw new FormatException("JWT payload is not a valid JSON object.");
+      claims.AddRange(keyValuePairs
+          .Where(kvp => kvp.Value is not null)
+          .Select(kvp => new Claim(kvp.Key, kvp.Value!.ToString() ?? string.Empty)));
       return claims;
     }
     private static byte[] ParseBase64WithoutPadding(string base64)

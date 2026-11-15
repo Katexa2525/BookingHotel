@@ -44,6 +44,9 @@ namespace Application.BussinessLogic.Price
     public async Task DeleteAsync(Guid priceId)
     {
       var price = await _repositoryManager.PriceRepository.GetOneAsync(x => x.Id == priceId);
+      if (price is null)
+        throw new KeyNotFoundException($"Price '{priceId}' was not found.");
+
       _repositoryManager.PriceRepository.DeleteEntity(price);
       await _repositoryManager.SaveAsync();
     }
@@ -51,6 +54,9 @@ namespace Application.BussinessLogic.Price
     public async Task UpdateAsync(PriceDto dto)
     {
       var existingPrice = await _repositoryManager.PriceRepository.GetOneAsync(x => x.Id == dto.Id);
+      if (existingPrice is null)
+        throw new KeyNotFoundException($"Price '{dto.Id}' was not found.");
+
       _mapper.Map(dto, existingPrice);
 
       _repositoryManager.PriceRepository.UpdateEntity(existingPrice);

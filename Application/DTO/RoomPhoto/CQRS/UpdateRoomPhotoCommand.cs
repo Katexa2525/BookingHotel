@@ -5,6 +5,6 @@ namespace Application.DTO.RoomPhoto.CQRS
 {
   public class UpdateRoomPhotoCommand : IRequest<Unit>
   {
-    public RoomPhotoDto Dto { get; set; }
+    public RoomPhotoDto Dto { get; set; } = null!;
   }
 }

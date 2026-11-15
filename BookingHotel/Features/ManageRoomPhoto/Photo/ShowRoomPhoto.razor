@@ -15,10 +15,11 @@
             <tbody>
               @foreach (var item in _photos)
               {
-                _photo = item;
+                _photo = item ?? new RoomPhotoDto();
+                var photoBytes = item?.Photo;
                 <tr>
                   <td>
-                    @if (item is null || (item is not null && item.Photo == null))
+                    @if (photoBytes is null || photoBytes.Length == 0)
                     {
                       <img src="images/NoImage.png" class="card-img-top" />
                     }
@@ -26,7 +27,7 @@
                     {
 
                       <div class="card bg-dark text-white">
-                        <img src="data:image/png;base64,@Convert.ToBase64String(item.Photo)" class="card-img-top" />
+                        <img src="data:image/png;base64,@Convert.ToBase64String(photoBytes)" class="card-img-top" />
                       </div>
                     }
                   </td>
@@ -76,10 +77,10 @@
 @code {
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private List<RoomPhotoDto>? _photos = new List<RoomPhotoDto>();
-  private RoomPhotoDto _photo;
+  private List<RoomPhotoDto> _photos = new();
+  private RoomPhotoDto _photo = new();
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
-  private List<RoomPhotoDto>? _photosDel = new List<RoomPhotoDto>();
+  private List<RoomPhotoDto> _photosDel = new();
   /// <summary>Словарь для отслеживания изменения фотки </summary>
   private Dictionary<Guid, bool> dicChangePhoto = new();
 
@@ -107,7 +108,7 @@
   protected override async Task OnParametersSetAsync()
   {
     dicChangePhoto.Clear();
-    _photos = Photos;
+    _photos = Photos ?? new List<RoomPhotoDto>();
     // обновляю данные по Facility по данному отелю
     var response = await Mediator.Send(new GetRoomPhotosRequest(RoomId));
     if (response is not null && response.RoomPhotos is not null && response.RoomPhotos.Any())
@@ -129,8 +130,9 @@
     _photos.Add(new RoomPhotoDto { RoomId = this.RoomId });
   }
 
-  private void DeleteRow(RoomPhotoDto item)
+  private void DeleteRow(RoomPhotoDto? item)
   {
+    ArgumentNullException.ThrowIfNull(item);
     _photosDel.Add(item);
     _photos.Remove(item);
   }

@@ -40,15 +40,17 @@ namespace Application.BussinessLogic.RoomType
     public async Task<RoomTypeDto> GetByIdAsync(Guid id, bool trackChanges)
     {
       var roomType = _repositoryManager.RoomTypeRepository.GetByCondition(x => x.Id == id, trackChanges).FirstOrDefault();
-      if (roomType == null)
-        return null; 
-      else
-        return _mapper.Map<RoomTypeDto>(roomType);
+      if (roomType is null)
+        throw new KeyNotFoundException($"Room type '{id}' was not found.");
+
+      return _mapper.Map<RoomTypeDto>(roomType);
     }
 
     public async Task DeleteAsync(Guid roomTypeId)
     {
       var roomType = await _repositoryManager.RoomTypeRepository.GetOneAsync(x => x.Id == roomTypeId);
+      if (roomType is null)
+        throw new KeyNotFoundException($"Room type '{roomTypeId}' was not found.");
 
       _repositoryManager.RoomTypeRepository.DeleteEntity(roomType);
       await _repositoryManager.SaveAsync();

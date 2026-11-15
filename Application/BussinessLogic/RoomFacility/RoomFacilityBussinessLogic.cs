@@ -47,6 +47,9 @@ namespace Application.BussinessLogic.RoomFacility
     public async Task DeleteAsync(Guid roomFacilityId)
     {
       var roomFacility = await _repositoryManager.RoomFacilityRepository.GetOneAsync(x => x.Id == roomFacilityId);
+      if (roomFacility is null)
+        throw new KeyNotFoundException($"Room facility '{roomFacilityId}' was not found.");
+
       _repositoryManager.RoomFacilityRepository.DeleteEntity(roomFacility);
       await _repositoryManager.SaveAsync();
     }
@@ -55,6 +58,9 @@ namespace Application.BussinessLogic.RoomFacility
     {
       //var existingroomFacility = await _repositoryRoomFacility.FindOneAsync(x => x.Id == dto.Id);
       var existingroomFacility = await _repositoryManager.RoomFacilityRepository.GetOneAsync(x => x.Id == dto.Id);
+      if (existingroomFacility is null)
+        throw new KeyNotFoundException($"Room facility '{dto.Id}' was not found.");
+
       _mapper.Map(dto, existingroomFacility);
 
       _repositoryManager.RoomFacilityRepository.UpdateEntity(existingroomFacility);

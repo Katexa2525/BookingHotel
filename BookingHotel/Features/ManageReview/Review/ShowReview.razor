@@ -55,7 +55,6 @@
 
 @code {
   private EditContext _editContext = default!;
-  private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
   private ReviewDto _review = new ReviewDto();
 
@@ -63,7 +62,7 @@
   public HotelDto Hotel { get; set; } = default!;
 
   [Parameter]
-  public ReviewDto Review { get; set; }
+  public ReviewDto Review { get; set; } = null!;
 
   /// <summary>Событие, что окно формы закрыто и надо обработать это событие в родительской форме </summary>
   [Parameter, EditorRequired]
@@ -80,11 +79,6 @@
 
 
   private void HandleSelectedValueChanged(int val) => _review.Star = val;
-
-  protected override async Task OnInitializedAsync()
-  {
-    _submitSuccessful = false;
-  }
 
   protected override async Task OnParametersSetAsync()
   {
@@ -107,7 +101,6 @@
 
   private void CloseModal()
   {
-    _submitSuccessful = false;
     IsModalOpen = false;
     // оповещаю родительскую форму
     OnCloseModal.InvokeAsync();
@@ -129,15 +122,12 @@
         var response = await Mediator.Send(new AddReviewRequest(Mapper.Map<ReviewCreateWithIdDto>(_review)));
         if (response.reviewId == Guid.Empty)
         {
-          _submitSuccessful = false;
           _errorMessage = AppMessage.ReviewPageSaveTextErrorMessage;
           // Если при сохранении произошла ошибка, вручную вызываю метод StateHasChanged, чтобы обновить
           // пользовательский интерфейс сообщением об ошибке
           StateHasChanged();
           return;
         }
-        else
-          _submitSuccessful = true;
         CloseModal();
       }
       else // изменение данных
@@ -156,11 +146,8 @@
             var response = await Mediator.Send(new EditReviewRequest(Mapper.Map<ReviewDto>(_review)));
             if (!response.IsSuccess)
             {
-              _submitSuccessful = false;
               _errorMessage = AppMessage.ReviewPageSaveTextErrorMessage;
             }
-            else
-              _submitSuccessful = true;
             CloseModal();
           }
         }

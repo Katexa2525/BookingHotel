@@ -27,10 +27,10 @@ namespace Application.BussinessLogic.Guest
     public async Task<GuestDto> GetByIdAsync(Guid id, bool trackChanges)
     {
       var guest = _repositoryManager.GuestRepository.GetByCondition(x => x.Id == id, trackChanges).FirstOrDefault();
-      if (guest == null)
-        return null;
-      else
-        return _mapper.Map<GuestDto>(guest);
+      if (guest is null)
+        throw new KeyNotFoundException($"Guest '{id}' was not found.");
+
+      return _mapper.Map<GuestDto>(guest);
     }
 
     public async Task<Guid> CreateAsync(GuestCreateDto dto) 

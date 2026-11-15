@@ -62,6 +62,8 @@ namespace Application.BussinessLogic.Room
     public async Task DeleteAsync(Guid roomId)
     {
       var room = await _repositoryManager.RoomRepository.GetOneAsync(x => x.Id == roomId);
+      if (room is null)
+        throw new KeyNotFoundException($"Room '{roomId}' was not found.");
 
       await _repositoryManager.PriceRepository.DeleteEntityRangeAsync(room.Prices);
       await _repositoryManager.RoomPhotoRepository.DeleteEntityRangeAsync(room.RoomPhotos);

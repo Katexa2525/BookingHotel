@@ -1,5 +1,5 @@
 ﻿<div>
-  @if (Photos == null || (Photos != null && !Photos.Any()))
+  @if (Photos is not { Count: > 0 })
   {
     <img src="images/NoImage.png" class="card-img-top" />
   }
@@ -33,7 +33,7 @@
 @code {
 
   [Parameter, EditorRequired]
-  public List<byte[]> Photos { get; set; } = default!; // определяет обязательный параметр компонента
+  public List<byte[]>? Photos { get; set; } // определяет обязательный параметр компонента
 
   /// <summary> id отеля/номера необходим для карусели картинок </summary>
   [Parameter, EditorRequired]

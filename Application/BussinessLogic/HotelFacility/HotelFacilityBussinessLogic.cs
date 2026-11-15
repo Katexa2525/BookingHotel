@@ -46,6 +46,9 @@ namespace Application.BussinessLogic.HotelFacility
     public async Task DeleteAsync(Guid hotelFacilityId)
     {
       var hotelFacility = await _repositoryManager.HotelFacilityRepository.GetOneAsync(x => x.Id == hotelFacilityId);
+      if (hotelFacility is null)
+        throw new KeyNotFoundException($"Hotel facility '{hotelFacilityId}' was not found.");
+
       _repositoryManager.HotelFacilityRepository.DeleteEntity(hotelFacility);
       await _repositoryManager.SaveAsync();
     }
@@ -54,6 +57,9 @@ namespace Application.BussinessLogic.HotelFacility
     {
       //var existingHotelFacility = await _repositoryHotelFacility.FindOneAsync(x => x.Id == dto.Id);
       var existingHotelFacility = await _repositoryManager.HotelFacilityRepository.GetOneAsync(x => x.Id == dto.Id);
+      if (existingHotelFacility is null)
+        throw new KeyNotFoundException($"Hotel facility '{dto.Id}' was not found.");
+
       _mapper.Map(dto, existingHotelFacility);
 
       _repositoryManager.HotelFacilityRepository.UpdateEntity(existingHotelFacility);

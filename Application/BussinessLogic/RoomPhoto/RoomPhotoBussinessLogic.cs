@@ -31,6 +31,9 @@ namespace Application.BussinessLogic.RoomPhoto
     public async Task DeleteAsync(Guid roomPhotoId)
     {
       var roomPhoto = await _repositoryManager.RoomPhotoRepository.GetOneAsync(x => x.Id == roomPhotoId);
+      if (roomPhoto is null)
+        throw new KeyNotFoundException($"Room photo '{roomPhotoId}' was not found.");
+
       _repositoryManager.RoomPhotoRepository.DeleteEntity(roomPhoto);
       await _repositoryManager.SaveAsync();
     }
@@ -51,6 +54,9 @@ namespace Application.BussinessLogic.RoomPhoto
     public async Task UpdateAsync(RoomPhotoDto dto)
     {
       var existingPhoto = await _repositoryManager.RoomPhotoRepository.GetOneAsync(x => x.Id == dto.Id);
+      if (existingPhoto is null)
+        throw new KeyNotFoundException($"Room photo '{dto.Id}' was not found.");
+
       _mapper.Map(dto, existingPhoto);
 
       _repositoryManager.RoomPhotoRepository.UpdateEntity(existingPhoto);

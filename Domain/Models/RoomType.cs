@@ -2,6 +2,6 @@
 {
   public class RoomType : BaseEntity
   {
-    public ICollection<Room> Rooms { get; set; }
+    public ICollection<Room> Rooms { get; set; } = new List<Room>();
   }
 }

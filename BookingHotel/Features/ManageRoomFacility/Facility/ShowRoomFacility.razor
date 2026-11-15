@@ -67,10 +67,9 @@
 @code {
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private List<RoomFacilityDto>? _roomFacilities = new List<RoomFacilityDto>();
-  private RoomFacilityDto _facility;
+  private List<RoomFacilityDto> _roomFacilities = new();
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
-  private List<RoomFacilityDto>? _roomFacilitiesDel = new List<RoomFacilityDto>();
+  private List<RoomFacilityDto> _roomFacilitiesDel = new();
 
   [Parameter, EditorRequired]
   public Guid RoomId { get; set; } = default!;
@@ -95,7 +94,7 @@
 
   protected override async Task OnParametersSetAsync()
   {
-    _roomFacilities = RoomFacilities;
+    _roomFacilities = RoomFacilities ?? new List<RoomFacilityDto>();
     // обновляю данные по Facility по данному отелю
     var response = await Mediator.Send(new GetRoomFacilitiesRequest(RoomId));
     if (response is not null && response.RoomFacilities is not null && response.RoomFacilities.Any())

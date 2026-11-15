@@ -37,26 +37,26 @@
           }
           else
           {
-            <h5 class="card-title">@Room.Id</h5>
+            <h5 class="card-title">@Room?.Id</h5>
           }
 
           @* Данные по кол-ву человек и площади номера *@
-          <RoomPeopleSquareComponent PeopleNumber="@Room.PeopleNumber" Square="@Room.Square" />
+          <RoomPeopleSquareComponent PeopleNumber="@(Room?.PeopleNumber ?? 0)" Square="@(Room?.Square ?? 0)" />
 
           @* Удобства в номере *@
-          <RoomFacilitiesComponent RoomFacilities="@Room.RoomFacilities" />
+          <RoomFacilitiesComponent RoomFacilities="@Room?.RoomFacilities" />
 
           <div class="d-flex justify-content-between align-items-center">
 
             @* Цена за ночь *@ 
-          <RoomDayPriceComponent DayPrice="@Room.DayPrice" DayCount="@DayCountForPrice" />
+          <RoomDayPriceComponent DayPrice="@(Room?.DayPrice ?? 0)" DayCount="@DayCountForPrice" />
 
             <AuthorizeView Context="authContext">
               @if (authContext.User.IsInRole("Administrator") || authContext.User.IsInRole("Hotel_owner"))
               {
                 <div class="mt-4 align-bottom">
                   <button class="btn btn-outline-secondary float-right" title="Редактирование"
-                          @onclick="@(() => NavManager.NavigateTo($"/hotels/{HotelId}/rooms/{Room.Id}"))">
+                          @onclick="@(() => NavManager.NavigateTo($"/hotels/{HotelId}/rooms/{Room?.Id}"))">
                     <i class="bi bi-pencil"></i>
                   </button>
                 </div>
@@ -73,7 +73,7 @@
         </div>
 
         <div class="col-4">
-          <h5 class="card-body">@Room.Description</h5>
+          <h5 class="card-body">@Room?.Description</h5>
         </div>
 
       </div>

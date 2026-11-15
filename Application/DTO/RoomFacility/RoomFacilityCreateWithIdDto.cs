@@ -3,6 +3,6 @@
   public class RoomFacilityCreateWithIdDto
   {
     public Guid RoomId { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
   }
 }

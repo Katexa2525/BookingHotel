@@ -103,10 +103,9 @@
 @code {
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private List<PriceDto>? _roomPrices = new List<PriceDto>();
-  private PriceDto _price;
+  private List<PriceDto> _roomPrices = new();
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
-  private List<PriceDto>? _roomPricesDel = new List<PriceDto>();
+  private List<PriceDto> _roomPricesDel = new();
 
   [Parameter, EditorRequired]
   public Guid RoomId { get; set; } = default!;
@@ -131,7 +130,7 @@
 
   protected override async Task OnParametersSetAsync()
   {
-    _roomPrices = RoomPrices;
+    _roomPrices = RoomPrices ?? new List<PriceDto>();
     // обновляю данные по Facility по данному отелю
     var response = await Mediator.Send(new GetPricesRequest(RoomId));
     if (response is not null && response.Prices is not null && response.Prices.Any())

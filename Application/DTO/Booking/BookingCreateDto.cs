@@ -18,7 +18,7 @@ namespace Application.DTO.Booking
     /// <summary> id пользователя из Keycloak </summary>
     public string? UserId { get; set; } = string.Empty;
     public Guid RoomId { get; set; }
-    public IEnumerable<GuestDto> Guests { get; set; }
-    public IEnumerable<ServiceDto> Services { get; set; }
+    public IEnumerable<GuestDto> Guests { get; set; } = Array.Empty<GuestDto>();
+    public IEnumerable<ServiceDto> Services { get; set; } = Array.Empty<ServiceDto>();
   }
 }

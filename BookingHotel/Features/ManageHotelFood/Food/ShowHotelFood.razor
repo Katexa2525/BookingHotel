@@ -27,8 +27,7 @@
                   _food = item;
                   if (_foodTypes != null)
                   {
-                    selectedOptionTypeFood = (_foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)) != null) ?
-                    _foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId)).Name : "";
+                    selectedOptionTypeFood = _foodTypes.FirstOrDefault(p => p.Id.Equals(item.TypeFoodId))?.Name ?? string.Empty;
                     <tr>
                       <td>
                         <div class="col">
@@ -89,11 +88,11 @@
 @code {
   private bool _submitSuccessful = false; // поле для отслеживания успешности отправки содержимого формы
   private string? _errorMessage; // поле для хранения сообщения об ошибке, если при отправке что-то пошло не так
-  private List<FoodDto>? _hotelFoods = new List<FoodDto>();
+  private List<FoodDto> _hotelFoods = new();
   private FoodDto _food = new FoodDto();
   /// <summary> Список для сохранения удаленных записей, чтобы можно было потом удалить при сохранении </summary>
-  private List<FoodDto>? _hotelFoodsDel = new List<FoodDto>();
-  private List<TypeFoodDto>? _foodTypes = new List<TypeFoodDto>();
+  private List<FoodDto> _hotelFoodsDel = new();
+  private List<TypeFoodDto> _foodTypes = new();
 
   // что выбрано из списка типа питания
   private string selectedOptionTypeFood = "";
@@ -119,7 +118,9 @@
   {
     selectedOptionTypeFood = value;
     _food.Name = value;
-    _food.TypeFoodId = _foodTypes.FirstOrDefault(p => p.Name.Equals(value)).Id;
+    var selectedTypeFood = _foodTypes.FirstOrDefault(p => p.Name.Equals(value));
+    if (selectedTypeFood is not null)
+      _food.TypeFoodId = selectedTypeFood.Id;
   }
 
   protected override async Task OnInitializedAsync()
@@ -128,12 +129,12 @@
     // получаю типы  питания
     var response = await Mediator.Send(new GetTypeFoodsRequest());
     if (response is not null)
-      _foodTypes = response.TypeFoods;
+      _foodTypes = response.TypeFoods ?? new List<TypeFoodDto>();
   }
 
   protected override async Task OnParametersSetAsync()
   {
-    _hotelFoods = HotelFoods;
+    _hotelFoods = HotelFoods ?? new List<FoodDto>();
     // обновляю данные по Facility по данному отелю
     var response = await Mediator.Send(new GetFoodsRequest(HotelId));
     if (response is not null && response.Foods is not null && response.Foods.Any())
@@ -233,7 +234,9 @@
     {
       selectedOptionTypeFood = typefood.First();
       _food.Name = selectedOptionTypeFood;
-      _food.TypeFoodId = _foodTypes.FirstOrDefault(p => p.Name.Equals(selectedOptionTypeFood)).Id;
+      var selectedTypeFood = _foodTypes.FirstOrDefault(p => p.Name.Equals(selectedOptionTypeFood));
+      if (selectedTypeFood is not null)
+        _food.TypeFoodId = selectedTypeFood.Id;
     }
   }
 }

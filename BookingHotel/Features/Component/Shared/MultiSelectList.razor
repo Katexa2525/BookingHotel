@@ -6,7 +6,7 @@
       <select multiple @onchange="HandleChange">
         @foreach (var option in Options)
         {
-          <option value="@option.ToString()" selected="@(SelectedOptions.Contains(option))">@option</option>
+          <option value="@Convert.ToString(option)" selected="@(SelectedOptions.Contains(option))">@option</option>
         }
       </select>
     </div>
@@ -28,7 +28,8 @@
 
   private async Task HandleChange(ChangeEventArgs e)
   {
-    var selectedValues = ((IEnumerable<object>)e.Value).Select(v => (T)Convert.ChangeType(v, typeof(T))).ToList();
+    var selectedItems = e.Value as IEnumerable<string> ?? Array.Empty<string>();
+    var selectedValues = selectedItems.Select(v => (T)Convert.ChangeType(v, typeof(T))).ToList();
     SelectedOptions = selectedValues;
     await OnSelectionChanged.InvokeAsync(SelectedOptions);
   }

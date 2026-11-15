@@ -4,6 +4,6 @@ namespace Application.DTO.Hotel.CQRS
 {
   public class UpdateHotelCommand : IRequest<Unit>
   {
-    public HotelUpdateDto Dto { get; set; }
+    public HotelUpdateDto Dto { get; set; } = null!;
   }
 }

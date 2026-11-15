@@ -125,11 +125,9 @@
 
 @code {
   private BookingModel booking = new BookingModel();
-  private bool bookingConfirmed = false;
 
   private void BookRoom()
   {
-    bookingConfirmed = true;
   }
 
   [Parameter]
@@ -141,16 +139,16 @@
   private class BookingModel
   {
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Required]
-    public string Famil { get; set; }
+    public string Famil { get; set; } = string.Empty;
 
     [Required]
-    public string Phone { get; set; }
+    public string Phone { get; set; } = string.Empty;
 
     [Required, EmailAddress]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     [Required]
     public DateTime CheckInDate { get; set; }

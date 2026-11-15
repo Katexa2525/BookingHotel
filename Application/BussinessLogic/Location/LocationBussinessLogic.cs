@@ -45,6 +45,9 @@ namespace Application.BussinessLogic.Location
     public async Task DeleteAsync(Guid locationId)
     {
       var location = await _repositoryManager.LocationRepository.GetOneAsync(x => x.Id == locationId);
+      if (location is null)
+        throw new KeyNotFoundException($"Location '{locationId}' was not found.");
+
       _repositoryManager.LocationRepository.DeleteEntity(location);
       await _repositoryManager.SaveAsync();
     }
@@ -52,6 +55,9 @@ namespace Application.BussinessLogic.Location
     public async Task UpdateAsync(LocationDto dto)
     {
       var existingLocation = await _repositoryManager.LocationRepository.GetOneAsync(x => x.Id == dto.Id);
+      if (existingLocation is null)
+        throw new KeyNotFoundException($"Location '{dto.Id}' was not found.");
+
       _mapper.Map(dto, existingLocation);
 
       _repositoryManager.LocationRepository.UpdateEntity(existingLocation);

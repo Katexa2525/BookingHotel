@@ -3,6 +3,6 @@
   public class HotelPhoto : BasePhotoEntity
   {
     public Guid HotelId { get; set; }
-    public Hotel Hotel { get; set; }
+    public Hotel Hotel { get; set; } = null!;
   }
 }

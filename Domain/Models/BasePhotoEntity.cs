@@ -3,6 +3,6 @@
   public abstract class BasePhotoEntity
   {
     public Guid Id { get; set; }
-    public byte[] Photo { get; set; }
+    public byte[] Photo { get; set; } = Array.Empty<byte>();
   }
 }

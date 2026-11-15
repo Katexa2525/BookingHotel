@@ -4,6 +4,6 @@ namespace Application.DTO.Price.CQRS
 {
   public class UpdatePriceCommand : IRequest<Unit>
   {
-    public PriceDto Dto { get; set; }
+    public PriceDto Dto { get; set; } = null!;
   }
 }

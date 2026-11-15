@@ -1,6 +1,7 @@
 using BookingHotel.Server.ContextFactory;
 using BookingHotel.Server.Extensions;
 using BookingHotel.Server.MappingProfile;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -37,8 +38,10 @@ builder.Services.ConfigureIdentity();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 //builder.Services.AddControllers();
-builder.Services.AddControllers()
-    .AddFluentValidation(p=>p.RegisterValidatorsFromAssembly(Assembly.Load("Application")));
+builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssembly(Assembly.Load("Application"));
  
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

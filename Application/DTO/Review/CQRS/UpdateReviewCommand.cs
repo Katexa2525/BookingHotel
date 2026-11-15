@@ -4,6 +4,6 @@ namespace Application.DTO.Review.CQRS
 {
   public class UpdateReviewCommand : IRequest<Unit>
   {
-    public ReviewDto Dto { get; set; }
+    public ReviewDto Dto { get; set; } = null!;
   }
 }

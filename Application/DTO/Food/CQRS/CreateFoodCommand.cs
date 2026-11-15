@@ -4,6 +4,6 @@ namespace Application.DTO.Food.CQRS
 {
   public class CreateFoodCommand: IRequest<Guid>
   {
-    public FoodCreateWithIdDto Dto { get; set; }
+    public FoodCreateWithIdDto Dto { get; set; } = null!;
   }
 }

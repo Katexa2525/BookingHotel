@@ -39,7 +39,7 @@ else
   private IEnumerable<HotelDto>? _searchResults;
   private HotelDto? _selectedHotel;
   // хранит копию неотфильтрованных результатов поиска
-  private IEnumerable<HotelDto>? _cachedSearchResults = Array.Empty<HotelDto>();
+  private IEnumerable<HotelDto> _cachedSearchResults = Array.Empty<HotelDto>();
 
   /// <summary> Параметр компонента, совпадающий с именем параметра маршрута, необходим для захвата его значения </summary>
   [Parameter]
@@ -57,6 +57,9 @@ else
     try
     {
       var response = await Mediator.Send(new GetHotelsRequest());
+      if (response?.Hotels is null)
+        throw new InvalidOperationException("The hotel list was not returned by the server.");
+
       var _allHotels = response.Hotels.Select(p => new HotelDto
         {
           Id = p.Id,
@@ -129,7 +132,7 @@ else
     if (filters.Any())
     {
       // при наличии фильтров, используем их и фильтруем кешированные результаты поиска
-      _searchResults = _cachedSearchResults.Where(hotel=> filters.All(filter=>filter(hotel)));
+      _searchResults = _cachedSearchResults.Where(hotel => filters.All(filter => filter(hotel)));
     }
     else
     {

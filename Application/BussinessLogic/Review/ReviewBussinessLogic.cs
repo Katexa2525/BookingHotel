@@ -44,6 +44,9 @@ namespace Application.BussinessLogic.Review
     public async Task DeleteAsync(Guid reviewId)
     {
       var review = await _repositoryManager.ReviewRepository.GetOneAsync(x => x.Id == reviewId);
+      if (review is null)
+        throw new KeyNotFoundException($"Review '{reviewId}' was not found.");
+
       _repositoryManager.ReviewRepository.DeleteEntity(review);
       await _repositoryManager.SaveAsync();
     }
@@ -51,6 +54,9 @@ namespace Application.BussinessLogic.Review
     public async Task UpdateAsync(ReviewDto dto)
     {
       var existingPrice = await _repositoryManager.ReviewRepository.GetOneAsync(x => x.Id == dto.Id);
+      if (existingPrice is null)
+        throw new KeyNotFoundException($"Review '{dto.Id}' was not found.");
+
       _mapper.Map(dto, existingPrice);
 
       _repositoryManager.ReviewRepository.UpdateEntity(existingPrice);

@@ -119,10 +119,12 @@
       opacity = 1,
       fillOpacity = 1
     };
-  bool run = false;
 
   private async Task onClickRun() //Button onclick event
   {
+    if (_activeHotel is null || realTimeMap is null)
+      return;
+
     RealTimeMap.PointTooltip tooltip = new RealTimeMap.PointTooltip()
       {
         content = $"{_activeHotel.Name}, {_activeHotel.Star}* - {Math.Round(_latitude, 3)}; {Math.Round(_longitude, 3)}",

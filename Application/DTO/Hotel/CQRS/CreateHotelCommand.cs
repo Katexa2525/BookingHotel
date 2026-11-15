@@ -4,6 +4,6 @@ namespace Application.DTO.Hotel.CQRS
 {
   public class CreateHotelCommand : IRequest<Guid>
   {
-    public HotelCreateDto Dto { get; set; }
+    public HotelCreateDto Dto { get; set; } = null!;
   }
 }

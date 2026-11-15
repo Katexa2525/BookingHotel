@@ -4,6 +4,6 @@ namespace Application.DTO.HotelPhoto.CQRS
 {
   public class CreateHotelPhotoCommand : IRequest<Guid>
   {
-    public HotelPhotoCreateWithIdDto Dto { get; set; }
+    public HotelPhotoCreateWithIdDto Dto { get; set; } = null!;
   }
 }

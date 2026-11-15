@@ -11,14 +11,14 @@
   public List<string> Options { get; set; } = new();
 
   [Parameter]
-  public string SelectedOption { get; set; }
+  public string SelectedOption { get; set; } = string.Empty;
 
   [Parameter]
   public EventCallback<string> OnSelectionChanged { get; set; }
 
   private async Task HandleChange(ChangeEventArgs e)
   {
-    SelectedOption = e.Value?.ToString();
+    SelectedOption = e.Value?.ToString() ?? string.Empty;
     await OnSelectionChanged.InvokeAsync(SelectedOption);
   }
 

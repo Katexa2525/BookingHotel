@@ -5,8 +5,8 @@ namespace Application.DTO.Login
   public class UserForAuthenticationDto
   {
     [Required(ErrorMessage = "Требуется электронная почта.")]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
     [Required(ErrorMessage = "Требуется пароль")]
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
   }
 }

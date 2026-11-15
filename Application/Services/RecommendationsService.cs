@@ -1,6 +1,9 @@
 ﻿using Application.DTO.Booking;
 using Application.DTO.Booking.ClientRequest;
+using Application.DTO.Food;
 using Application.DTO.Hotel;
+using Application.DTO.HotelFacility;
+using Application.DTO.Location;
 using Application.Interfaces.Recommendation;
 using MediatR;
 
@@ -29,22 +32,25 @@ namespace Application.Services
       // Собираем удобства из отелей, которые бронировал пользователь
       foreach (var booking in allUserBookings)
       {
+        if (booking.Room is null)
+          continue;
+
         userBookedHotels.Add(booking.Room.HotelId);
         var hotel = allHotels.FirstOrDefault(h => h.Id == booking.Room.HotelId);
         if (hotel != null)
         {
           // удобства по отелю
-          foreach (var item in hotel.HotelFacilities)
+          foreach (var item in hotel.HotelFacilities ?? Array.Empty<HotelFacilityDto>())
           {
             userHotelFacilities.Add(item.Name);
           }
           // локации отеля
-          foreach (var item in hotel.Locations)
+          foreach (var item in hotel.Locations ?? Array.Empty<LocationDto>())
           {
             userHotelLocations.Add(item.Name);
           }
           // питание отеля
-          foreach (var item in hotel.Foods)
+          foreach (var item in hotel.Foods ?? Array.Empty<FoodDto>())
           {
             userHotelFoods.Add(item.Name);
           }
@@ -63,9 +69,9 @@ namespace Application.Services
       // Рекомендуем отели с похожими удобствами
       var recommendations = allHotels
           .Where(h => !userBookedHotels.Contains(h.Id))
-          .OrderByDescending(h => h.HotelFacilities.Count(fac => userHotelFacilities.Contains(fac.Name)))
-          .ThenByDescending(h => h.Foods.Count(food => userHotelFoods.Contains(food.Name)))
-          .ThenByDescending(h => h.Locations.Count(loc => userHotelLocations.Contains(loc.Name)))
+          .OrderByDescending(h => h.HotelFacilities?.Count(fac => userHotelFacilities.Contains(fac.Name)) ?? 0)
+          .ThenByDescending(h => h.Foods?.Count(food => userHotelFoods.Contains(food.Name)) ?? 0)
+          .ThenByDescending(h => h.Locations?.Count(loc => userHotelLocations.Contains(loc.Name)) ?? 0)
           .ThenByDescending(h => h.Star).ThenByDescending(h => h.Rating)
           .Take(topN)
           //.Select()
@@ -128,14 +134,16 @@ namespace Application.Services
       try
       {
         // рекомендации на основе схожести бронирования других пользователей
-        if (allUserBookings is not null && allUserBookings.First() is not null)
+        var firstBooking = allUserBookings.FirstOrDefault();
+        var targetUserId = firstBooking?.UserId;
+        if (!string.IsNullOrWhiteSpace(targetUserId))
         {
           // получаю все бронирования
           var responseAllBookings = await _mediator.Send(new GetBookingsRequest());
           if (responseAllBookings != null && responseAllBookings.Bookings != null)
           {
             // нахожу похожих пользователей
-            similarUsers = FindSimilarUsers(allUserBookings.First().UserId, allUserBookings, allHotels, responseAllBookings.Bookings);
+            similarUsers = FindSimilarUsers(targetUserId, allUserBookings, allHotels, responseAllBookings.Bookings);
             if (similarUsers != null && similarUsers.Any())
             {
               foreach (var user in similarUsers)
@@ -143,13 +151,14 @@ namespace Application.Services
                 // получаю отели по пользователю
                 //var responseBookings = await _mediator.Send(new GetBookingsByUserIdRequest(user.Key));
                 //Берем топовые отели похожего пользователя (оценка >= 4)
-                var userTopHotels = responseAllBookings.Bookings.Where(b => b.UserId == user.Key)
-                                                                           .Select(b => b.Room.HotelId).Distinct().Take(topN);
+                var userTopHotels = responseAllBookings.Bookings
+                    .Where(b => b.UserId == user.Key && b.Room is not null)
+                    .Select(b => b.Room.HotelId).Distinct().Take(topN);
                 recommendedUsersHotels.AddRange(userTopHotels);
               }
               // Удаляю дубликаты и отели, которые пользователь уже бронировал
               var bookedHotels = responseAllBookings.Bookings
-                  .Where(b => b.UserId == allUserBookings.First().UserId)
+                  .Where(b => b.UserId == targetUserId && b.Room is not null)
                   .Select(b => b.Room.HotelId)
                   .ToList();
             

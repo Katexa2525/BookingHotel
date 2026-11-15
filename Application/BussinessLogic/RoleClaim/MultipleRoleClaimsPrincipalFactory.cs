@@ -14,24 +14,27 @@ namespace Application.BussinessLogic.RoleClaim
     public async override ValueTask<ClaimsPrincipal> CreateUserAsync(TAccount account, RemoteAuthenticationUserOptions options)
     {
       var user = await base.CreateUserAsync(account, options);
-      var claimsIdentity = (ClaimsIdentity)user.Identity;
-      if (account != null)
-      {
+      if (user.Identity is ClaimsIdentity claimsIdentity)
         MapArrayClaimsToMultipleSeparateClaims(account, claimsIdentity);
-      }
+
       return user;
     }
 
     private static void MapArrayClaimsToMultipleSeparateClaims(TAccount account, ClaimsIdentity claimsIdentity)
     {
-      foreach (var prop in account.AdditionalProperties)
+      var additionalProperties = account?.AdditionalProperties;
+      if (additionalProperties is null)
+        return;
+
+      foreach (var prop in additionalProperties)
       {
-        var key = prop.Key;
         var value = prop.Value;
-        if (value != null &&
-            (value is JsonElement element && element.ValueKind == JsonValueKind.Array))
+        if (value is JsonElement element && element.ValueKind == JsonValueKind.Array)
         {
-          claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(prop.Key));
+          var existingClaim = claimsIdentity.FindFirst(prop.Key);
+          if (existingClaim is not null)
+            claimsIdentity.RemoveClaim(existingClaim);
+
           var claims = element.EnumerateArray()
                                               .Select(x => new Claim(prop.Key, x.ToString()));
           claimsIdentity.AddClaims(claims);

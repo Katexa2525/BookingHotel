@@ -4,6 +4,6 @@
   public class Food : HotelRelatedEntity
   {
     public Guid TypeFoodId { get; set; }
-    public TypeFood TypeFood { get; set; }
+    public TypeFood TypeFood { get; set; } = null!;
   }
 }

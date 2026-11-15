@@ -43,7 +43,7 @@ else
 
     var response = await Mediator.Send(new GetHotelRequest(HotelId));
 
-    if (response is not null)
+    if (response?.Hotel is not null)
     {
       // если отель получен, сведения о нём копирую в локальное поле для передачи в HotelForm
       _hotel = response.Hotel;
@@ -106,7 +106,7 @@ else
     {
       var response = await Mediator.Send(new GetHotelRequest(HotelId));
 
-      if (response is not null)
+      if (response?.Hotel is not null)
       {
         _hotel = response.Hotel;
       }

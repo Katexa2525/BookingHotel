@@ -53,6 +53,9 @@ else
     try
     {
       var response = await Mediator.Send(new GetRoomsRequest(HotelId));
+      if (response?.Rooms is null)
+        throw new InvalidOperationException("The room list was not returned by the server.");
+
       var _allRooms = response.Rooms.Select(p => new RoomDto
         {
           Id = p.Id,
@@ -67,8 +70,8 @@ else
         });
 
       _searchResults = _allRooms.Where(x => x.Description.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
-                                            x.RoomType.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ||
-                                            x.RoomFacilities.Any(p => p.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase))
+                                            (x.RoomType?.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+                                            (x.RoomFacilities?.Any(p => p.Name.Contains(SearchTerm, StringComparison.CurrentCultureIgnoreCase)) ?? false)
       );
       _cachedSearchResults = _searchResults;
 

@@ -46,6 +46,6 @@
     /// <summary>дата исключения валюты из перечня валют, к которым устанавливается официальный курс бел.рубля </summary>
     public System.DateTime Cur_DateEnd { get; set; }
 
-    public IEnumerable<Price> Prices { get; set; }
+    public IEnumerable<Price> Prices { get; set; } = Array.Empty<Price>();
   }
 }
