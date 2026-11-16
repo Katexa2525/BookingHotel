@@ -19,7 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("sqlConnection");
 
 // Добавляем DbContext в DI контейнер
-builder.Services.AddDbContext<RepositoryContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<RepositoryContext>(options =>
+    options.UseSqlServer(connectionString, sqlOptions =>
+        sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
 // Добавляем Factory для миграций
 builder.Services.AddSingleton<IDesignTimeDbContextFactory<RepositoryContext>, RepositoryContextFactory>();

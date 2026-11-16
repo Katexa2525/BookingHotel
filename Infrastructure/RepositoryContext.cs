@@ -1,6 +1,7 @@
 ﻿using Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Infrastructure
 {
@@ -8,6 +9,12 @@ namespace Infrastructure
   {
     public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
     {    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+      optionsBuilder.ConfigureWarnings(warnings =>
+        warnings.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
+    }
 
     public DbSet<Hotel>? Hotels { get; set; }
     public DbSet<Room>? Rooms { get; set; }

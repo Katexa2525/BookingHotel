@@ -15,7 +15,8 @@ namespace BookingHotel.Server.ContextFactory
           .Build();
 
       var builder = new DbContextOptionsBuilder<RepositoryContext>()
-          .UseSqlServer(configuration.GetConnectionString("sqlConnection"));
+          .UseSqlServer(configuration.GetConnectionString("sqlConnection"), sqlOptions =>
+              sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 
       return new RepositoryContext(builder.Options);
     }
